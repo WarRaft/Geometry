@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE buildprofiles SYSTEM "https://resources.jetbrains.com/writerside/1.0/build-profiles.dtd">
+<buildprofiles xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/build-profiles.xsd"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <!-- https://www.jetbrains.com/help/writerside/generate-sitemap.html -->
+    <sitemap priority="0.35" change-frequency="daily"/>
+
+    <build-profile instance="Geometry">
+        <variables>
+            <primary-color>ruby</primary-color>
+            <color-preset>contrast</color-preset>
+            <noindex-content>false</noindex-content>
+
+            <download-title>Скачать UjAPI</download-title>
+            <download-page>https://github.com/UnryzeC/UjAPI</download-page>
+            <showDownloadButton>true</showDownloadButton>
+
+            <webmaster>nazarpunk@gmail.com</webmaster>
+            <og-image>https://repository-images.githubusercontent.com/792021259/4a042057-681a-47bd-86bd-35f9818d1fdb
+            </og-image>
+
+            <!-- https://www.jetbrains.com/help/writerside/buildprofiles-xml.html#resizable-sidebar -->
+            <resizable-sidebar>true</resizable-sidebar>
+
+            <!-- https://www.jetbrains.com/help/writerside/offline-documentation.html-->
+            <offline-docs>true</offline-docs>
+
+            <!-- https://www.jetbrains.com/help/writerside/buildprofiles-xml.html#content-max-width -->
+            <content-max-width>99999</content-max-width>
+
+            <!-- https://www.jetbrains.com/help/writerside/buildprofiles-xml.html#include-in-head -->
+            <include-in-head>js/head-start.html</include-in-head>
+
+            <include-in-head>js/core/color.js</include-in-head>
+            <include-in-head>js/core/grid.js</include-in-head>
+            <include-in-head>js/core/point.js</include-in-head>
+            <include-in-head>js/example/number-line.js</include-in-head>
+
+            <include-in-head>js/core/observe.js</include-in-head>
+            <include-in-head>js/head-end.html</include-in-head>
+
+        </variables>
+        <footer>
+
+            <link href="https://discord.com/invite/mpvASEcujC">Discord</link>
+            <link href="https://unryzec.github.io/UjAPI">UjAPI</link>
+            <link href="https://warraft.github.io/JASS-doc">JASS</link>
+            <link href="https://warraft.github.io/AngelScript-doc">AngelScript</link>
+            <link href="https://plugins.jetbrains.com/plugin/23120-jass">JetBrains plugin</link>
+
+            <copyright>2024 WarRaft</copyright>
+        </footer>
+    </build-profile>
+
+</buildprofiles>

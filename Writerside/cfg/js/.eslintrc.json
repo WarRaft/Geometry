@@ -1,0 +1,30 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "script"
+  },
+  "rules": {
+    "curly": "off",
+    "no-undef": "off",
+    "no-unused-vars": "off",
+    "semi": [
+      "error",
+      "never"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "no-unsafe-optional-chaining": "off",
+    "no-console": "warn",
+    "no-eq-null": "warn",
+    "no-case-declarations": "off"
+  }
+}
