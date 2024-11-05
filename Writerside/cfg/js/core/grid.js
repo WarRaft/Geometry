@@ -1,4 +1,5 @@
-const cssvar = (name) => window.getComputedStyle(document.documentElement).getPropertyValue(name)
+const cssvar = (name) => window.getComputedStyle(document.body).getPropertyValue(name)
+
 
 class CanvasGrid extends HTMLElement {
     /** @type {Map <string, boolean>} */ static map = new Map()
@@ -227,7 +228,7 @@ class CanvasGrid extends HTMLElement {
                     ctx.moveTo(x, y - r)
                     xy = cy - step
                 }
-                ctx.lineTo(x, xy  - (padding * dpr))
+                ctx.lineTo(x, xy - (padding * dpr))
             }
 
             if (trackY) {
@@ -664,7 +665,8 @@ class CanvasGrid extends HTMLElement {
 
         ctx.lineJoin = 'miter'
         ctx.lineWidth = dpr
-        ctx.font = `${12 * dpr}px ${cssvar('--rs-font-family-ui')}`
+        //ctx.font = `${12 * dpr}px ${cssvar('--rs-font-family-ui')}`
+        ctx.font = `${12 * dpr}px ${cssvar('font-family')}`
 
         ctx.scale(1, -1)
         ctx.translate(0, -h)
