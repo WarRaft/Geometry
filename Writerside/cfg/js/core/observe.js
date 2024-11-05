@@ -5,11 +5,10 @@
     const check = (id) => {
         const elem = document.getElementById(id)
         if (elem === null || !elem.isConnected) return
-        const grid = Grid.map.get(id)
-        if (grid === undefined) return
-        grid.start(elem)
+        if (!CanvasGrid.map.get(id)) return
+        elem.textContent = ''
+        elem.appendChild(document.createElement(id))
     }
-
 
     document.addEventListener('DOMContentLoaded', () => {
         const observer = new MutationObserver((mutationsList) => {
@@ -20,17 +19,11 @@
                         if (node.id === '') continue
                         check(node.id)
                     }
-
-                    for (const node of mutation.removedNodes) {
-                        if (node.nodeType !== Node.ELEMENT_NODE) continue
-                        if (node.id === '') continue
-                        console.log('☠️', node.id)
-                    }
                 }
             }
         })
 
-        Grid.map.forEach((_, key) => {
+        CanvasGrid.map.forEach((_, key) => {
             check(key)
         })
 

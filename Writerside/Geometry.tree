@@ -7,5 +7,7 @@
                  start-page="intro.md">
 
     <toc-element topic="intro.md"/>
-    <toc-element topic="number-line.md"/>
+    <toc-element topic="number-line.md">
+        <toc-element topic="number-line-abs.md"/>
+    </toc-element>
 </instance-profile>

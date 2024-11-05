@@ -1,27 +1,31 @@
-{
-    const grid = new Grid('canvas-number-line', () => {
-        grid
-            .grid(undefined, .25, {axisY: false})
+class CanvasNumberLine extends CanvasGrid {
+    static name = 'canvas-number-line'
+
+    constructor() {
+        super()
+
+        this.A = new Point(-5, 0, {dragY: false})
+        this.B = new Point(5, 0, {dragY: false})
+        this.X = new Point(0, 0, {dragY: false})
+
+        this.points.push(this.A, this.B, this.X)
+    }
+
+    draw() {
+        this
+            .grid({axisY: false})
             .dragRelease()
 
-        const AX = A.x - X.x
-        const XB = X.x - B.x
+        const
+            A = this.A,
+            B = this.B,
+            X = this.X
 
-        /*
-        div.innerHTML = `<div><b>AX</b> = |<b>A</b> - <b>X</b>| = |${A.x.toFixed(2)} - ${X.x.toFixed(2)}| = |${AX.toFixed(2)}| = ${Math.abs(AX).toFixed(2)}</div>`
-        div.innerHTML += `<div><b>XB</b> = |<b>X</b> - <b>B</b>| = |${X.x.toFixed(2)} - ${B.x.toFixed(2)}| = |${XB.toFixed(2)}| = ${Math.abs(XB).toFixed(2)}</div>`
-         */
-
-        grid
+        this
             .point(A, {trackX: true, name: 'A'})
             .point(B, {trackX: true, name: 'B'})
             .point(X, {trackX: true, name: 'X'})
-
-    })
-
-    const A = new Point(-5, 0, {dragY: false})
-    const B = new Point(5, 0, {dragY: false})
-    const X = new Point(0, 0, {dragY: false})
-
-    grid.dragAdd(A, B, X)
+    }
 }
+
+CanvasGrid.define(CanvasNumberLine)

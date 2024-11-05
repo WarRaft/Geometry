@@ -1,61 +1,90 @@
-/** @callback GridDraw */
+const cssvar = (name) => window.getComputedStyle(document.documentElement).getPropertyValue(name)
 
-/** @typedef {import('../math/point.mjs').Point} Point */
+class CanvasGrid extends HTMLElement {
+    /** @type {Map <string, boolean>} */ static map = new Map()
 
-class Grid {
-    /** @type {Map < string, Grid>} */ static map = new Map()
+    static name = 'canvas-grid'
+    static sheet = new CSSStyleSheet()
 
     /**
-     * @param {string} id
-     * @param {GridDraw} draw
+     * @param {CanvasGrid} constructor
      */
-    constructor(id, draw) {
-        this.#id = id
-        this.redraw = this.redraw.bind(this)
-        this.#draw = draw
-        Grid.map.set(id, this)
+    static define(constructor) {
+        // noinspection JSUnresolvedReference,JSCheckFunctionSignatures
+        customElements.define(constructor.name, constructor)
+        // noinspection JSUnresolvedReference
+        CanvasGrid.map.set(constructor.name, true)
     }
 
+    constructor() {
+        super()
+        const shadow = this.attachShadow({mode: 'open'})
+        shadow.adoptedStyleSheets = [CanvasGrid.sheet]
 
-    /** @type {string} */ #id
-    /** @type {HTMLDivElement} */ #container = null
-    /** @type {HTMLCanvasElement} */ #canvas = null
-    /** @type {CanvasRenderingContext2D} */ #ctx
-    #raf = 0
-    /** @type {GridDraw} */ #draw
+        this.container = document.createElement('div')
+        shadow.appendChild(this.container)
+        this.container.classList.add('container')
 
-    #centerX = 0
-    #centerY = 0
+        this.canvas = document.createElement('canvas')
+        this.ctx = this.canvas.getContext('2d')
+        this.container.appendChild(this.canvas)
 
-    /** @return {number} */ get #step() {
+        this.pointerdown = this.pointerdown.bind(this)
+        this.canvas.addEventListener('pointerdown', this.pointerdown)
+
+        this.redraw = this.redraw.bind(this)
+    }
+
+    /** @type {HTMLDivElement} */ container
+    /** @type {HTMLCanvasElement} */ canvas
+    /** @type {CanvasRenderingContext2D} */ ctx
+    raf = 0
+    centerX = 0
+    centerY = 0
+    pointRadius = 6
+
+    // noinspection JSUnusedGlobalSymbols
+    connectedCallback() {
+        this.redraw()
+        //console.log('💋connectedCallback')
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    disconnectedCallback() {
+        cancelAnimationFrame(this.raf)
+        //console.log('🔥disconnectedCallback')
+    }
+
+    // ================
+    /** @return {number} */ get step() {
         const s = window.innerWidth > 800 ? 25 : 20
         return s * (window.devicePixelRatio ?? 1)
     }
 
-    #pointRadius = 6
-
     /**
-     * @param {?number} dx
-     * @param {?number} dy
+     * @param {number} dx
+     * @param {number} dy
      * @param {boolean} axisX
      * @param {boolean} axisY
-     * @return {Grid}
+     * @return {this}
      */
-    grid(dx = .5, dy = .5, {
-        axisX = true,
-        axisY = true
-    } = {}) {
-        const cw = this.#canvas.width
-        const ch = this.#canvas.height
+    grid({
+             dx = .5,
+             dy = .5,
+             axisX = true,
+             axisY = true
+         } = {}) {
+        const cw = this.canvas.width
+        const ch = this.canvas.height
         const cx = cw * dx
         const cy = ch * dy
-        this.#centerX = cx
-        this.#centerY = cy
+        this.centerX = cx
+        this.centerY = cy
 
-        const ctx = this.#ctx
+        const ctx = this.ctx
 
         const dpr = window.devicePixelRatio ?? 1
-        const step = this.#step
+        const step = this.step
 
         const cminx = Math.trunc(cx / step)
         const cminy = Math.trunc(cy / step)
@@ -160,7 +189,8 @@ class Grid {
      * @param {string?} name
      * @param {number[]} dash
      * @param {boolean} ray
-     * @return {Grid}
+     * @param {number} padding
+     * @return {this}
      */
     point(point, {
         trackX = false,
@@ -168,18 +198,19 @@ class Grid {
         name,
         dash = [],
         ray = false,
+        padding = 0,
     } = {}) {
         const dpr = window.devicePixelRatio ?? 1
-        const step = this.#step
-        const r = this.#pointRadius * dpr
+        const step = this.step
+        const r = this.pointRadius * dpr
 
-        const cx = this.#centerX
-        const cy = this.#centerY
+        const cx = this.centerX
+        const cy = this.centerY
 
         const x = cx + point.x * step
         const y = cy + point.y * step
 
-        const ctx = this.#ctx
+        const ctx = this.ctx
 
         if (trackX || trackY) {
             ctx.beginPath()
@@ -196,7 +227,7 @@ class Grid {
                     ctx.moveTo(x, y - r)
                     xy = cy - step
                 }
-                ctx.lineTo(x, xy)
+                ctx.lineTo(x, xy  - (padding * dpr))
             }
 
             if (trackY) {
@@ -217,6 +248,7 @@ class Grid {
             // === text
             ctx.save()
             ctx.scale(1, -1)
+
             /**
              * @param {number} value
              * @param {number} x
@@ -264,7 +296,7 @@ class Grid {
                 ctx.fillText(t, tx, ty)
                 ctx.closePath()
             }
-            if (trackX) text(point.x, x, xy, true)
+            if (trackX) text(point.x, x, xy - (padding * dpr), true)
             if (trackY) text(point.y, yx, y, false)
 
             ctx.restore()
@@ -284,8 +316,7 @@ class Grid {
             ctx.beginPath()
             ctx.strokeStyle = Color.point.fill
             ctx.moveTo(x + r, y)
-            ctx.lineTo(this.#canvas.width, y)
-
+            ctx.lineTo(this.canvas.width, y)
             ctx.stroke()
             ctx.closePath()
         }
@@ -296,7 +327,7 @@ class Grid {
             ctx.scale(1, -1)
             const m = ctx.measureText(name)
             ctx.fillStyle = Color.point.name
-            ctx.fillText(name, x - m.width * .5, -y - r - 4 * dpr)
+            ctx.fillText(name, x - m.width * .5, -y - r - 4 * dpr - (padding * dpr))
             ctx.restore()
             ctx.closePath()
         }
@@ -309,19 +340,19 @@ class Grid {
      * @param {Point} b
      * @param {number[]} dash
      * @param {boolean} line
-     * @return {Grid}
+     * @return {this}
      */
     segment(a, b, {
         dash = [],
         line = false
     } = {}) {
         const dpr = window.devicePixelRatio ?? 1
-        const step = this.#step
-        const r = this.#pointRadius * dpr
-        const ctx = this.#ctx
+        const step = this.step
+        const r = this.pointRadius * dpr
+        const ctx = this.ctx
 
-        const cx = this.#centerX
-        const cy = this.#centerY
+        const cx = this.centerX
+        const cy = this.centerY
 
         const ax = cx + a.x * step
         const ay = cy + a.y * step
@@ -349,7 +380,7 @@ class Grid {
         ctx.closePath()
 
         if (line) {
-            const ld = Math.max(this.#canvas.width, this.#canvas.height) * 10
+            const ld = Math.max(this.canvas.width, this.canvas.height) * 10
 
             ctx.beginPath()
             ctx.strokeStyle = Color.point.track.fill
@@ -371,18 +402,18 @@ class Grid {
     /**
      * @param {Point[]} points
      * @param {string} color
-     * @return {Grid}
+     * @return {this}
      */
     polygon(points, {
         color = Color.polygon.fill
     } = {}) {
         if (points.length < 2) return this
 
-        const ctx = this.#ctx
-        const step = this.#step
+        const ctx = this.ctx
+        const step = this.step
 
-        const cx = this.#centerX
-        const cy = this.#centerY
+        const cx = this.centerX
+        const cy = this.centerY
 
         ctx.beginPath()
         ctx.moveTo(cx + points[0].x * step, cy + points[0].y * step)
@@ -398,18 +429,18 @@ class Grid {
 
     /**
      * @param {Point} point
-     * @return {Grid}
+     * @return {this}
      */
     circle(point) {
         const dpr = window.devicePixelRatio ?? 1
-        const step = this.#step
-        const pr = this.#pointRadius * dpr
-        const cr = this.#canvas.width * .5 - step * 3
+        const step = this.step
+        const pr = this.pointRadius * dpr
+        const cr = this.canvas.width * .5 - step * 3
 
-        const cx = this.#centerX
-        const cy = this.#centerY
+        const cx = this.centerX
+        const cy = this.centerY
 
-        const ctx = this.#ctx
+        const ctx = this.ctx
 
         const px = cx + point.x * step
         const py = cy + point.y * step
@@ -530,19 +561,19 @@ class Grid {
      * @param {number} a
      * @param {number} b
      * @param {number[]} dash
-     * @return {Grid}
+     * @return {this}
      */
     arc(point, radius, a, b, {
         dash = []
     } = {}) {
         if (AngleNormalize(b - a) < 0) [a, b] = [b, a]
 
-        const step = this.#step
+        const step = this.step
 
-        const cx = this.#centerX
-        const cy = this.#centerY
+        const cx = this.centerX
+        const cy = this.centerY
 
-        const ctx = this.#ctx
+        const ctx = this.ctx
 
         const px = cx + point.x * step
         const py = cy + point.y * step
@@ -559,61 +590,52 @@ class Grid {
 
     // === Events
 
-    #dx = 0
-    #dy = 0
+    dx = 0
+    dy = 0
     /** @type {PointerEvent} */ #pointer = null
-    /** @type {Point[]} */ #points = []
+    /** @type {Point[]} */ points = []
     /** @type {Point} */ #point = null
 
     dragRelease() {
         if (this.#point === null) return this
         const dpr = window.devicePixelRatio ?? 1
-        const step = this.#step
+        const step = this.step
 
-        this.#point.drag(this.#dx * dpr / step, -this.#dy * dpr / step)
-        return this
-    }
-
-    /**
-     * @param {...Point} points
-     * @return {Grid}
-     */
-    dragAdd(...points) {
-        for (const point of points) this.#points.push(point)
+        this.#point.drag(this.dx * dpr / step, -this.dy * dpr / step)
         return this
     }
 
     /** @param {PointerEvent} e */
-    #pointerdown(e) {
+    pointerdown(e) {
         if (!e.isPrimary) return
-        const c = this.#canvas
+        const c = this.canvas
         if (c === null) return
         if (e.pointerType === 'mouse' && e.button !== 0) return
         this.#pointer = e
         c.setPointerCapture(e.pointerId)
 
-        if (this.#points.length > 0) {
-            const rect = this.#container.getBoundingClientRect()
+        if (this.points.length > 0) {
+            const rect = this.container.getBoundingClientRect()
             const dpr = window.devicePixelRatio ?? 1
-            const step = this.#step
+            const step = this.step
 
-            const x = ((e.clientX - rect.x) * dpr - this.#centerX) / step
-            const y = (this.#canvas.height - (e.clientY - rect.y) * dpr - this.#centerY) / step
+            const x = ((e.clientX - rect.x) * dpr - this.centerX) / step
+            const y = (this.canvas.height - (e.clientY - rect.y) * dpr - this.centerY) / step
 
             /**
              * @param {Point} p
              * @return {number}
              */
             const dist = p => (x - p.x) ** 2 + (y - p.y) ** 2
-            this.#points.sort((a, b) => dist(a) - dist(b))
+            this.points.sort((a, b) => dist(a) - dist(b))
 
-            this.#point = this.#points[0]
+            this.#point = this.points[0]
         }
 
         c.onpointermove = e => {
             if (!e.isPrimary) return
-            this.#dx += e.clientX - this.#pointer.clientX
-            this.#dy += e.clientY - this.#pointer.clientY
+            this.dx += e.clientX - this.#pointer.clientX
+            this.dy += e.clientY - this.#pointer.clientY
             this.#pointer = e
         }
 
@@ -625,69 +647,60 @@ class Grid {
         }
     }
 
+    draw() {
+    }
+
     // === Redraw
-
     redraw() {
-        if (this.#container === null || !this.#container.isConnected) return
-        if (this.#canvas === null || !this.#canvas.isConnected) return
-
         const dpr = window.devicePixelRatio ?? 1
 
-        const rect = this.#container.getBoundingClientRect()
+        const rect = this.container.getBoundingClientRect()
 
-        this.#canvas.width = rect.width * dpr
+        this.canvas.width = rect.width * dpr
         const h = rect.height * dpr
-        this.#canvas.height = h
+        this.canvas.height = h
 
-        const ctx = this.#ctx
+        const ctx = this.ctx
 
         ctx.lineJoin = 'miter'
         ctx.lineWidth = dpr
-        ctx.font = `${12 * dpr}px JetBrainsMono`
+        ctx.font = `${12 * dpr}px ${cssvar('--rs-font-family-ui')}`
 
         ctx.scale(1, -1)
         ctx.translate(0, -h)
 
-        const repeat = this.#draw(this)
-        this.#dx = 0
-        this.#dy = 0
+        const repeat = this.draw()
 
-        if (repeat !== false) this.#raf = requestAnimationFrame(this.redraw)
+        this.dx = 0
+        this.dy = 0
 
-        this.#container.dataset.raf = this.#raf.toString()
-    }
-
-    /**
-     * @param {HTMLElement} container
-     */
-    start(container) {
-        if (this.#container !== null) this.#container.remove()
-        const code = container.querySelector('.code')
-        if (code === null) return
-        code.textContent = ''
-        code.style.display = 'block'
-        code.style.padding = '0'
-
-        this.#container = document.createElement('div')
-
-        code.appendChild(this.#container)
-
-        this.#container.classList.add('canvas-wrap')
-
-        this.#canvas = document.createElement('canvas')
-        this.#ctx = this.#canvas.getContext('2d')
-        this.#container.appendChild(this.#canvas)
-
-        this.#canvas.addEventListener('pointerdown', this.#pointerdown.bind(this))
-        this.redraw()
-    }
-
-    stop() {
-        this.#container.remove()
-        this.#container = null
-
-        this.#canvas.remove()
-        this.#canvas = null
-        cancelAnimationFrame(this.#raf)
+        if (repeat !== false) this.raf = requestAnimationFrame(this.redraw)
     }
 }
+
+// noinspection CssUnusedSymbol,CssUnresolvedCustomProperty
+CanvasGrid.sheet.replaceSync(
+    //language=CSS
+    `
+        .container {
+            display: block;
+            position: relative;
+            width: 100%;
+            min-height: 200px;
+            margin: 0;
+            border-radius: 8px;
+            background-color: var(--wh-color-white-t5);
+            overflow: hidden;
+        }
+
+        canvas {
+            position: absolute;
+            inset: 0;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    `)
+
+
+CanvasGrid.define(CanvasGrid)

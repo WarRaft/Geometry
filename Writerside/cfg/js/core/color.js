@@ -16,7 +16,7 @@ const Color = {
         base: '#419d30',
         step: '#11e81a',
         text: '#da0a3d',
-        grid: '#282727',
+        grid: '#373636',
     },
     polygon: {
         fill: 'rgba(19,140,222,0.25)',
