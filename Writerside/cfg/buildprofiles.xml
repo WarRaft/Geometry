@@ -36,6 +36,7 @@
             <include-in-head>js/core/point.js</include-in-head>
             <include-in-head>js/example/number-line.js</include-in-head>
             <include-in-head>js/example/number-line-abs.js</include-in-head>
+            <include-in-head>js/example/number-line-distance.js</include-in-head>
 
             <include-in-head>js/core/observe.js</include-in-head>
             <include-in-head>js/head-end.html</include-in-head>

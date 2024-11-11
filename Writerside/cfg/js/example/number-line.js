@@ -3,12 +3,11 @@ class CanvasNumberLine extends CanvasGrid {
 
     constructor() {
         super()
-
-        this.A = new Point(-5, 0, {dragY: false})
-        this.B = new Point(5, 0, {dragY: false})
-        this.X = new Point(0, 0, {dragY: false})
-
-        this.points.push(this.A, this.B, this.X)
+        this.points.push(
+            new Point(-5, 0, {dragY: false}),
+            new Point(5, 0, {dragY: false}),
+            new Point(0, 0, {dragY: false})
+        )
     }
 
     draw() {
@@ -16,10 +15,7 @@ class CanvasNumberLine extends CanvasGrid {
             .grid({axisY: false})
             .dragRelease()
 
-        const
-            A = this.A,
-            B = this.B,
-            X = this.X
+        const [A, B, X] = this.points
 
         this
             .point(A, {trackX: true, name: 'A'})

@@ -9,5 +9,6 @@
     <toc-element topic="intro.md"/>
     <toc-element topic="number-line.md">
         <toc-element topic="number-line-abs.md"/>
+        <toc-element topic="number-line-distance.md"/>
     </toc-element>
 </instance-profile>

@@ -56,10 +56,34 @@ class CanvasGrid extends HTMLElement {
         //console.log('🔥disconnectedCallback')
     }
 
+    /** @type {HTMLLabelElement} */ intvalContainer
+    intval = false
+
+    /**
+     * @param checked
+     */
+    intvalCreate(checked = false) {
+        const c = document.createElement('label')
+        this.intvalContainer = c
+        this.container.appendChild(c)
+
+        c.classList.add('intval')
+        c.innerHTML = '<input type="checkbox"><span>Выровнять по сетке</span>'
+
+        const ch = c.querySelector('input')
+        ch.checked = this.intval = checked
+        ch.addEventListener('change', () => {
+            this.intval = ch.checked
+        })
+    }
+
     // ================
+    /** @return {number} */  get height() {
+        return 8
+    }
+
     /** @return {number} */ get step() {
-        const s = window.innerWidth > 800 ? 25 : 20
-        return s * (window.devicePixelRatio ?? 1)
+        return 25 * (window.devicePixelRatio ?? 1)
     }
 
     /**
@@ -183,10 +207,12 @@ class CanvasGrid extends HTMLElement {
         return this
     }
 
+
     /**
      * @param {Point} point
      * @param {boolean} trackX
      * @param {boolean} trackY
+     * @param {boolean} intval
      * @param {string?} name
      * @param {number[]} dash
      * @param {boolean} ray
@@ -196,6 +222,7 @@ class CanvasGrid extends HTMLElement {
     point(point, {
         trackX = false,
         trackY = false,
+        intval = false,
         name,
         dash = [],
         ray = false,
@@ -258,7 +285,7 @@ class CanvasGrid extends HTMLElement {
              */
             const text = (value, x, y, v) => {
                 ctx.beginPath()
-                const t = value.toFixed(2)
+                const t = intval ? Math.round(value).toString() : value.toFixed(2)
                 const m = ctx.measureText(t)
                 const th = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent
 
@@ -292,8 +319,8 @@ class CanvasGrid extends HTMLElement {
 
                 ctx.fill()
 
-                ctx.textAlign = 'center'
                 ctx.fillStyle = Color.point.track.text
+                ctx.textAlign = 'center'
                 ctx.fillText(t, tx, ty)
                 ctx.closePath()
             }
@@ -628,9 +655,12 @@ class CanvasGrid extends HTMLElement {
              * @return {number}
              */
             const dist = p => (x - p.x) ** 2 + (y - p.y) ** 2
-            this.points.sort((a, b) => dist(a) - dist(b))
 
-            this.#point = this.points[0]
+            let lowest = 0
+            for (let i = 1; i < this.points.length; i++) {
+                if (dist(this.points[i]) < dist(this.points[lowest])) lowest = i
+            }
+            this.#point = this.points[lowest]
         }
 
         c.onpointermove = e => {
@@ -655,17 +685,17 @@ class CanvasGrid extends HTMLElement {
     redraw() {
         const dpr = window.devicePixelRatio ?? 1
 
-        const rect = this.container.getBoundingClientRect()
+        this.canvas.width = this.container.getBoundingClientRect().width * dpr
+        const rh = (this.step / dpr) * this.height
+        this.container.style.height = `${rh}px`
 
-        this.canvas.width = rect.width * dpr
-        const h = rect.height * dpr
+        const h = rh * dpr
         this.canvas.height = h
 
         const ctx = this.ctx
 
         ctx.lineJoin = 'miter'
         ctx.lineWidth = dpr
-        //ctx.font = `${12 * dpr}px ${cssvar('--rs-font-family-ui')}`
         ctx.font = `${12 * dpr}px ${cssvar('font-family')}`
 
         ctx.scale(1, -1)
@@ -688,7 +718,6 @@ CanvasGrid.sheet.replaceSync(
             display: block;
             position: relative;
             width: 100%;
-            min-height: 200px;
             margin: 0;
             border-radius: 8px;
             background-color: var(--wh-color-white-t5);
@@ -702,6 +731,40 @@ CanvasGrid.sheet.replaceSync(
             width: 100%;
             height: 100%;
         }
+
+        .intval {
+            user-select: none;
+            position: absolute;
+            bottom: 8px;
+            left: 12px;
+            cursor: pointer;
+        }
+
+        .intval span {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        [type=checkbox] {
+            --input-background: #32a1ce;
+            --m: 0px;
+            --s: 16px;
+            display: inline-block;
+            box-sizing: border-box;
+            appearance: none;
+            width: calc(var(--s) - var(--m) * 2);
+            height: calc(var(--s) - var(--m) * 2);
+            margin: var(--m) calc(.5rem + var(--m)) var(--m) calc(var(--m));
+            vertical-align: middle;
+            border: 1px solid var(--input-background);
+        }
+
+        [type=checkbox]:checked {
+            --m: 4px;
+            outline: var(--m) double var(--input-background);
+            background-color: var(--input-background);
+        }
+
     `)
 
 
