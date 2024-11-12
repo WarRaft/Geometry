@@ -56,25 +56,27 @@ class CanvasGrid extends HTMLElement {
         //console.log('🔥disconnectedCallback')
     }
 
-    /** @type {HTMLLabelElement} */ intvalContainer
-    intval = false
+    /** @type {HTMLLabelElement} */ roundContainer
+    round = false
 
     /**
-     * @param checked
+     * @param {boolean} checked
+     * @return {this}
      */
-    intvalCreate(checked = false) {
+    roundInit(checked = false) {
         const c = document.createElement('label')
-        this.intvalContainer = c
+        this.roundContainer = c
         this.container.appendChild(c)
 
         c.classList.add('intval')
         c.innerHTML = '<input type="checkbox"><span>Выровнять по сетке</span>'
 
         const ch = c.querySelector('input')
-        ch.checked = this.intval = checked
+        ch.checked = this.round = checked
         ch.addEventListener('change', () => {
-            this.intval = ch.checked
+            this.round = ch.checked
         })
+        return this
     }
 
     // ================
@@ -130,7 +132,7 @@ class CanvasGrid extends HTMLElement {
             ctx.moveTo(0, y)
             ctx.lineTo(cw, y)
         }
-        ctx.strokeStyle = Color.axis.grid
+        ctx.strokeStyle = Color.grid.strokeStyle
         ctx.stroke()
         ctx.closePath()
 
@@ -145,7 +147,7 @@ class CanvasGrid extends HTMLElement {
                 ctx.moveTo(cx, 0)
                 ctx.lineTo(cx, ch)
             }
-            ctx.strokeStyle = Color.axis.base
+            ctx.strokeStyle = Color.axis.strokeStyle
             ctx.stroke()
             ctx.closePath()
 
@@ -167,7 +169,7 @@ class CanvasGrid extends HTMLElement {
             // text
             ctx.save()
             ctx.scale(1, -1)
-            ctx.fillStyle = Color.axis.text
+            ctx.fillStyle = Color.axis.strokeStyle
 
             if (axisX) {
                 ctx.textAlign = 'center'
@@ -179,7 +181,15 @@ class CanvasGrid extends HTMLElement {
                     const hwm = metrics.width * .5
                     if (x - hwm < 0) continue
                     if (x + hwm > cw) continue
-                    ctx.fillText(text, x, -cy + metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent + h + 4 * dpr)
+
+                    const tw = metrics.width
+                    const th = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
+
+                    const y = -cy + th + h + 4 * dpr
+                    const p = 2 * dpr
+
+                    ctx.clearRect(x - p - tw * .5, y - p - th, tw + p * 2, th + p * 2)
+                    ctx.fillText(text, x, y)
                 }
             }
 
@@ -199,7 +209,7 @@ class CanvasGrid extends HTMLElement {
             }
 
             ctx.restore()
-            ctx.strokeStyle = Color.axis.step
+            ctx.strokeStyle = Color.axis.strokeStyle
             ctx.fill()
             ctx.stroke()
             ctx.closePath()
@@ -212,21 +222,21 @@ class CanvasGrid extends HTMLElement {
      * @param {Point} point
      * @param {boolean} trackX
      * @param {boolean} trackY
-     * @param {boolean} intval
      * @param {string?} name
      * @param {number[]} dash
      * @param {boolean} ray
      * @param {number} padding
+     * @param {Color} color
      * @return {this}
      */
     point(point, {
         trackX = false,
         trackY = false,
-        intval = false,
         name,
         dash = [],
         ray = false,
         padding = 0,
+        color = Color.yellow,
     } = {}) {
         const dpr = window.devicePixelRatio ?? 1
         const step = this.step
@@ -242,7 +252,7 @@ class CanvasGrid extends HTMLElement {
 
         if (trackX || trackY) {
             ctx.beginPath()
-            ctx.strokeStyle = Color.point.track.fill
+            ctx.strokeStyle = Colors.point.track.fill
 
             // === line
             let xy, yx
@@ -285,7 +295,7 @@ class CanvasGrid extends HTMLElement {
              */
             const text = (value, x, y, v) => {
                 ctx.beginPath()
-                const t = intval ? Math.round(value).toString() : value.toFixed(2)
+                const t = point.round ? Math.round(value).toString() : value.toFixed(2)
                 const m = ctx.measureText(t)
                 const th = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent
 
@@ -314,12 +324,12 @@ class CanvasGrid extends HTMLElement {
                     }
                 }
 
-                ctx.fillStyle = Color.point.track.fill
+                ctx.fillStyle = Colors.point.track.fill
                 ctx.roundRect(rx, ry, rw, rh, [4 * dpr])
 
                 ctx.fill()
 
-                ctx.fillStyle = Color.point.track.text
+                ctx.fillStyle = Colors.point.track.text
                 ctx.textAlign = 'center'
                 ctx.fillText(t, tx, ty)
                 ctx.closePath()
@@ -331,8 +341,8 @@ class CanvasGrid extends HTMLElement {
         }
 
         ctx.beginPath()
-        ctx.fillStyle = Color.point.fill
-        ctx.strokeStyle = Color.point.stroke
+        ctx.fillStyle = color.fillStyle
+        ctx.strokeStyle = color.strokeStyle
 
         ctx.setLineDash(dash.map(v => v * dpr))
         ctx.arc(x, y, r, 0, Math.PI * 2)
@@ -342,7 +352,7 @@ class CanvasGrid extends HTMLElement {
 
         if (ray) {
             ctx.beginPath()
-            ctx.strokeStyle = Color.point.fill
+            ctx.strokeStyle = Colors.point.fill
             ctx.moveTo(x + r, y)
             ctx.lineTo(this.canvas.width, y)
             ctx.stroke()
@@ -354,7 +364,7 @@ class CanvasGrid extends HTMLElement {
             ctx.save()
             ctx.scale(1, -1)
             const m = ctx.measureText(name)
-            ctx.fillStyle = Color.point.name
+            ctx.fillStyle = Colors.point.name
             ctx.fillText(name, x - m.width * .5, -y - r - 4 * dpr - (padding * dpr))
             ctx.restore()
             ctx.closePath()
@@ -364,15 +374,58 @@ class CanvasGrid extends HTMLElement {
     }
 
     /**
+     * @param {string} text
+     * @param {?number} x
+     * @param {?number} y
+     * @param {Color} color
+     * @param {number} fontSize
+     */
+    text(text, {
+        x = null,
+        y = null,
+        color = Color.teal,
+        fontSize = 18,
+    } = {}) {
+        const dpr = window.devicePixelRatio ?? 1
+        const step = this.step
+
+        let cx = 0, cy = 0
+
+        const ctx = this.ctx
+
+        const mt = ctx.measureText(text)
+        const th = mt.actualBoundingBoxAscent + mt.actualBoundingBoxDescent
+
+        if (x !== null && y !== null) {
+            cx = this.centerX + x * step
+            cy = -this.centerY - y * step
+            if (step > th) cy -= (step - th) * .5
+        }
+
+        ctx.save()
+        ctx.scale(1, -1)
+        ctx.beginPath()
+
+        ctx.textAlign = 'center'
+        ctx.fillStyle = color.strokeStyle
+        ctx.font = `${fontSize * dpr}px ${cssvar('font-family')}`
+        ctx.fillText(text, cx, cy)
+        ctx.closePath()
+        ctx.restore()
+    }
+
+    /**
      * @param {Point} a
      * @param {Point} b
      * @param {number[]} dash
      * @param {boolean} line
+     * @param {Color} color
      * @return {this}
      */
     segment(a, b, {
         dash = [],
-        line = false
+        line = false,
+        color = Color.yellow,
     } = {}) {
         const dpr = window.devicePixelRatio ?? 1
         const step = this.step
@@ -394,7 +447,7 @@ class CanvasGrid extends HTMLElement {
         const dist = Math.sqrt(dx * dx + dy * dy) - r
 
         ctx.beginPath()
-        ctx.strokeStyle = Color.point.stroke
+        ctx.strokeStyle = color.strokeStyle
         ctx.moveTo(
             Math.cos(angle) * r + ax,
             Math.sin(angle) * r + ay
@@ -411,7 +464,7 @@ class CanvasGrid extends HTMLElement {
             const ld = Math.max(this.canvas.width, this.canvas.height) * 10
 
             ctx.beginPath()
-            ctx.strokeStyle = Color.point.track.fill
+            ctx.strokeStyle = Colors.point.track.fill
             let cos = Math.cos(angle)
             let sin = Math.sin(angle)
             ctx.moveTo(cos * r + bx, sin * r + by)
@@ -433,7 +486,7 @@ class CanvasGrid extends HTMLElement {
      * @return {this}
      */
     polygon(points, {
-        color = Color.polygon.fill
+        color = Colors.polygon.fill
     } = {}) {
         if (points.length < 2) return this
 
@@ -477,7 +530,7 @@ class CanvasGrid extends HTMLElement {
         const rad = Math.atan2(-point.y, -point.x) + Math.PI
         if (dist < cr) {
             ctx.beginPath()
-            ctx.strokeStyle = Color.point.stroke
+            ctx.strokeStyle = Colors.point.stroke
             ctx.setLineDash([3 * dpr])
             ctx.moveTo(
                 cx + Math.cos(rad) * (dist + pr),
@@ -492,21 +545,21 @@ class CanvasGrid extends HTMLElement {
         }
 
         ctx.beginPath()
-        ctx.strokeStyle = Color.point.track.fill
+        ctx.strokeStyle = Colors.point.track.fill
         ctx.setLineDash([])
         ctx.arc(cx, cy, cr, rad, Math.PI * 2)
         ctx.stroke()
         ctx.closePath()
 
         ctx.beginPath()
-        ctx.strokeStyle = Color.point.stroke
+        ctx.strokeStyle = Colors.point.stroke
         ctx.setLineDash([3 * dpr])
         ctx.arc(cx, cy, cr, 0, rad)
         ctx.stroke()
         ctx.closePath()
 
         ctx.beginPath()
-        ctx.strokeStyle = Color.point.stroke
+        ctx.strokeStyle = Colors.point.stroke
         ctx.setLineDash([3 * dpr])
         ctx.moveTo(cx + pr, cy)
         ctx.lineTo(cx + cr, cy)
@@ -518,7 +571,7 @@ class CanvasGrid extends HTMLElement {
         ctx.scale(1, -1)
         ctx.beginPath()
         ctx.setLineDash([])
-        ctx.strokeStyle = Color.point.track.fill
+        ctx.strokeStyle = Colors.point.track.fill
 
         const p = 20 * dpr
         const texts = []
@@ -548,7 +601,7 @@ class CanvasGrid extends HTMLElement {
         ctx.stroke()
         ctx.closePath()
 
-        const text = (value, x, y, inner) => {
+        const textDraw = (value, x, y, inner) => {
             ctx.beginPath()
             const t = inner ? value.toString() : value.toFixed(1)
             const m = ctx.measureText(t)
@@ -567,17 +620,17 @@ class CanvasGrid extends HTMLElement {
             let rx = x - rw * .5
             let ry = -y - th - py * .5
 
-            ctx.fillStyle = Color.point.track.fill
+            ctx.fillStyle = Colors.point.track.fill
             ctx.roundRect(rx, ry, rw, rh, [4 * dpr])
             ctx.fill()
 
             ctx.textAlign = 'center'
-            ctx.fillStyle = Color.point.track.text
+            ctx.fillStyle = Colors.point.track.text
             ctx.fillText(t, x, -y)
             ctx.closePath()
         }
 
-        for (const t of texts) text(...t)
+        for (const t of texts) textDraw(...t)
         ctx.restore()
 
         return this
@@ -609,14 +662,14 @@ class CanvasGrid extends HTMLElement {
         ctx.beginPath()
         ctx.arc(px, py, radius * step, a, b)
         ctx.setLineDash(dash)
-        ctx.strokeStyle = Color.point.stroke
+        ctx.strokeStyle = Colors.point.stroke
         ctx.stroke()
         ctx.closePath()
 
         return this
     }
 
-    // === Events
+// === Events
 
     dx = 0
     dy = 0
@@ -681,7 +734,7 @@ class CanvasGrid extends HTMLElement {
     draw() {
     }
 
-    // === Redraw
+// === Redraw
     redraw() {
         const dpr = window.devicePixelRatio ?? 1
 

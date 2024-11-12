@@ -1,5 +1,5 @@
-class CanvasNumberLine extends CanvasGrid {
-    static name = 'canvas-number-line'
+class CanvasNumberLineSegment extends CanvasGrid {
+    static name = 'canvas-number-line-segment'
 
     constructor() {
         super()
@@ -7,9 +7,8 @@ class CanvasNumberLine extends CanvasGrid {
         this
             .roundInit(true)
             .points.push(
-            new Point(-5, 0, {dragY: false}),
+            new Point(-3, 0, {dragY: false}),
             new Point(5, 0, {dragY: false}),
-            new Point(0, 0, {dragY: false})
         )
     }
 
@@ -18,15 +17,17 @@ class CanvasNumberLine extends CanvasGrid {
             .grid({axisY: false})
             .dragRelease()
 
-        const [A, B, X] = this.points
-
         for (const p of this.points) p.round = this.round
+
+        let [A, B] = this.points
+
+        if (A.x > B.x) [A, B] = [B, A]
 
         this
             .point(A, {trackX: true, name: 'A'})
             .point(B, {trackX: true, name: 'B'})
-            .point(X, {trackX: true, name: 'X'})
+            .segment(A, B)
     }
 }
 
-CanvasGrid.define(CanvasNumberLine)
+CanvasGrid.define(CanvasNumberLineSegment)

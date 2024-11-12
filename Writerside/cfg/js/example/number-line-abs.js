@@ -4,7 +4,9 @@ class CanvasNumberLineAbs extends CanvasGrid {
     constructor() {
         super()
 
-        this.points.push(new Point(-5, 0, {dragY: false}))
+        this
+            .roundInit(true)
+            .points.push(new Point(-5, 0, {dragY: false}))
     }
 
     draw() {
@@ -14,6 +16,8 @@ class CanvasNumberLineAbs extends CanvasGrid {
 
         const [A] = this.points
         const A1 = new Point(Math.abs(A.x), 0, {dragX: false, dragY: false})
+
+        A.round = A1.round = this.round
 
         this
             .point(A, {trackX: true, name: 'A'})

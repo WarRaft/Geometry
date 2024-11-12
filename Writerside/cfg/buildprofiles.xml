@@ -17,7 +17,8 @@
             <showDownloadButton>true</showDownloadButton>
 
             <webmaster>nazarpunk@gmail.com</webmaster>
-            <og-image>https://repository-images.githubusercontent.com/878606540/9408810b-00d4-45ad-9667-fc7d23b4718a</og-image>
+            <og-image>https://repository-images.githubusercontent.com/878606540/9408810b-00d4-45ad-9667-fc7d23b4718a
+            </og-image>
 
             <!-- https://www.jetbrains.com/help/writerside/buildprofiles-xml.html#resizable-sidebar -->
             <resizable-sidebar>true</resizable-sidebar>
@@ -37,6 +38,8 @@
             <include-in-head>js/example/number-line.js</include-in-head>
             <include-in-head>js/example/number-line-abs.js</include-in-head>
             <include-in-head>js/example/number-line-distance.js</include-in-head>
+            <include-in-head>js/example/number-line-segment.js</include-in-head>
+            <include-in-head>js/example/number-line-segment-intersect.js</include-in-head>
 
             <include-in-head>js/core/observe.js</include-in-head>
             <include-in-head>js/head-end.html</include-in-head>
