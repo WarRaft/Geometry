@@ -31,9 +31,9 @@ class CanvasGrid extends HTMLElement {
         this.container.appendChild(this.canvas)
 
         this.pointerdown = this.pointerdown.bind(this)
-        this.canvas.addEventListener('pointerdown', this.pointerdown)
-
         this.redraw = this.redraw.bind(this)
+
+        this.canvas.addEventListener('pointerdown', this.pointerdown, {passive: false})
     }
 
     /** @type {HTMLDivElement} */ container
@@ -694,6 +694,7 @@ class CanvasGrid extends HTMLElement {
         if (e.pointerType === 'mouse' && e.button !== 0) return
         this.#pointer = e
         c.setPointerCapture(e.pointerId)
+        e.stopImmediatePropagation()
 
         if (this.points.length > 0) {
             const rect = this.container.getBoundingClientRect()
@@ -734,7 +735,7 @@ class CanvasGrid extends HTMLElement {
     draw() {
     }
 
-// === Redraw
+    // === Redraw
     redraw() {
         const dpr = window.devicePixelRatio ?? 1
 
@@ -778,6 +779,7 @@ CanvasGrid.sheet.replaceSync(
         }
 
         canvas {
+            touch-action: none;
             position: absolute;
             inset: 0;
             display: block;
