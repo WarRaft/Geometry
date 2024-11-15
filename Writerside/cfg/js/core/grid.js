@@ -418,13 +418,13 @@ class CanvasGrid extends HTMLElement {
      * @param {Point} a
      * @param {Point} b
      * @param {number[]} dash
-     * @param {boolean} line
+     * @param {Color?} line
      * @param {Color} color
      * @return {this}
      */
     segment(a, b, {
         dash = [],
-        line = false,
+        line = null,
         color = Color.yellow,
     } = {}) {
         const dpr = window.devicePixelRatio ?? 1
@@ -460,11 +460,11 @@ class CanvasGrid extends HTMLElement {
         ctx.stroke()
         ctx.closePath()
 
-        if (line) {
+        if (line !== null) {
             const ld = Math.max(this.canvas.width, this.canvas.height) * 10
 
             ctx.beginPath()
-            ctx.strokeStyle = Colors.point.track.fill
+            ctx.strokeStyle = line.strokeStyle
             let cos = Math.cos(angle)
             let sin = Math.sin(angle)
             ctx.moveTo(cos * r + bx, sin * r + by)

@@ -35,11 +35,17 @@
             <include-in-head>js/core/color.js</include-in-head>
             <include-in-head>js/core/grid.js</include-in-head>
             <include-in-head>js/core/point.js</include-in-head>
+
             <include-in-head>js/example/number-line.js</include-in-head>
             <include-in-head>js/example/number-line-abs.js</include-in-head>
             <include-in-head>js/example/number-line-distance.js</include-in-head>
             <include-in-head>js/example/number-line-segment.js</include-in-head>
             <include-in-head>js/example/number-line-segment-intersect.js</include-in-head>
+
+            <include-in-head>js/example/cartesian-coordinate-system.js</include-in-head>
+            <include-in-head>js/example/cartesian-point-distance-a.js</include-in-head>
+            <include-in-head>js/example/cartesian-point-distance-b.js</include-in-head>
+            <include-in-head>js/example/cartesian-line.js</include-in-head>
 
             <include-in-head>js/core/observe.js</include-in-head>
             <include-in-head>js/head-end.html</include-in-head>
