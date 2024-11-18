@@ -1,4 +1,4 @@
-class CartesianPointDistanceA extends CanvasGrid {
+class CartesianPointDistanceA extends CanvasDraw {
     static name = 'canvas-cartesian-point-distance-a'
 
     get height() {
@@ -15,7 +15,7 @@ class CartesianPointDistanceA extends CanvasGrid {
         )
     }
 
-    draw() {
+    drawOld() {
         this.grid().dragRelease()
 
         const [A] = this.points
@@ -28,11 +28,11 @@ class CartesianPointDistanceA extends CanvasGrid {
 
 
         this
-            .point(A, {trackX: true, trackY: true, name: 'A'})
-            .point(O, {name: '(0,0)', dash: [2, 2]})
+            .pointOld(A, {trackX: true, trackY: true, name: 'A'})
+            .pointOld(O, {name: '(0,0)', dash: [2, 2]})
             .segment(A, O, {dash: [2, 2]})
             .text(`Расстояние ${d.toFixed(2)}`, {x: 0, y: 4})
     }
 }
 
-CanvasGrid.define(CartesianPointDistanceA)
+CanvasDraw.define(CartesianPointDistanceA)

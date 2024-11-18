@@ -1,4 +1,4 @@
-class CartesianLineSlope extends CanvasGrid {
+class CartesianLineSlope extends CanvasDraw {
     static name = 'canvas-cartesian-line-slope'
 
     get height() {
@@ -16,8 +16,7 @@ class CartesianLineSlope extends CanvasGrid {
         )
     }
 
-    draw() {
-        // noinspection DuplicatedCode
+    drawOld() {
         this.grid().dragRelease()
 
         const [A, B] = this.points
@@ -25,8 +24,8 @@ class CartesianLineSlope extends CanvasGrid {
         for (const p of this.points) p.round = this.round
 
         this
-            .point(A, {trackX: true, trackY: true, name: 'A'})
-            .point(B, {trackX: true, trackY: true, name: 'B'})
+            .pointOld(A, {trackX: true, trackY: true, name: 'A'})
+            .pointOld(B, {trackX: true, trackY: true, name: 'B'})
 
         if (A.x === B.x && A.y === B.y) {
             this.text('Прямая не определена', {x: 0, y: 4, color: Color.yellow})
@@ -41,8 +40,8 @@ class CartesianLineSlope extends CanvasGrid {
         const B1 = new Point(dx, dy)
 
         this
-            .point(A1, {name: 'A′'})
-            .point(B1, {name: 'B′'})
+            .pointOld(A1, {name: 'A′'})
+            .pointOld(B1, {name: 'B′'})
             .segment(A, B, {line: Color.yellow})
             .segment(A1, B1, {line: Color.yellow, dash: [2, 2]})
 
@@ -56,4 +55,4 @@ class CartesianLineSlope extends CanvasGrid {
     }
 }
 
-CanvasGrid.define(CartesianLineSlope)
+CanvasDraw.define(CartesianLineSlope)

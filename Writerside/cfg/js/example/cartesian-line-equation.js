@@ -1,4 +1,4 @@
-class CartesianLineEquation extends CanvasGrid {
+class CartesianLineEquation extends CanvasDraw {
     static name = 'canvas-cartesian-line-equation'
 
     get height() {
@@ -16,8 +16,7 @@ class CartesianLineEquation extends CanvasGrid {
         )
     }
 
-    draw() {
-        // noinspection DuplicatedCode
+    drawOld() {
         this.grid().dragRelease()
 
         const [A, B] = this.points
@@ -25,8 +24,8 @@ class CartesianLineEquation extends CanvasGrid {
         for (const p of this.points) p.round = this.round
 
         this
-            .point(A, {trackX: true, trackY: true, name: 'A'})
-            .point(B, {trackX: true, trackY: true, name: 'B'})
+            .pointOld(A, {trackX: true, trackY: true, name: 'A'})
+            .pointOld(B, {trackX: true, trackY: true, name: 'B'})
 
         if (A.x === B.x && A.y === B.y) {
             this.text('Прямая не определена', {x: 0, y: 4, color: Color.yellow})
@@ -47,4 +46,4 @@ class CartesianLineEquation extends CanvasGrid {
     }
 }
 
-CanvasGrid.define(CartesianLineEquation)
+CanvasDraw.define(CartesianLineEquation)

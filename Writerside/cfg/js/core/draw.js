@@ -1,25 +1,25 @@
 const cssvar = (name) => window.getComputedStyle(document.body).getPropertyValue(name)
 
-class CanvasGrid extends HTMLElement {
+class CanvasDraw extends HTMLElement {
     /** @type {Map <string, boolean>} */ static map = new Map()
 
     static name = 'canvas-grid'
     static sheet = new CSSStyleSheet()
 
     /**
-     * @param {CanvasGrid} constructor
+     * @param {CanvasDraw} constructor
      */
     static define(constructor) {
         // noinspection JSUnresolvedReference,JSCheckFunctionSignatures
         customElements.define(constructor.name, constructor)
         // noinspection JSUnresolvedReference
-        CanvasGrid.map.set(constructor.name, true)
+        CanvasDraw.map.set(constructor.name, true)
     }
 
     constructor() {
         super()
         const shadow = this.attachShadow({mode: 'open'})
-        shadow.adoptedStyleSheets = [CanvasGrid.sheet]
+        shadow.adoptedStyleSheets = [CanvasDraw.sheet]
 
         this.container = document.createElement('div')
         shadow.appendChild(this.container)
@@ -31,6 +31,7 @@ class CanvasGrid extends HTMLElement {
 
         this.pointerdown = this.pointerdown.bind(this)
         this.redraw = this.redraw.bind(this)
+        this.redrawOld = this.redrawOld.bind(this)
 
         this.canvas.addEventListener('pointerdown', this.pointerdown, {passive: false})
     }
@@ -43,8 +44,13 @@ class CanvasGrid extends HTMLElement {
     centerY = 0
     pointRadius = 6
 
+    /** @return {number} */ get dpr() {
+        return window.devicePixelRatio ?? 1
+    }
+
     // noinspection JSUnusedGlobalSymbols
     connectedCallback() {
+        this.redrawOld()
         this.redraw()
         //console.log('💋connectedCallback')
     }
@@ -79,11 +85,13 @@ class CanvasGrid extends HTMLElement {
     }
 
     // ================
-    /** @return {number} */  get height() {
+    /** @return {number}
+     *  @deprecated */  get height() {
         return 8
     }
 
-    /** @return {number} */ get step() {
+    /** @return {number}
+     * @deprecated */ get step() {
         return 25 * (window.devicePixelRatio ?? 1)
     }
 
@@ -93,6 +101,7 @@ class CanvasGrid extends HTMLElement {
      * @param {boolean} axisX
      * @param {boolean} axisY
      * @return {this}
+     * @deprecated
      */
     grid({
              dx = .5,
@@ -216,7 +225,6 @@ class CanvasGrid extends HTMLElement {
         return this
     }
 
-
     /**
      * @param {Point} point
      * @param {boolean} trackX
@@ -227,8 +235,9 @@ class CanvasGrid extends HTMLElement {
      * @param {number} padding
      * @param {Color} color
      * @return {this}
+     * @deprecated
      */
-    point(point, {
+    pointOld(point, {
         trackX = false,
         trackY = false,
         name,
@@ -733,8 +742,20 @@ class CanvasGrid extends HTMLElement {
     draw() {
     }
 
-    // === Redraw
     redraw() {
+        const repeat = this.draw()
+
+        this.dx = 0
+        this.dy = 0
+
+        if (repeat !== false) this.raf = requestAnimationFrame(this.redraw)
+    }
+
+    drawOld() {
+    }
+
+    // === Redraw
+    redrawOld() {
         const dpr = window.devicePixelRatio ?? 1
 
         this.canvas.width = this.container.getBoundingClientRect().width * dpr
@@ -753,17 +774,17 @@ class CanvasGrid extends HTMLElement {
         ctx.scale(1, -1)
         ctx.translate(0, -h)
 
-        const repeat = this.draw()
+        const repeat = this.drawOld()
 
         this.dx = 0
         this.dy = 0
 
-        if (repeat !== false) this.raf = requestAnimationFrame(this.redraw)
+        if (repeat !== false) this.raf = requestAnimationFrame(this.redrawOld)
     }
 }
 
 // noinspection CssUnusedSymbol,CssUnresolvedCustomProperty
-CanvasGrid.sheet.replaceSync(
+CanvasDraw.sheet.replaceSync(
     //language=CSS
     `
         .container {
@@ -821,4 +842,4 @@ CanvasGrid.sheet.replaceSync(
     `)
 
 
-CanvasGrid.define(CanvasGrid)
+CanvasDraw.define(CanvasDraw)

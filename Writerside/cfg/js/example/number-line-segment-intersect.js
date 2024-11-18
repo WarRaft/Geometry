@@ -1,4 +1,4 @@
-class CanvasNumberLineSegmentIntersect extends CanvasGrid {
+class CanvasNumberLineSegmentIntersect extends CanvasDraw {
     static name = 'canvas-number-line-segment-intersect'
 
     constructor() {
@@ -14,7 +14,7 @@ class CanvasNumberLineSegmentIntersect extends CanvasGrid {
         )
     }
 
-    draw() {
+    drawOld() {
         this
             .grid({axisY: false})
             .dragRelease()
@@ -47,12 +47,12 @@ class CanvasNumberLineSegmentIntersect extends CanvasGrid {
         const pc = (a, b, c) => intersect && a === b ? Color.teal : c
 
         this
-            .point(A, {trackX: true, name: 'A', color: pc(A, lp, Color.yellow)})
-            .point(B, {trackX: true, name: 'B', color: pc(B, rp, Color.yellow)})
+            .pointOld(A, {trackX: true, name: 'A', color: pc(A, lp, Color.yellow)})
+            .pointOld(B, {trackX: true, name: 'B', color: pc(B, rp, Color.yellow)})
             .segment(A, B)
 
-            .point(C, {trackX: true, name: 'C', color: pc(C, lp, Color.blue)})
-            .point(D, {trackX: true, name: 'D', color: pc(D, rp, Color.blue)})
+            .pointOld(C, {trackX: true, name: 'C', color: pc(C, lp, Color.blue)})
+            .pointOld(D, {trackX: true, name: 'D', color: pc(D, rp, Color.blue)})
             .segment(C, D, {color: Color.blue})
 
         if (intersect) {
@@ -61,4 +61,4 @@ class CanvasNumberLineSegmentIntersect extends CanvasGrid {
     }
 }
 
-CanvasGrid.define(CanvasNumberLineSegmentIntersect)
+CanvasDraw.define(CanvasNumberLineSegmentIntersect)

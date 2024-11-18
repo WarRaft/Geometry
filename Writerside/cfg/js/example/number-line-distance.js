@@ -1,4 +1,4 @@
-class CanvasNumberLineDistance extends CanvasGrid {
+class CanvasNumberLineDistance extends CanvasDraw {
     static name = 'canvas-number-line-distance'
 
     constructor() {
@@ -12,7 +12,7 @@ class CanvasNumberLineDistance extends CanvasGrid {
         )
     }
 
-    draw() {
+    drawOld() {
         this
             .grid({axisY: false})
             .dragRelease()
@@ -25,12 +25,12 @@ class CanvasNumberLineDistance extends CanvasGrid {
         A.round = A1.round = B.round = B1.round = this.round
 
         this
-            .point(A, {trackX: true, name: 'A'})
-            .point(B, {trackX: true, name: 'B'})
+            .pointOld(A, {trackX: true, name: 'A'})
+            .pointOld(B, {trackX: true, name: 'B'})
 
-            .point(A1, {trackX: true, name: 'A′', padding: 20, dash: [2, 2]})
-            .point(B1, {trackX: true, name: 'B′', padding: 20, dash: [2, 2]})
+            .pointOld(A1, {trackX: true, name: 'A′', padding: 20, dash: [2, 2]})
+            .pointOld(B1, {trackX: true, name: 'B′', padding: 20, dash: [2, 2]})
     }
 }
 
-CanvasGrid.define(CanvasNumberLineDistance)
+CanvasDraw.define(CanvasNumberLineDistance)

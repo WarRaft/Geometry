@@ -1,4 +1,4 @@
-class CanvasNumberLineAbs extends CanvasGrid {
+class CanvasNumberLineAbs extends CanvasDraw {
     static name = 'canvas-number-line-abs'
 
     constructor() {
@@ -9,7 +9,7 @@ class CanvasNumberLineAbs extends CanvasGrid {
             .points.push(new Point(-5, 0, {dragY: false}))
     }
 
-    draw() {
+    drawOld() {
         this
             .grid({axisY: false})
             .dragRelease()
@@ -20,10 +20,10 @@ class CanvasNumberLineAbs extends CanvasGrid {
         A.round = A1.round = this.round
 
         this
-            .point(A, {trackX: true, name: 'A'})
-            .point(A1, {trackX: true, name: '|A|', padding: 20, dash: [2, 2]})
+            .pointOld(A, {trackX: true, name: 'A'})
+            .pointOld(A1, {trackX: true, name: '|A|', padding: 20, dash: [2, 2]})
 
     }
 }
 
-CanvasGrid.define(CanvasNumberLineAbs)
+CanvasDraw.define(CanvasNumberLineAbs)

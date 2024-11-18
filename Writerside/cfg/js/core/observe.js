@@ -5,7 +5,7 @@
     const check = (id) => {
         const elem = document.getElementById(id)
         if (elem === null || !elem.isConnected) return
-        if (!CanvasGrid.map.get(id)) return
+        if (!CanvasDraw.map.get(id)) return
         elem.textContent = ''
         elem.appendChild(document.createElement(id))
     }
@@ -23,7 +23,7 @@
             }
         })
 
-        CanvasGrid.map.forEach((_, key) => {
+        CanvasDraw.map.forEach((_, key) => {
             check(key)
         })
 

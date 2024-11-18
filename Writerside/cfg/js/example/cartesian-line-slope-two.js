@@ -1,4 +1,4 @@
-class CartesianLineSlopeTwo extends CanvasGrid {
+class CartesianLineSlopeTwo extends CanvasDraw {
     static name = 'canvas-cartesian-line-slope-two'
 
     get height() {
@@ -18,7 +18,7 @@ class CartesianLineSlopeTwo extends CanvasGrid {
         )
     }
 
-    draw() {
+    drawOld() {
         this.grid().dragRelease()
 
         const [A, B, C, D] = this.points
@@ -26,10 +26,10 @@ class CartesianLineSlopeTwo extends CanvasGrid {
         for (const p of this.points) p.round = this.round
 
         this
-            .point(A, {name: 'A'})
-            .point(B, {name: 'B'})
-            .point(C, {name: 'C'})
-            .point(D, {name: 'D'})
+            .pointOld(A, {name: 'A'})
+            .pointOld(B, {name: 'B'})
+            .pointOld(C, {name: 'C'})
+            .pointOld(D, {name: 'D'})
 
 
         const errA = A.x === B.x && A.y === B.y
@@ -58,4 +58,4 @@ class CartesianLineSlopeTwo extends CanvasGrid {
     }
 }
 
-CanvasGrid.define(CartesianLineSlopeTwo)
+CanvasDraw.define(CartesianLineSlopeTwo)

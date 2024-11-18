@@ -1,4 +1,4 @@
-class CartesianLine extends CanvasGrid {
+class CartesianLine extends CanvasDraw {
     static name = 'canvas-cartesian-line'
 
     get height() {
@@ -16,7 +16,7 @@ class CartesianLine extends CanvasGrid {
         )
     }
 
-    draw() {
+    drawOld() {
         this.grid().dragRelease()
 
         const [A, B] = this.points
@@ -24,8 +24,8 @@ class CartesianLine extends CanvasGrid {
         for (const p of this.points) p.round = this.round
 
         this
-            .point(A, {trackX: true, trackY: true, name: 'A'})
-            .point(B, {trackX: true, trackY: true, name: 'B'})
+            .pointOld(A, {trackX: true, trackY: true, name: 'A'})
+            .pointOld(B, {trackX: true, trackY: true, name: 'B'})
 
         if (A.x === B.x && A.y === B.y) {
             this.text('Прямая не определена', {x: 0, y: 4, color: Color.yellow})
@@ -35,4 +35,4 @@ class CartesianLine extends CanvasGrid {
     }
 }
 
-CanvasGrid.define(CartesianLine)
+CanvasDraw.define(CartesianLine)

@@ -1,4 +1,4 @@
-class CartesianCoordinateSystem extends CanvasGrid {
+class CartesianCoordinateSystem extends CanvasDraw {
     static name = 'cartesian-coordinate-system'
 
     get height() {
@@ -15,15 +15,15 @@ class CartesianCoordinateSystem extends CanvasGrid {
         )
     }
 
-    draw() {
+    drawOld() {
         this.grid().dragRelease()
 
         const [A] = this.points
 
         for (const p of this.points) p.round = this.round
 
-        this.point(A, {trackX: true, trackY: true, name: 'A'})
+        this.pointOld(A, {trackX: true, trackY: true, name: 'A'})
     }
 }
 
-CanvasGrid.define(CartesianCoordinateSystem)
+CanvasDraw.define(CartesianCoordinateSystem)
