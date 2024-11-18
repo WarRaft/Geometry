@@ -1,8 +1,8 @@
-class CartesianLine extends CanvasGrid {
-    static name = 'canvas-cartesian-line'
+class CartesianLineEquation extends CanvasGrid {
+    static name = 'canvas-cartesian-line-equation'
 
     get height() {
-        return 12
+        return 18
     }
 
     constructor() {
@@ -12,11 +12,12 @@ class CartesianLine extends CanvasGrid {
             .roundInit(true)
             .points.push(
             new Point(2, 3),
-            new Point(-2, 1),
+            new Point(-2, -5),
         )
     }
 
     draw() {
+        // noinspection DuplicatedCode
         this.grid().dragRelease()
 
         const [A, B] = this.points
@@ -29,10 +30,21 @@ class CartesianLine extends CanvasGrid {
 
         if (A.x === B.x && A.y === B.y) {
             this.text('Прямая не определена', {x: 0, y: 4, color: Color.yellow})
+            return
         }
 
         this.segment(A, B, {line: Color.yellow})
+
+        if (A.x === B.x) {
+            this.text('Уравнение не определено для вертикальной прямой', {x: 0, y: 6, color: Color.yellow})
+            return
+        }
+
+        const k = (B.y - A.y) / (B.x - A.x)
+        const b = A.y - k * A.x
+
+        this.text(`y = ${k.toFixed(2)} * x + ${b.toFixed(2)}`, {x: 0, y: 6})
     }
 }
 
-CanvasGrid.define(CartesianLine)
+CanvasGrid.define(CartesianLineEquation)

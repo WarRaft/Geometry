@@ -10,13 +10,16 @@
     <toc-element topic="number-line.md">
         <toc-element topic="number-line-abs.md"/>
         <toc-element topic="number-line-distance.md"/>
-        <toc-element topic="number-line-segment.md"/>
-        <toc-element topic="number-line-segment-intersect.md"/>
+        <toc-element topic="number-line-segment.md">
+            <toc-element topic="number-line-segment-intersect.md"/>
+        </toc-element>
     </toc-element>
     <toc-element topic="cartesian-coordinate-system.md">
         <toc-element topic="cartesian-point-distance.md"/>
-        <toc-element topic="cartesian-line.md"/>
-        <toc-element topic="cartesian-line-equation.md"/>
+        <toc-element topic="cartesian-line.md">
+            <toc-element topic="cartesian-line-slope.md"/>
+            <toc-element topic="cartesian-line-equation.md"/>
+        </toc-element>
     </toc-element>
     <toc-element topic="donate.md"/>
 </instance-profile>

@@ -9,10 +9,68 @@
         }
 
         html, body {
-            background-color: #252528;
+            background-color: #19191c;
+            margin: 0;
+            font-family: 'JetBrains Sans', serif;
         }
 
+        div[id] {
+            background-color: #252528;
+            margin: 12px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        div[id]::before {
+            content: attr(id);
+            position: absolute;
+            z-index: 9999;
+            font-size: 12px;
+            top: 3px;
+            right: 8px;
+        }
+        /* @formatter:off  */
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-Thin.ttf'); font-weight: 100; font-style: normal; }
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-ThinItalic.ttf'); font-weight: 100; font-style: italic; }
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-ExtraLight.ttf'); font-weight: 200; font-style: normal; }
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-ExtraLightItalic.ttf'); font-weight: 200; font-style: italic; }
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-Light.ttf'); font-weight: 300; font-style: normal; }
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-LightItalic.ttf'); font-weight: 300; font-style: italic; }
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-Regular.ttf'); font-weight: 400; font-style: normal; }
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-RegularItalic.ttf'); font-weight: 400; font-style: italic; }
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-Medium.ttf'); font-weight: 600; font-style: normal; }
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-MediumItalic.ttf'); font-weight: 600; font-style: italic; }
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-SemiBold.ttf'); font-weight: 700; font-style: normal; }
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-SemiBoldItalic.ttf'); font-weight: 700; font-style: italic; }
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-Bold.ttf'); font-weight: 800; font-style: normal; }
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-BoldItalic.ttf'); font-weight: 800; font-style: italic; }
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-ExtraBold.ttf'); font-weight: 900; font-style: normal; }
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-ExtraBoldItalic.ttf'); font-weight: 900; font-style: italic; }
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-Black.ttf'); font-weight: 1000; font-style: normal; }
+        @font-face { font-family: 'JetBrains Sans'; src: url('https://warraft.github.io/Geometry/frontend/Montserrat-BlackItalic.ttf'); font-weight: 1000; font-style: italic; }
+        /* @formatter:on */
     </style>
+
+    <!--
+    var can = document.getElementById('canvas1');
+var ctx = can.getContext('2d');
+
+ctx.lineWidth = 1;
+
+// linear gradient from start to end of line
+var grad= ctx.createLinearGradient(50, 50, 150, 150);
+grad.addColorStop(0, "red");
+grad.addColorStop(1, "green");
+
+ctx.strokeStyle = grad;
+
+ctx.beginPath();
+ctx.moveTo(50,50);
+ctx.lineTo(150,150);
+
+ctx.stroke();
+    -->
 
     <script type="text/javascript" src="../core/color.js"></script>
     <script type="text/javascript" src="../core/grid.js"></script>
@@ -24,10 +82,12 @@
     <script type="text/javascript" src="number-line-segment.js"></script>
     <script type="text/javascript" src="number-line-segment-intersect.js"></script>
 
-
     <script type="text/javascript" src="cartesian-line.js"></script>
     <script type="text/javascript" src="cartesian-point-distance-a.js"></script>
     <script type="text/javascript" src="cartesian-point-distance-b.js"></script>
+    <script type="text/javascript" src="cartesian-line-slope.js"></script>
+    <script type="text/javascript" src="cartesian-line-slope-two.js"></script>
+    <script type="text/javascript" src="cartesian-line-equation.js"></script>
 
 
     <script type="text/javascript" src="../core/observe.js"></script>
@@ -35,7 +95,13 @@
 
 <body>
 
-<div id="canvas-cartesian-point-distance-b"></div>
+<div id="canvas-number-line"></div>
+<div id="canvas-number-line-abs"></div>
+<div id="canvas-number-line-distance"></div>
+<div id="canvas-number-line-segment"></div>
+<div id="canvas-number-line-segment-intersect"></div>
+
+<div id="canvas-cartesian-line"></div>
 
 </body>
 

@@ -1,6 +1,5 @@
 const cssvar = (name) => window.getComputedStyle(document.body).getPropertyValue(name)
 
-
 class CanvasGrid extends HTMLElement {
     /** @type {Map <string, boolean>} */ static map = new Map()
 
@@ -669,8 +668,7 @@ class CanvasGrid extends HTMLElement {
         return this
     }
 
-// === Events
-
+    // === Events
     dx = 0
     dy = 0
     /** @type {PointerEvent} */ #pointer = null

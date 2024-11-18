@@ -1,4 +1,7 @@
 const Colors = {
+    /**
+     * @deprecated
+     */
     point: {
         fill: 'rgba(239,172,16,0.36)',
         stroke: '#efac10',
