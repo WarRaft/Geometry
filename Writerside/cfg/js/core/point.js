@@ -18,6 +18,7 @@ class Point {
     /** @type {number} */ #x
     /** @type {number} */ #y
     /** @type {boolean} */ round = false
+    /** @type {Rect} */ rect
 
     get x() {
         return this.round ? Math.round(this.#x) : this.#x
@@ -36,11 +37,13 @@ class Point {
     }
 
     /**  @return {string} */ get xs() {
-        return this.#x.toFixed(this.round ? 0 : 2)
+        const out = this.#x.toFixed(this.round ? 0 : 2)
+        return out === '-0' ? '0' : out
     }
 
     /**  @return {string} */ get ys() {
-        return this.#y.toFixed(this.round ? 0 : 2)
+        const out = this.#x.toFixed(this.round ? 0 : 2)
+        return out === '-0' ? '0' : out
     }
 
     /**

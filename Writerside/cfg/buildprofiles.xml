@@ -36,6 +36,7 @@
             <include-in-head>js/core/draw.js</include-in-head>
             <include-in-head>js/core/cartesian.js</include-in-head>
             <include-in-head>js/core/point.js</include-in-head>
+            <include-in-head>js/core/rect.js</include-in-head>
 
             <include-in-head>js/example/number-line.js</include-in-head>
             <include-in-head>js/example/number-line-abs.js</include-in-head>

@@ -22,6 +22,7 @@
       "error",
       "single"
     ],
+    "no-compare-neg-zero": "off",
     "no-extra-boolean-cast": "off",
     "no-unsafe-optional-chaining": "off",
     "no-console": "warn",

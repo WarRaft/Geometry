@@ -56,6 +56,7 @@ class Cartesian {
     #height = 0
     round = false
     /** @type {Point[]} */ points = []
+    /** @type {Point[]} */ #points = []
     /** @type {Point|null} */ pointDrag = null
 
     /**
@@ -81,6 +82,7 @@ class Cartesian {
          } = {}
     ) {
         this.#axisY = y
+        this.#points = []
 
         // -- vars
         const draw = this.#draw
@@ -258,20 +260,29 @@ class Cartesian {
             ctx.setLineDash([])
             ctx.save()
             ctx.scale(1, -1)
-            ctx.textAlign = 'left'
-            ctx.font = `${16 * dpr}px ${cssvar('font-family')}`
 
-            const m = ctx.measureText(name)
+            const ra = Rect.fromText(ctx, name, {
+                x: x,
+                alignX: .5,
+                y: -y - radius - 4 * dpr,
+                color: color,
+                fontSize: 16 * dpr,
+            })
 
-            ctx.fillStyle = color.strokeStyle
+            const rb = Rect.fromText(
+                ctx, `(${point.xs}${this.#axisY ? `, ${point.ys}` : ''})`, {
+                    fontSize: 12 * dpr,
+                    color: color,
+                    x: ra.maxX,
+                    y: ra.maxY,
+                }
+            )
 
-            const tx = x - m.width * .5
-            const ty = -y - radius - 4 * dpr
+            point.rect = Rect.expand(ra, rb)
+            this.#points.push(point)
 
-            ctx.fillText(name, tx, ty)
-
-            ctx.font = `${12 * dpr}px ${cssvar('font-family')}`
-            ctx.fillText(`(${point.xs}${this.#axisY ? `, ${point.ys}` : ''})`, tx + 2 * dpr + m.width, ty)
+            ra.fill()
+            rb.fill()
 
             ctx.restore()
             ctx.closePath()

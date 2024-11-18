@@ -4,11 +4,11 @@ class CanvasNumberLine extends CanvasDraw {
     constructor() {
         super()
 
-        const c = this.cartesian = new Cartesian(this, 5, {round: true})
+        const c = this.cartesian = new Cartesian(this, 5, {round: false})
 
         c.points.push(
-            new Point(-5, 0, {dragY: false}),
-            new Point(5, 0, {dragY: false}),
+            new Point(0, 0, {dragY: false}),
+            new Point(0, 0, {dragY: false}),
             new Point(0, 0, {dragY: false})
         )
     }
