@@ -40,9 +40,19 @@ class Color {
         strokeStyle: '#efac10',
     })
 
+    static red = new Color({
+        fillStyle: 'rgba(239,16,16,0.36)',
+        strokeStyle: '#ed0c21',
+    })
+
+    static green = new Color({
+        fillStyle: 'rgba(27,232,37,0.36)',
+        strokeStyle: '#1bbd3c',
+    })
+
     static blue = new Color({
         fillStyle: 'rgba(27,85,232,0.36)',
-        strokeStyle: '#2165e6',
+        strokeStyle: '#516ee8',
     })
 
     /**

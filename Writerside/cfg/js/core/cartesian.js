@@ -3,24 +3,88 @@ class Cartesian {
     /**
      * @param {CanvasDraw} draw
      * @param {number} height
+     * @param {?boolean} round
      */
-    constructor(draw, height) {
+    constructor(draw, height, {
+        round = null
+    } = {}) {
         this.#draw = draw
         this.#height = height * 2
+
+        if (round !== null) {
+            const c = document.createElement('label')
+            draw.container.appendChild(c)
+
+            c.classList.add('intval')
+            c.innerHTML = '<input type="checkbox"><span>Выровнять по сетке</span>'
+
+            const ch = c.querySelector('input')
+            ch.checked = this.round = round
+            ch.addEventListener('change', () => this.round = ch.checked)
+        }
+
+        draw.pointerdownCallback = (e) => {
+            const rect = draw.canvas.getBoundingClientRect()
+            const dpr = draw.dpr
+            const step = this.#step
+
+            const x = ((e.clientX - rect.x) * dpr - this.#ox) / step
+            const y = (this.#canvasHeight - (e.clientY - rect.y) * dpr - this.#oy) / step
+
+            const dist = p => (x - p.x) ** 2 + (y - p.y) ** 2
+
+            let lowest = 0
+            for (let i = 1; i < this.points.length; i++) {
+                if (dist(this.points[i]) < dist(this.points[lowest])) lowest = i
+            }
+            this.pointDrag = this.points[lowest]
+        }
+
+        draw.pointerupCallback = () => {
+            this.pointDrag = null
+        }
     }
 
     /** @type {CanvasDraw} */ #draw
-    /** @type {number} */ #ox
-    /** @type {number} */ #oy
-    /** @type {number} */ #step
-    /** @type {number} */ #height
+    /** @type {CanvasRenderingContext2D} */ #ctx
 
-    axis(x = true,
-         y = true,
+    #ox = 0
+    #oy = 0
+    #canvasHeight = 0
+    #step = 0
+    #axisY = true
+    #height = 0
+    round = false
+    /** @type {Point[]} */ points = []
+    /** @type {Point|null} */ pointDrag = null
+
+    /**
+     * @return {this}
+     */
+    drag() {
+        if (this.pointDrag === null) return this
+        const draw = this.#draw
+        const dpr = draw.dpr
+        const step = this.#step
+        this.pointDrag.drag(draw.dx * dpr / step, -draw.dy * dpr / step)
+        return this
+    }
+
+    /**
+     * @param {boolean} x
+     * @param {boolean} y
+     * @return {this}
+     */
+    axis({
+             x = true,
+             y = true,
+         } = {}
     ) {
+        this.#axisY = y
+
         // -- vars
         const draw = this.#draw
-        const ctx = draw.ctx
+        const ctx = this.#ctx = draw.ctx
         const dpr = draw.dpr
         const canvas = draw.canvas
         const container = draw.container
@@ -42,7 +106,7 @@ class Cartesian {
         const coh = stepNoDpr * this.#height + 1
         container.style.height = `${coh}px`
 
-        const caH = canvas.height = coh * dpr
+        const caH = this.#canvasHeight = canvas.height = coh * dpr
         const oY = this.#oy = caH * .5
 
         // -- scale
@@ -153,7 +217,68 @@ class Cartesian {
             ctx.stroke()
             ctx.closePath()
         }
+
         return this
     }
+
+    /**
+     * @param {Point} point
+     * @param dash
+     * @param {number} radius
+     * @param {Color} color
+     * @param name
+     * @return {this}
+     */
+    point(point, {
+        name = '',
+        color = Color.yellow,
+        dash = [],
+        radius = 6,
+    } = {}) {
+        const ctx = this.#ctx
+        const dpr = this.#draw.dpr
+
+        radius *= dpr
+
+        const x = this.#ox + point.x * this.#step
+        const y = this.#oy + point.y * this.#step
+
+        ctx.beginPath()
+        ctx.fillStyle = color.fillStyle
+        ctx.strokeStyle = color.strokeStyle
+
+        ctx.setLineDash(dash.map(v => v * dpr))
+        ctx.arc(x, y, radius, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.stroke()
+        ctx.closePath()
+
+        if (name.length > 0) {
+            ctx.beginPath()
+            ctx.setLineDash([])
+            ctx.save()
+            ctx.scale(1, -1)
+            ctx.textAlign = 'left'
+            ctx.font = `${16 * dpr}px ${cssvar('font-family')}`
+
+            const m = ctx.measureText(name)
+
+            ctx.fillStyle = color.strokeStyle
+
+            const tx = x - m.width * .5
+            const ty = -y - radius - 4 * dpr
+
+            ctx.fillText(name, tx, ty)
+
+            ctx.font = `${12 * dpr}px ${cssvar('font-family')}`
+            ctx.fillText(`(${point.xs}${this.#axisY ? `, ${point.ys}` : ''})`, tx + 2 * dpr + m.width, ty)
+
+            ctx.restore()
+            ctx.closePath()
+        }
+
+        return this
+    }
+
 
 }

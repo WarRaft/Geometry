@@ -33,7 +33,8 @@
             <include-in-head>js/head-start.html</include-in-head>
 
             <include-in-head>js/core/color.js</include-in-head>
-            <include-in-head>js/core/grid.js</include-in-head>
+            <include-in-head>js/core/draw.js</include-in-head>
+            <include-in-head>js/core/cartesian.js</include-in-head>
             <include-in-head>js/core/point.js</include-in-head>
 
             <include-in-head>js/example/number-line.js</include-in-head>

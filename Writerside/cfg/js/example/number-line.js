@@ -4,35 +4,26 @@ class CanvasNumberLine extends CanvasDraw {
     constructor() {
         super()
 
-        this
-            .roundInit(true)
-            .points.push(
-            new Point(-5, 0, {color: Color.yellow, dragY: false}),
+        const c = this.cartesian = new Cartesian(this, 5, {round: true})
+
+        c.points.push(
+            new Point(-5, 0, {dragY: false}),
             new Point(5, 0, {dragY: false}),
             new Point(0, 0, {dragY: false})
         )
-
-        this.cartesian = new Cartesian(this, 5)
     }
 
     draw() {
-        this.cartesian.axis()
+        const c = this.cartesian.axis({y: false}).drag()
 
-        if (0) {
-            this
-                .grid({axisY: false})
-                .dragRelease()
+        const [A, B, X] = c.points
 
-            const [A, B, X] = this.points
+        for (const p of c.points) p.round = c.round
 
-            for (const p of this.points) p.round = this.round
-
-
-            this
-                .pointOld(A, {trackX: true, name: 'A'})
-                .pointOld(B, {trackX: true, name: 'B'})
-                .pointOld(X, {trackX: true, name: 'X'})
-        }
+        c
+            .point(A, {name: 'A', color: Color.red})
+            .point(B, {name: 'B', color: Color.green})
+            .point(X, {name: 'X', color: Color.blue})
     }
 
     redrawOld() {

@@ -66,6 +66,7 @@ class CanvasDraw extends HTMLElement {
 
     /**
      * @param {boolean} checked
+     * @deprecated
      * @return {this}
      */
     roundInit(checked = false) {
@@ -684,6 +685,10 @@ class CanvasDraw extends HTMLElement {
     /** @type {Point[]} */ points = []
     /** @type {Point} */ #point = null
 
+    /**
+     * @deprecated
+     * @return {CanvasDraw}
+     */
     dragRelease() {
         if (this.#point === null) return this
         const dpr = window.devicePixelRatio ?? 1
@@ -691,6 +696,15 @@ class CanvasDraw extends HTMLElement {
 
         this.#point.drag(this.dx * dpr / step, -this.dy * dpr / step)
         return this
+    }
+
+    // noinspection JSUnusedLocalSymbols
+    /** @param {PointerEvent} e */
+    pointerdownCallback = (e) => {
+    }
+    pointermoveCallback = () => {
+    }
+    pointerupCallback = () => {
     }
 
     /** @param {PointerEvent} e */
@@ -702,6 +716,8 @@ class CanvasDraw extends HTMLElement {
         this.#pointer = e
         c.setPointerCapture(e.pointerId)
         e.stopImmediatePropagation()
+
+        this.pointerdownCallback(e)
 
         if (this.points.length > 0) {
             const rect = this.container.getBoundingClientRect()
@@ -726,6 +742,7 @@ class CanvasDraw extends HTMLElement {
 
         c.onpointermove = e => {
             if (!e.isPrimary) return
+            this.pointermoveCallback()
             this.dx += e.clientX - this.#pointer.clientX
             this.dy += e.clientY - this.#pointer.clientY
             this.#pointer = e
@@ -733,6 +750,7 @@ class CanvasDraw extends HTMLElement {
 
         c.onpointerup = e => {
             if (!e.isPrimary) return
+            this.pointerupCallback()
             this.#point = null
             c.onpointermove = null
             c.onpointerup = null
@@ -743,18 +761,21 @@ class CanvasDraw extends HTMLElement {
     }
 
     redraw() {
-        const repeat = this.draw()
+        const draw = this.draw()
 
         this.dx = 0
         this.dy = 0
 
-        if (repeat !== false) this.raf = requestAnimationFrame(this.redraw)
+        if (draw !== false) this.raf = requestAnimationFrame(this.redraw)
     }
 
     drawOld() {
     }
 
     // === Redraw
+    /**
+     * @deprecated
+     */
     redrawOld() {
         const dpr = window.devicePixelRatio ?? 1
 

@@ -1,21 +1,16 @@
 class Point {
-    color
-
     /**
      * @param {number} x
      * @param {number} y
-     * @param {Color} color
      * @param {boolean} dragX
      * @param {boolean} dragY
      */
     constructor(x, y, {
-        color = Color.yellow,
         dragX = true,
         dragY = true
     } = {}) {
         this.#x = x
         this.#y = y
-        this.color = color
         this.dragX = dragX
         this.dragY = dragY
     }
@@ -38,6 +33,14 @@ class Point {
 
     /** @param {number} y */ set y(y) {
         this.#y = y
+    }
+
+    /**  @return {string} */ get xs() {
+        return this.#x.toFixed(this.round ? 0 : 2)
+    }
+
+    /**  @return {string} */ get ys() {
+        return this.#y.toFixed(this.round ? 0 : 2)
     }
 
     /**
