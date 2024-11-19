@@ -4,24 +4,28 @@ class CanvasNumberLineAbs extends CanvasDraw {
     constructor() {
         super()
 
-        this
-            .roundInit(true)
-            .points.push(new Point(-5, 0, {dragY: false}))
+        const c = this.cartesian = new Cartesian(this, 4, {round: true})
+
+        c.points.push(
+            new Point(-5, 0, {dragY: false})
+        )
     }
 
-    drawOld() {
-        this
-            .grid({axisY: false})
-            .dragRelease()
+    draw() {
+        const c = this.cartesian.axis({y: false}).drag()
 
-        const [A] = this.points
-        const A1 = new Point(Math.abs(A.x), 0, {dragX: false, dragY: false})
+        const [A] = c.points
+        const A1 = new Point(Math.abs(A.x), 0)
 
-        A.round = A1.round = this.round
+        A.round = A1.round = c.round
 
-        this
-            .pointOld(A, {trackX: true, name: 'A'})
-            .pointOld(A1, {trackX: true, name: '|A|', padding: 20, dash: [2, 2]})
+        c
+            .point(A, {name: 'A', color: Color.red})
+            .point(A1, {name: '|A|', color: Color.redA, dash: [2, 2]})
+
+    }
+
+    redrawOld() {
 
     }
 }

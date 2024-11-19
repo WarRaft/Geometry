@@ -14,7 +14,7 @@ $$|-3| = 3$$
 
 ```.``` {id=canvas-number-line-abs}
 
-## Вычисление в игре {id="game"}
+## Вычисление в игре {id=game}
 
 <tabs>
     <tab id="AngelScript" title="AngelScript">

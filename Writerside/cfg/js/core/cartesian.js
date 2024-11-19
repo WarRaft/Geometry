@@ -52,6 +52,7 @@ class Cartesian {
     #oy = 0
     #canvasHeight = 0
     #step = 0
+    #dpr = 1
     #axisY = true
     #height = 0
     round = false
@@ -87,7 +88,7 @@ class Cartesian {
         // -- vars
         const draw = this.#draw
         const ctx = this.#ctx = draw.ctx
-        const dpr = draw.dpr
+        const dpr = this.#dpr = draw.dpr
         const canvas = draw.canvas
         const container = draw.container
 
@@ -238,9 +239,11 @@ class Cartesian {
         radius = 6,
     } = {}) {
         const ctx = this.#ctx
-        const dpr = this.#draw.dpr
+        const dpr = this.#dpr
 
-        radius *= dpr
+        point.radius = radius * dpr
+        point.color = color
+        point.name = name
 
         const x = this.#ox + point.x * this.#step
         const y = this.#oy + point.y * this.#step
@@ -250,7 +253,7 @@ class Cartesian {
         ctx.strokeStyle = color.strokeStyle
 
         ctx.setLineDash(dash.map(v => v * dpr))
-        ctx.arc(x, y, radius, 0, Math.PI * 2)
+        ctx.arc(x, y, point.radius, 0, Math.PI * 2)
         ctx.fill()
         ctx.stroke()
         ctx.closePath()
@@ -261,10 +264,12 @@ class Cartesian {
             ctx.save()
             ctx.scale(1, -1)
 
+            const gap = 5 * dpr
+
             const ra = Rect.fromText(ctx, name, {
                 x: x,
                 alignX: .5,
-                y: -y - radius - 4 * dpr,
+                y: -y - point.radius - gap,
                 color: color,
                 fontSize: 16 * dpr,
             })
@@ -279,6 +284,22 @@ class Cartesian {
             )
 
             point.rect = Rect.expand(ra, rb)
+
+            const i = () => {
+                for (const p of this.#points) {
+                    if (!p.rect.intesect(point.rect)) continue
+                    const ty = p.rect.minY - point.rect.maxY - gap
+                    if (ty > 0) continue
+                    point.rect = Rect.expand(
+                        ra.translate(0, ty),
+                        rb.translate(0, ty)
+                    )
+                    i()
+                    break
+                }
+            }
+            i()
+
             this.#points.push(point)
 
             ra.fill()
@@ -291,5 +312,117 @@ class Cartesian {
         return this
     }
 
+    /**
+     * @param {Point} a
+     * @param {Point} b
+     * @param {number[]} dash
+     * @return {this}
+     */
+    segment(a, b, {
+        dash = [],
+    } = {}) {
+        const ctx = this.#ctx
+        const dpr = this.#dpr
 
+        const step = this.#step
+
+        const cx = this.#ox
+        const cy = this.#oy
+
+        let ax = cx + a.x * step
+        let ay = cy + a.y * step
+        let bx = cx + b.x * step
+        let by = cy + b.y * step
+
+        const dx = bx - ax
+        const dy = by - ay
+
+        const angle = Math.atan2(dy, dx)
+        const dist = Math.sqrt(dx * dx + dy * dy) - b.radius
+
+        ctx.beginPath()
+        const cos = Math.cos(angle)
+        const sin = Math.sin(angle)
+
+        bx = cos * dist + ax
+        by = sin * dist + ay
+
+        ax += cos * a.radius
+        ay += sin * a.radius
+
+        const grad = ctx.createLinearGradient(ax, ay, bx, by)
+        grad.addColorStop(0, a.color.strokeStyle)
+        grad.addColorStop(1, b.color.strokeStyle)
+        ctx.strokeStyle = grad
+
+        ctx.moveTo(ax, ay)
+        ctx.lineTo(bx, by)
+        ctx.setLineDash(dash.map(v => v * dpr))
+        ctx.stroke()
+        ctx.closePath()
+
+        /*
+        if (line !== null) {
+            const ld = Math.max(this.canvas.width, this.canvas.height) * 10
+
+            ctx.beginPath()
+            ctx.strokeStyle = line.strokeStyle
+            let cos = Math.cos(angle)
+            let sin = Math.sin(angle)
+            ctx.moveTo(cos * r + bx, sin * r + by)
+            ctx.lineTo(cos * ld + bx, sin * ld + by)
+            cos = Math.cos(angle + Math.PI)
+            sin = Math.sin(angle + Math.PI)
+            ctx.moveTo(cos * r + ax, sin * r + ay)
+            ctx.lineTo(cos * ld + ax, sin * ld + ay)
+            ctx.stroke()
+            ctx.closePath()
+        }
+
+         */
+
+        return this
+    }
+
+
+    /**
+     * @param {string} text
+     * @param {?number} x
+     * @param {?number} y
+     * @param {Color} color
+     * @param {number} fontSize
+     *
+     */
+    text(text, {
+        x = null,
+        y = null,
+        color = Color.teal,
+        fontSize = 18,
+    } = {}) {
+        const ctx = this.#ctx
+        const dpr = this.#dpr
+        const step = this.#step
+
+        let cx = 0, cy = 0
+
+        const mt = ctx.measureText(text)
+        const th = mt.actualBoundingBoxAscent + mt.actualBoundingBoxDescent
+
+        if (x !== null && y !== null) {
+            cx = this.#ox + x * step
+            cy = -this.#oy - y * step
+            if (step > th) cy -= (step - th) * .5
+        }
+
+        ctx.save()
+        ctx.scale(1, -1)
+        ctx.beginPath()
+
+        ctx.textAlign = 'center'
+        ctx.fillStyle = color.strokeStyle
+        ctx.font = `${fontSize * dpr}px ${cssvar('font-family')}`
+        ctx.fillText(text, cx, cy)
+        ctx.closePath()
+        ctx.restore()
+    }
 }

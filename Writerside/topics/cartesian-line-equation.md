@@ -6,7 +6,7 @@ $$y = k * x + b$$
 
 Где $ k $ это [углововой коэффициент](cartesian-line-slope.md), а $ b $ свободный член уравнения.
 
-```.``` {id="canvas-cartesian-line-equation"}
+```.``` {id=canvas-cartesian-line-equation}
 
 Для прямой, паралельной оси $ X $ [углововой коэффициент](cartesian-line-slope.md) равен нулю и уравнение принимает
 вид:

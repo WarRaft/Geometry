@@ -3,7 +3,7 @@
 Вычисление расстояние между точками основано на [Теореме Пифагора](https://w.wiki/7axe) и сходя из которой, расстояние
 между точкой $A(x,y)$ и началом координат $O(0,0)$ будет равно $ \sqrt{x^2 + y^2} $.
 
-```.``` {id="canvas-cartesian-point-distance-a"}
+```.``` {id=canvas-cartesian-point-distance-a}
 
 Чтобы найти расстояние между двумя произвольными точками, воспользуемся [методом](number-line-distance.md),
 который мы уже применяли на [числовой прямой](number-line.md) — сместим их таким образом, чтоб одна точка совпала с
@@ -17,5 +17,5 @@ $$B' = (B_x - A_x, B_y - A_y)$$
 
 $$ S = \sqrt{(B_x - A_x)^2 + (B_y - A_y)^2} $$
 
-```.``` {id="canvas-cartesian-point-distance-b"}
+```.``` {id=canvas-cartesian-point-distance-b}
 

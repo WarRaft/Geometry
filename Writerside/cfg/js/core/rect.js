@@ -30,6 +30,26 @@ class Rect {
         return new Rect(this.minX, this.maxX, this.minY, this.maxY)
     }
 
+    translate(x, y) {
+        this.minX += x
+        this.maxX += x
+        this.minY += y
+        this.maxY += y
+        return this
+    }
+
+    /**
+     * @param {Rect} b
+     * @return {boolean}
+     */
+    intesect(b) {
+        const li = Math.max(this.minX, b.minX)
+        const ri = Math.min(this.maxX, b.maxX)
+        const ti = Math.max(this.minY, b.minY)
+        const bi = Math.min(this.maxY, b.maxY)
+        return li < ri && ti < bi
+    }
+
     /**
      * @param {Rect} rects
      * @return {Rect}

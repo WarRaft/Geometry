@@ -4,21 +4,28 @@ class Point {
      * @param {number} y
      * @param {boolean} dragX
      * @param {boolean} dragY
+     * @param round
      */
     constructor(x, y, {
         dragX = true,
-        dragY = true
+        dragY = true,
+        round = false,
     } = {}) {
         this.#x = x
         this.#y = y
         this.dragX = dragX
         this.dragY = dragY
+        this.round = round
     }
 
-    /** @type {number} */ #x
-    /** @type {number} */ #y
-    /** @type {boolean} */ round = false
+    #x = 0
+    #y = 0
+    round = false
+    radius = 0
+    name = ''
+
     /** @type {Rect} */ rect
+    /** @type {Color} */ color
 
     get x() {
         return this.round ? Math.round(this.#x) : this.#x
@@ -42,7 +49,7 @@ class Point {
     }
 
     /**  @return {string} */ get ys() {
-        const out = this.#x.toFixed(this.round ? 0 : 2)
+        const out = this.#y.toFixed(this.round ? 0 : 2)
         return out === '-0' ? '0' : out
     }
 

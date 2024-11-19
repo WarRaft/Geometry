@@ -1,37 +1,35 @@
 class CartesianPointDistanceA extends CanvasDraw {
     static name = 'canvas-cartesian-point-distance-a'
 
-    get height() {
-        return 14
-    }
-
     constructor() {
         super()
 
-        this
-            .roundInit(false)
-            .points.push(
+        const c = this.cartesian = new Cartesian(this, 7, {round: true})
+
+        c.points.push(
             new Point(4, 3),
         )
     }
 
-    drawOld() {
-        this.grid().dragRelease()
+    draw() {
+        const c = this.cartesian.axis().drag()
 
-        const [A] = this.points
+        const [A] = c.points
 
         const O = new Point(0, 0)
 
-        A.round = O.round = this.round
+        for (const p of c.points) p.round = c.round
 
         const d = Math.sqrt(A.x * A.x + A.y * A.y)
 
-
-        this
-            .pointOld(A, {trackX: true, trackY: true, name: 'A'})
-            .pointOld(O, {name: '(0,0)', dash: [2, 2]})
+        c
+            .point(A, {name: 'A', color: Color.red})
+            .point(O, {color: Color.redA, dash: [2, 2]})
             .segment(A, O, {dash: [2, 2]})
             .text(`Расстояние ${d.toFixed(2)}`, {x: 0, y: 4})
+    }
+
+    redrawOld() {
     }
 }
 

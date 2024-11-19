@@ -1,28 +1,35 @@
 class CartesianCoordinateSystem extends CanvasDraw {
-    static name = 'cartesian-coordinate-system'
-
-    get height() {
-        return 12
-    }
+    static name = 'canvas-cartesian-coordinate-system'
 
     constructor() {
         super()
 
-        this
-            .roundInit(false)
-            .points.push(
-            new Point(5, 3),
+        const c = this.cartesian = new Cartesian(this, 7, {round: true})
+
+        c.points.push(
+            new Point(4, 4),
+            new Point(-4, 4),
+            new Point(-4, -4),
+            new Point(4, -4),
         )
     }
 
-    drawOld() {
-        this.grid().dragRelease()
+    draw() {
+        const c = this.cartesian.axis().drag()
 
-        const [A] = this.points
+        const [A, B, C, D] = c.points
 
-        for (const p of this.points) p.round = this.round
+        for (const p of c.points) p.round = c.round
 
-        this.pointOld(A, {trackX: true, trackY: true, name: 'A'})
+        c
+            .point(A, {name: 'A', color: Color.red})
+            .point(B, {name: 'B', color: Color.green})
+            .point(C, {name: 'C', color: Color.blue})
+            .point(D, {name: 'D', color: Color.yellow})
+
+    }
+
+    redrawOld() {
     }
 }
 

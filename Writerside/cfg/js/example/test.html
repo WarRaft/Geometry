@@ -53,26 +53,6 @@
         /* @formatter:on */
     </style>
 
-    <!--
-    var can = document.getElementById('canvas1');
-var ctx = can.getContext('2d');
-
-ctx.lineWidth = 1;
-
-// linear gradient from start to end of line
-var grad= ctx.createLinearGradient(50, 50, 150, 150);
-grad.addColorStop(0, "red");
-grad.addColorStop(1, "green");
-
-ctx.strokeStyle = grad;
-
-ctx.beginPath();
-ctx.moveTo(50,50);
-ctx.lineTo(150,150);
-
-ctx.stroke();
-    -->
-
     <script type="text/javascript" src="../core/color.js"></script>
     <script type="text/javascript" src="../core/draw.js"></script>
     <script type="text/javascript" src="../core/cartesian.js"></script>
@@ -85,9 +65,12 @@ ctx.stroke();
     <script type="text/javascript" src="number-line-segment.js"></script>
     <script type="text/javascript" src="number-line-segment-intersect.js"></script>
 
-    <script type="text/javascript" src="cartesian-line.js"></script>
+    <script type="text/javascript" src="cartesian-coordinate-system.js"></script>
     <script type="text/javascript" src="cartesian-point-distance-a.js"></script>
     <script type="text/javascript" src="cartesian-point-distance-b.js"></script>
+
+
+    <script type="text/javascript" src="cartesian-line.js"></script>
     <script type="text/javascript" src="cartesian-line-slope.js"></script>
     <script type="text/javascript" src="cartesian-line-slope-two.js"></script>
     <script type="text/javascript" src="cartesian-line-equation.js"></script>
@@ -104,7 +87,9 @@ ctx.stroke();
 <div id="canvas-number-line-segment"></div>
 <div id="canvas-number-line-segment-intersect"></div>
 
-<div id="canvas-cartesian-line"></div>
+<div id="canvas-cartesian-coordinate-system"></div>
+<div id="canvas-cartesian-point-distance-a"></div>
+<div id="canvas-cartesian-point-distance-b"></div>
 
 </body>
 

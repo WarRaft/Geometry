@@ -4,29 +4,30 @@ class CanvasNumberLineSegment extends CanvasDraw {
     constructor() {
         super()
 
-        this
-            .roundInit(true)
-            .points.push(
+        const c = this.cartesian = new Cartesian(this, 4, {round: true})
+
+        c.points.push(
             new Point(-3, 0, {dragY: false}),
             new Point(5, 0, {dragY: false}),
         )
     }
 
-    drawOld() {
-        this
-            .grid({axisY: false})
-            .dragRelease()
+    draw() {
+        const c = this.cartesian.axis({y: false}).drag()
 
-        for (const p of this.points) p.round = this.round
+        let [A, B] = c.points
 
-        let [A, B] = this.points
+        for (const p of c.points) p.round = c.round
 
         if (A.x > B.x) [A, B] = [B, A]
 
-        this
-            .pointOld(A, {trackX: true, name: 'A'})
-            .pointOld(B, {trackX: true, name: 'B'})
+        c
+            .point(A, {name: 'A', color: Color.red})
+            .point(B, {name: 'B', color: Color.green})
             .segment(A, B)
+    }
+
+    redrawOld() {
     }
 }
 

@@ -388,6 +388,7 @@ class CanvasDraw extends HTMLElement {
      * @param {?number} y
      * @param {Color} color
      * @param {number} fontSize
+     * @deprecated
      */
     text(text, {
         x = null,
@@ -430,6 +431,7 @@ class CanvasDraw extends HTMLElement {
      * @param {Color?} line
      * @param {Color} color
      * @return {this}
+     * @deprecated
      */
     segment(a, b, {
         dash = [],
