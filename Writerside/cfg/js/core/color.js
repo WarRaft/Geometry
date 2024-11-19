@@ -35,6 +35,10 @@ class Color {
         fillStyle: 'rgba(239,172,16,0.36)',
         strokeStyle: '#efac10',
     })
+    static yellowA = new Color({
+        fillStyle: 'rgba(189,140,21,0.36)',
+        strokeStyle: '#af8113',
+    })
 
     static red = new Color({
         fillStyle: 'rgba(239,16,16,0.36)',
@@ -59,6 +63,11 @@ class Color {
     static blue = new Color({
         fillStyle: 'rgba(27,85,232,0.36)',
         strokeStyle: '#516ee8',
+    })
+
+    static blueA = new Color({
+        fillStyle: 'rgba(26,68,174,0.36)',
+        strokeStyle: '#2e48af',
     })
 
     /**

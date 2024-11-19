@@ -20,6 +20,9 @@
             <toc-element topic="cartesian-line-slope.md"/>
             <toc-element topic="cartesian-line-equation.md"/>
         </toc-element>
+        <toc-element topic="cartesian-rect-oriented.md">
+            <toc-element topic="cartesian-rect-oriented-intersect.md"/>
+        </toc-element>
     </toc-element>
     <toc-element topic="donate.md"/>
 </instance-profile>

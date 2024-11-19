@@ -52,6 +52,9 @@
             <include-in-head>js/example/cartesian-line-slope-two.js</include-in-head>
             <include-in-head>js/example/cartesian-line-equation.js</include-in-head>
 
+            <include-in-head>js/example/cartesian-rect-oriented.js</include-in-head>
+            <include-in-head>js/example/cartesian-rect-oriented-intersect.js</include-in-head>
+
             <include-in-head>js/core/observe.js</include-in-head>
             <include-in-head>js/head-end.html</include-in-head>
 

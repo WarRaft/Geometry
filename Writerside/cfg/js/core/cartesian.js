@@ -400,6 +400,96 @@ class Cartesian {
         return this
     }
 
+    /**
+     * @param {Point} a
+     * @param {Point} b
+     */
+    rect(a, b) {
+        const ctx = this.#ctx
+        const dpr = this.#dpr
+
+        const step = this.#step
+
+        const cx = this.#ox
+        const cy = this.#oy
+
+        const ar = a.radius
+        const br = b.radius
+
+        const ax = cx + a.x * step
+        const ay = cy + a.y * step
+        const bx = cx + b.x * step
+        const by = cy + b.y * step
+
+        const grad = ctx.createLinearGradient(ax, ay, bx, by)
+        grad.addColorStop(0, a.color.strokeStyle)
+        grad.addColorStop(1, b.color.strokeStyle)
+        ctx.strokeStyle = grad
+
+        ctx.beginPath()
+
+        const brt = br + 20 * dpr
+
+        // ↖️↗️
+        if (bx - ax > ar) {
+            ctx.moveTo(ax + ar, ay)
+
+            ctx.lineTo(ay - by > brt ? bx : bx - 10 * dpr, ay)
+        }
+
+        // ↗️
+        // ↘️
+        if (ay - by > brt) {
+            ctx.moveTo(bx, ay)
+            ctx.lineTo(bx, by + brt)
+        }
+
+        // ↖️
+        // ↙️
+        if (ay - by > ar) {
+            ctx.moveTo(ax, ay - ar)
+            ctx.lineTo(ax, by)
+        }
+
+        // ↙️↘️
+        if (bx - ax > ar) {
+            ctx.moveTo(ax, by)
+            ctx.lineTo(bx - br, by)
+        }
+
+        ctx.stroke()
+        ctx.closePath()
+
+        return this
+    }
+
+    /**
+     * @param {Point[]} points
+     * @param {string} color
+     * @return {this}
+     */
+    polygon(points, {
+        color = Colors.polygon.fill
+    } = {}) {
+        if (points.length < 2) return this
+
+        const ctx = this.#ctx
+        const step = this.#step
+
+        const cx = this.#ox
+        const cy = this.#oy
+
+        ctx.beginPath()
+        ctx.moveTo(cx + points[0].x * step, cy + points[0].y * step)
+        for (let i = 1; i < points.length; i++) {
+            ctx.lineTo(cx + points[i].x * step, cy + points[i].y * step)
+        }
+        ctx.fillStyle = color
+        //ctx.strokeStyle = Color.polygon.stroke
+        ctx.fill('evenodd')
+        ctx.closePath()
+        return this
+    }
 
     /**
      * @param {string} text
@@ -407,7 +497,7 @@ class Cartesian {
      * @param {?number} y
      * @param {Color} color
      * @param {number} fontSize
-     *
+     * @return {this}
      */
     text(text, {
         x = null,
@@ -440,5 +530,7 @@ class Cartesian {
         ctx.fillText(text, cx, cy)
         ctx.closePath()
         ctx.restore()
+
+        return this
     }
 }

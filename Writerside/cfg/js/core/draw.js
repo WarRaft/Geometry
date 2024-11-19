@@ -61,34 +61,6 @@ class CanvasDraw extends HTMLElement {
     }
 
     /**
-     * @param {Point[]} points
-     * @param {string} color
-     * @return {this}
-     */
-    polygon(points, {
-        color = Colors.polygon.fill
-    } = {}) {
-        if (points.length < 2) return this
-
-        const ctx = this.ctx
-        const step = this.step
-
-        const cx = this.centerX
-        const cy = this.centerY
-
-        ctx.beginPath()
-        ctx.moveTo(cx + points[0].x * step, cy + points[0].y * step)
-        for (let i = 1; i < points.length; i++) {
-            ctx.lineTo(cx + points[i].x * step, cy + points[i].y * step)
-        }
-        ctx.fillStyle = color
-        //ctx.strokeStyle = Color.polygon.stroke
-        ctx.fill('evenodd')
-        ctx.closePath()
-        return this
-    }
-
-    /**
      * @param {Point} point
      * @return {this}
      */

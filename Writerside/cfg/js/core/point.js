@@ -76,6 +76,34 @@ class Point {
     }
 
     /**
+     * @param {Cartesian} c
+     * @param {Point} b
+     */
+    cartesianRectSwap(c, b) {
+        const ax = this.#x
+        const ay = this.#y
+        const bx = b.#x
+        const by = b.#y
+
+        const swap = () => {
+            if (c.pointDrag === this) c.pointDrag = b
+            else if (c.pointDrag === b) c.pointDrag = this
+        }
+
+        if (ax > bx) {
+            this.#x = bx
+            b.#x = ax
+            swap()
+        }
+
+        if (ay < by) {
+            this.#y = by
+            b.#y = ay
+            swap()
+        }
+    }
+
+    /**
      * @param {Point} point
      * @return {Point}
      */
