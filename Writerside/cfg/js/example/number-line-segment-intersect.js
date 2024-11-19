@@ -15,7 +15,7 @@ class CanvasNumberLineSegmentIntersect extends CanvasDraw {
     }
 
     draw() {
-        const c = this.cartesian.axis({y: false}).drag()
+        const c = this.cartesian.axis({y: false}).dragAll()
 
         for (const p of c.points) p.round = c.round
 

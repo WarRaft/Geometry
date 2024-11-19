@@ -14,7 +14,7 @@ class CanvasNumberLine extends CanvasDraw {
     }
 
     draw() {
-        const c = this.cartesian.axis({y: false}).drag()
+        const c = this.cartesian.axis({y: false}).dragAll()
 
         const [A, B, X] = c.points
 

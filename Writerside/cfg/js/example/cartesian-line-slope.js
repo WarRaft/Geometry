@@ -1,34 +1,30 @@
 class CartesianLineSlope extends CanvasDraw {
     static name = 'canvas-cartesian-line-slope'
 
-    get height() {
-        return 20
-    }
-
     constructor() {
         super()
 
-        this
-            .roundInit(true)
-            .points.push(
+        const c = this.cartesian = new Cartesian(this, 8, {round: true})
+
+        c.points.push(
             new Point(3, 2),
             new Point(5, -2),
         )
     }
 
-    drawOld() {
-        this.grid().dragRelease()
+    draw() {
+        const c = this.cartesian.axis().dragAll()
 
-        const [A, B] = this.points
+        const [A, B] = c.points
 
-        for (const p of this.points) p.round = this.round
+        for (const p of c.points) p.round = c.round
 
-        this
-            .pointOld(A, {trackX: true, trackY: true, name: 'A'})
-            .pointOld(B, {trackX: true, trackY: true, name: 'B'})
+        c
+            .point(A, {name: 'A', color: Color.red})
+            .point(B, {name: 'B', color: Color.green})
 
         if (A.x === B.x && A.y === B.y) {
-            this.text('Прямая не определена', {x: 0, y: 4, color: Color.yellow})
+            c.text('Прямая не определена', {x: 0, y: 4, color: Color.yellow})
             return
         }
 
@@ -39,19 +35,21 @@ class CartesianLineSlope extends CanvasDraw {
 
         const B1 = new Point(dx, dy)
 
-        this
-            .pointOld(A1, {name: 'A′'})
-            .pointOld(B1, {name: 'B′'})
-            .segment(A, B, {line: Color.yellow})
-            .segment(A1, B1, {line: Color.yellow, dash: [2, 2]})
+        c
+            .point(A1, {name: 'A′', color: Color.redA, dash: [2, 2]})
+            .point(B1, {name: 'B′', color: Color.greenA, dash: [2, 2]})
+            .segment(A, B, {line: 3})
+            .segment(A1, B1, {line: 3, dash: [2, 2]})
 
 
         if (dx === 0) {
-            this.text('Коэффициент не определён', {x: 0, y: 6})
+            c.text('Коэффициент не определён', {x: 0, y: 6})
         } else {
-            this.text(`Коэффициент равен ${(dy / dx).toFixed(2)} `, {x: 0, y: 6})
+            c.text(`Коэффициент равен ${(dy / dx).toFixed(2)} `, {x: 0, y: 6})
         }
+    }
 
+    redrawOld() {
     }
 }
 

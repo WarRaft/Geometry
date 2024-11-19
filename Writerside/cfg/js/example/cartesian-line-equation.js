@@ -1,48 +1,47 @@
 class CartesianLineEquation extends CanvasDraw {
     static name = 'canvas-cartesian-line-equation'
 
-    get height() {
-        return 18
-    }
-
     constructor() {
         super()
 
-        this
-            .roundInit(true)
-            .points.push(
+        const c = this.cartesian = new Cartesian(this, 10, {round: true})
+
+        c.points.push(
             new Point(2, 3),
             new Point(-2, -5),
         )
     }
 
-    drawOld() {
-        this.grid().dragRelease()
+    draw() {
+        const c = this.cartesian.axis().dragAll()
 
-        const [A, B] = this.points
+        const [A, B] = c.points
 
-        for (const p of this.points) p.round = this.round
+        for (const p of c.points) p.round = c.round
 
-        this
-            .pointOld(A, {trackX: true, trackY: true, name: 'A'})
-            .pointOld(B, {trackX: true, trackY: true, name: 'B'})
+        c
+            .point(A, {name: 'A', color: Color.red})
+            .point(B, {name: 'B', color: Color.green})
 
         if (A.x === B.x && A.y === B.y) {
-            this.text('Прямая не определена', {x: 0, y: 4, color: Color.yellow})
+            c.text('Прямая не определена', {x: 0, y: 4, color: Color.yellow})
             return
         }
 
-        this.segment(A, B, {line: Color.yellow})
+        c.segment(A, B, {line: 3})
 
         if (A.x === B.x) {
-            this.text('Уравнение не определено для вертикальной прямой', {x: 0, y: 6, color: Color.yellow})
+            c.text('Уравнение не определено для вертикальной прямой', {x: 0, y: 6, color: Color.yellow})
             return
         }
 
         const k = (B.y - A.y) / (B.x - A.x)
         const b = A.y - k * A.x
 
-        this.text(`y = ${k.toFixed(2)} * x + ${b.toFixed(2)}`, {x: 0, y: 6})
+        c.text(`y = ${k.toFixed(2)} * x + ${b.toFixed(2)}`, {x: 0, y: 6})
+    }
+
+    redrawOld() {
     }
 }
 

@@ -50,6 +50,7 @@ class Cartesian {
 
     #ox = 0
     #oy = 0
+    #canvasWidth = 0
     #canvasHeight = 0
     #step = 0
     #dpr = 1
@@ -63,7 +64,7 @@ class Cartesian {
     /**
      * @return {this}
      */
-    drag() {
+    dragAll() {
         if (this.pointDrag === null) return this
         const draw = this.#draw
         const dpr = draw.dpr
@@ -94,7 +95,7 @@ class Cartesian {
 
         // -- width
         const cow = container.getBoundingClientRect().width
-        const caw = canvas.width = cow * dpr
+        const caw = canvas.width = this.#canvasWidth = cow * dpr
         const ox = this.#ox = caw * .5
 
         // -- step
@@ -313,17 +314,46 @@ class Cartesian {
     }
 
     /**
+     * @param {number} ax
+     * @param {number} ay
+     * @param {number} bx
+     * @param {number} by
+     * @param {Color} ca
+     * @param {?Color} cb
+     * @param {number[]} dash
+     */
+    #segment(ax, ay, bx, by, ca, cb, dash) {
+        const ctx = this.#ctx
+
+        if (cb instanceof Color) {
+            const grad = ctx.createLinearGradient(ax, ay, bx, by)
+            grad.addColorStop(0, ca.strokeStyle)
+            grad.addColorStop(1, cb.strokeStyle)
+            ctx.strokeStyle = grad
+        } else {
+            ctx.strokeStyle = ca.strokeStyle
+        }
+
+        ctx.beginPath()
+        ctx.moveTo(ax, ay)
+        ctx.lineTo(bx, by)
+        ctx.setLineDash(dash)
+        ctx.stroke()
+        ctx.closePath()
+    }
+
+    /**
      * @param {Point} a
      * @param {Point} b
      * @param {number[]} dash
+     * @param {number} line
      * @return {this}
      */
     segment(a, b, {
         dash = [],
+        line = 0
     } = {}) {
-        const ctx = this.#ctx
         const dpr = this.#dpr
-
         const step = this.#step
 
         const cx = this.#ox
@@ -340,7 +370,6 @@ class Cartesian {
         const angle = Math.atan2(dy, dx)
         const dist = Math.sqrt(dx * dx + dy * dy) - b.radius
 
-        ctx.beginPath()
         const cos = Math.cos(angle)
         const sin = Math.sin(angle)
 
@@ -350,36 +379,24 @@ class Cartesian {
         ax += cos * a.radius
         ay += sin * a.radius
 
-        const grad = ctx.createLinearGradient(ax, ay, bx, by)
-        grad.addColorStop(0, a.color.strokeStyle)
-        grad.addColorStop(1, b.color.strokeStyle)
-        ctx.strokeStyle = grad
+        dash = dash.map(v => v * dpr)
 
-        ctx.moveTo(ax, ay)
-        ctx.lineTo(bx, by)
-        ctx.setLineDash(dash.map(v => v * dpr))
-        ctx.stroke()
-        ctx.closePath()
+        this.#segment(ax, ay, bx, by, a.color, b.color, dash)
 
-        /*
-        if (line !== null) {
-            const ld = Math.max(this.canvas.width, this.canvas.height) * 10
+        if (line > 0) {
+            const ld = this.#canvasHeight + this.#canvasHeight
+            const cosld = cos * ld
+            const sinld = sin * ld
 
-            ctx.beginPath()
-            ctx.strokeStyle = line.strokeStyle
-            let cos = Math.cos(angle)
-            let sin = Math.sin(angle)
-            ctx.moveTo(cos * r + bx, sin * r + by)
-            ctx.lineTo(cos * ld + bx, sin * ld + by)
-            cos = Math.cos(angle + Math.PI)
-            sin = Math.sin(angle + Math.PI)
-            ctx.moveTo(cos * r + ax, sin * r + ay)
-            ctx.lineTo(cos * ld + ax, sin * ld + ay)
-            ctx.stroke()
-            ctx.closePath()
+            if (line >= 3 || line === 1) {
+                const r = a.radius * 2
+                this.#segment(-cos * r + ax, -sin * r + ay, ax - cosld, ay - sinld, a.color, null, dash)
+            }
+            if (line >= 3 || line === 2) {
+                const r = b.radius * 2
+                this.#segment(cos * r + bx, sin * r + by, cosld + bx, sinld + by, b.color, null, dash)
+            }
         }
-
-         */
 
         return this
     }

@@ -13,7 +13,7 @@ class CartesianPointDistanceB extends CanvasDraw {
     }
 
     draw() {
-        const c = this.cartesian.axis().drag()
+        const c = this.cartesian.axis().dragAll()
 
         const [A, B] = c.points
 

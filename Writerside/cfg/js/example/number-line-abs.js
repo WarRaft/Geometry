@@ -12,7 +12,7 @@ class CanvasNumberLineAbs extends CanvasDraw {
     }
 
     draw() {
-        const c = this.cartesian.axis({y: false}).drag()
+        const c = this.cartesian.axis({y: false}).dragAll()
 
         const [A] = c.points
         const A1 = new Point(Math.abs(A.x), 0)
