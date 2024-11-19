@@ -15,11 +15,10 @@ class CartesianLineSlopeTwo extends CanvasDraw {
     }
 
     draw() {
-        const c = this.cartesian.axis().dragAll()
+        const c = this.cartesian.axis()
 
         const [A, B, C, D] = c.points
 
-        for (const p of c.points) p.round = c.round
 
         c
             .point(A, {name: 'A', color: Color.red})
@@ -51,9 +50,6 @@ class CartesianLineSlopeTwo extends CanvasDraw {
         c.text(kAB === null ? 'kAB не определён' : `kAB = ${kAB.toFixed(2)}`, {x: 0, y: 8})
         c.text(kCD === null ? 'kCD не определён' : `kCD = ${kCD.toFixed(2)}`, {x: 0, y: 7})
         if (kAB !== null && kCD !== null) c.text(`kAB * kCD = ${(kAB * kCD).toFixed(2)}`, {x: 0, y: 6})
-    }
-
-    redrawOld() {
     }
 }
 

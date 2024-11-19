@@ -13,11 +13,10 @@ class CartesianLine extends CanvasDraw {
     }
 
     draw() {
-        const c = this.cartesian.axis().dragAll()
+        const c = this.cartesian.axis()
 
         const [A, B] = c.points
 
-        for (const p of c.points) p.round = c.round
 
         c
             .point(A, {name: 'A', color: Color.red})
@@ -29,9 +28,6 @@ class CartesianLine extends CanvasDraw {
         }
 
         c.segment(A, B, {line: 3})
-    }
-
-    redrawOld() {
     }
 }
 

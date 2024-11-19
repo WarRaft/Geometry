@@ -15,11 +15,9 @@ class CartesianCoordinateSystem extends CanvasDraw {
     }
 
     draw() {
-        const c = this.cartesian.axis().dragAll()
+        const c = this.cartesian.axis()
 
         const [A, B, C, D] = c.points
-
-        for (const p of c.points) p.round = c.round
 
         c
             .point(A, {name: 'A', color: Color.red})
@@ -27,9 +25,6 @@ class CartesianCoordinateSystem extends CanvasDraw {
             .point(C, {name: 'C', color: Color.blue})
             .point(D, {name: 'D', color: Color.yellow})
 
-    }
-
-    redrawOld() {
     }
 }
 

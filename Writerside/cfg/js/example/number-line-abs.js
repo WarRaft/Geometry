@@ -12,20 +12,14 @@ class CanvasNumberLineAbs extends CanvasDraw {
     }
 
     draw() {
-        const c = this.cartesian.axis({y: false}).dragAll()
+        const c = this.cartesian.axis({y: false})
 
         const [A] = c.points
-        const A1 = new Point(Math.abs(A.x), 0)
-
-        A.round = A1.round = c.round
+        const A1 = new Point(Math.abs(A.x), 0, {round: c.round})
 
         c
             .point(A, {name: 'A', color: Color.red})
             .point(A1, {name: '|A|', color: Color.redA, dash: [2, 2]})
-
-    }
-
-    redrawOld() {
 
     }
 }

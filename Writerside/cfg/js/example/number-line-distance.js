@@ -13,14 +13,13 @@ class CanvasNumberLineDistance extends CanvasDraw {
     }
 
     draw() {
-        const c = this.cartesian.axis({y: false}).dragAll()
+        const c = this.cartesian.axis({y: false})
 
         const [A, B] = c.points
 
         const A1 = new Point(0, 0, {round: c.round})
         const B1 = new Point(B.x - A.x, 0, {round: c.round})
 
-        for (const p of c.points) p.round = c.round
 
         c
             .point(A, {name: 'A', color: Color.red})
@@ -28,10 +27,6 @@ class CanvasNumberLineDistance extends CanvasDraw {
 
             .point(B, {name: 'B', color: Color.green})
             .point(B1, {name: 'B′', color: Color.greenA, dash: [2, 2]})
-    }
-
-    redrawOld() {
-
     }
 }
 

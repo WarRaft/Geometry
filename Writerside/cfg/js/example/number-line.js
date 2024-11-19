@@ -14,19 +14,14 @@ class CanvasNumberLine extends CanvasDraw {
     }
 
     draw() {
-        const c = this.cartesian.axis({y: false}).dragAll()
+        const c = this.cartesian.axis({y: false})
 
         const [A, B, X] = c.points
-
-        for (const p of c.points) p.round = c.round
 
         c
             .point(A, {name: 'A', color: Color.red})
             .point(B, {name: 'B', color: Color.green})
             .point(X, {name: 'X', color: Color.blue})
-    }
-
-    redrawOld() {
     }
 }
 

@@ -13,11 +13,10 @@ class CartesianLineSlope extends CanvasDraw {
     }
 
     draw() {
-        const c = this.cartesian.axis().dragAll()
+        const c = this.cartesian.axis()
 
         const [A, B] = c.points
 
-        for (const p of c.points) p.round = c.round
 
         c
             .point(A, {name: 'A', color: Color.red})
@@ -47,9 +46,6 @@ class CartesianLineSlope extends CanvasDraw {
         } else {
             c.text(`Коэффициент равен ${(dy / dx).toFixed(2)} `, {x: 0, y: 6})
         }
-    }
-
-    redrawOld() {
     }
 }
 

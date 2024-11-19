@@ -11,10 +11,6 @@ const Colors = {
             text: '#bd8a0e'
         }
     },
-    line: {
-        base: '#5c5d60',
-        primary: '#efaf1b',
-    },
     polygon: {
         fill: 'rgba(19,140,222,0.25)',
         stroke: 'rgba(5,238,213,0.48)'

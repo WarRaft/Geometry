@@ -12,13 +12,12 @@ class CartesianPointDistanceA extends CanvasDraw {
     }
 
     draw() {
-        const c = this.cartesian.axis().dragAll()
+        const c = this.cartesian.axis()
 
         const [A] = c.points
 
         const O = new Point(0, 0)
 
-        for (const p of c.points) p.round = c.round
 
         const d = Math.sqrt(A.x * A.x + A.y * A.y)
 
@@ -27,9 +26,6 @@ class CartesianPointDistanceA extends CanvasDraw {
             .point(O, {color: Color.redA, dash: [2, 2]})
             .segment(A, O, {dash: [2, 2]})
             .text(`Расстояние ${d.toFixed(2)}`, {x: 0, y: 4})
-    }
-
-    redrawOld() {
     }
 }
 

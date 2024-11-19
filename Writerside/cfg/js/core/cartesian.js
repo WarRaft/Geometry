@@ -62,18 +62,6 @@ class Cartesian {
     /** @type {Point|null} */ pointDrag = null
 
     /**
-     * @return {this}
-     */
-    dragAll() {
-        if (this.pointDrag === null) return this
-        const draw = this.#draw
-        const dpr = draw.dpr
-        const step = this.#step
-        this.pointDrag.drag(draw.dx * dpr / step, -draw.dy * dpr / step)
-        return this
-    }
-
-    /**
      * @param {boolean} x
      * @param {boolean} y
      * @return {this}
@@ -221,6 +209,17 @@ class Cartesian {
             ctx.stroke()
             ctx.closePath()
         }
+
+        // --- drag
+        if (this.pointDrag !== null) {
+            const draw = this.#draw
+            const dpr = draw.dpr
+            const step = this.#step
+            this.pointDrag.drag(draw.dx * dpr / step, -draw.dy * dpr / step)
+        }
+
+        // --
+        for (const p of this.points) p.round = this.round
 
         return this
     }

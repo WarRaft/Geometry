@@ -13,11 +13,9 @@ class CanvasNumberLineSegment extends CanvasDraw {
     }
 
     draw() {
-        const c = this.cartesian.axis({y: false}).dragAll()
+        const c = this.cartesian.axis({y: false})
 
         let [A, B] = c.points
-
-        for (const p of c.points) p.round = c.round
 
         if (A.x > B.x) [A, B] = [B, A]
 
@@ -25,9 +23,6 @@ class CanvasNumberLineSegment extends CanvasDraw {
             .point(A, {name: 'A', color: Color.red})
             .point(B, {name: 'B', color: Color.green})
             .segment(A, B)
-    }
-
-    redrawOld() {
     }
 }
 
