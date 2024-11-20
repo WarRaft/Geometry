@@ -37,11 +37,11 @@ class Cartesian {
             for (let i = 1; i < this.points.length; i++) {
                 if (dist(this.points[i]) < dist(this.points[lowest])) lowest = i
             }
-            this.pointDrag = this.points[lowest]
+            this.dragPoint = this.points[lowest]
         }
 
         draw.pointerupCallback = () => {
-            this.pointDrag = null
+            this.dragPoint = null
         }
     }
 
@@ -58,8 +58,8 @@ class Cartesian {
     #height = 0
     round = false
     /** @type {Point[]} */ points = []
-    /** @type {Point[]} */ #points = []
-    /** @type {Point|null} */ pointDrag = null
+    /** @type {Point|null} */ dragPoint = null
+    /** @type {Rect[]} */ #pointNames = []
 
     /**
      * @param {boolean} x
@@ -72,7 +72,7 @@ class Cartesian {
          } = {}
     ) {
         this.#axisY = y
-        this.#points = []
+        this.#pointNames = []
 
         // -- vars
         const draw = this.#draw
@@ -100,7 +100,6 @@ class Cartesian {
 
         const cah = this.#canvasHeight = canvas.height = coh * dpr
         const oy = this.#oy = cah * .5
-
 
         // -- grid
         ctx.lineJoin = 'miter'
@@ -203,8 +202,8 @@ class Cartesian {
         }
 
         // --- drag
-        if (this.pointDrag !== null) {
-            this.pointDrag.drag(draw.dx * dpr / step, -draw.dy * dpr / step)
+        if (this.dragPoint !== null) {
+            this.dragPoint.drag(draw.dx * dpr / step, -draw.dy * dpr / step)
         }
 
         // -- round
@@ -230,7 +229,7 @@ class Cartesian {
         const ctx = this.#ctx
         const dpr = this.#dpr
 
-        point.radius = radius * dpr
+        const r = point.radius = radius * dpr
         point.color = color
         point.name = name
 
@@ -256,7 +255,7 @@ class Cartesian {
             const ra = Rect.fromText(ctx, name, {
                 x: x,
                 alignX: .5,
-                y: y - point.radius - gap,
+                y: y - r - gap,
                 color: color,
                 fontSize: 16 * dpr,
             })
@@ -270,30 +269,28 @@ class Cartesian {
                 }
             )
 
-            point.rect = Rect.expand(ra, rb)
-
             const i = () => {
-                for (const p of this.#points) {
-                    if (!p.rect.intesect(point.rect)) continue
-                    const ty = p.rect.minY - point.rect.maxY - gap
+                for (const r of this.#pointNames) {
+                    /** @type {Rect} */ let cur = null
+                    if (r.intesect(ra)) cur = ra
+                    else if (r.intesect(rb)) cur = rb
+                    if (cur === null) continue
+
+                    const ty = r.minY - cur.maxY - gap
                     if (ty > 0) continue
-                    point.rect = Rect.expand(
-                        ra.translate(0, ty),
-                        rb.translate(0, ty)
-                    )
+                    ra.translate(0, ty)
+                    rb.translate(0, ty)
                     i()
                     break
                 }
             }
             i()
 
-            this.#points.push(point)
-
-            ra.fill()
-            rb.fill()
-
+            this.#pointNames.push(ra.fill(), rb.fill())
             ctx.closePath()
         }
+
+        this.#pointNames.push(new Rect(x - r, x + r, y - r, y + r))
 
         return this
     }
@@ -497,20 +494,16 @@ class Cartesian {
 
         if (x !== null && y !== null) {
             cx = this.#ox + x * step
-            cy = -this.#oy - y * step
+            cy = this.#oy + y * -step
             if (step > th) cy -= (step - th) * .5
         }
 
-        ctx.save()
-        ctx.scale(1, -1)
         ctx.beginPath()
-
         ctx.textAlign = 'center'
         ctx.fillStyle = color.strokeStyle
         ctx.font = `${fontSize * dpr}px ${cssvar('font-family')}`
         ctx.fillText(text, cx, cy)
         ctx.closePath()
-        ctx.restore()
 
         return this
     }

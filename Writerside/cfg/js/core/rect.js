@@ -18,14 +18,6 @@ class Rect {
     minY = 0
     maxY = 0
 
-    get width() {
-        return Math.abs(this.maxX - this.minX)
-    }
-
-    get height() {
-        return Math.abs(this.maxY - this.minY)
-    }
-
     get clone() {
         return new Rect(this.minX, this.maxX, this.minY, this.maxY)
     }
@@ -112,6 +104,7 @@ class Rect {
         ctx.font = `${this.#fontSize}px ${cssvar('font-family')}`
         ctx.fillStyle = this.#color.strokeStyle
         ctx.fillText(this.#text, this.minX, this.maxY)
+        return this
     }
 
 }

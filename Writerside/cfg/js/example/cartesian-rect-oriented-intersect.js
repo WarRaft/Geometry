@@ -4,7 +4,7 @@ class CartesianRectOrientedIntersect extends CanvasDraw {
     constructor() {
         super()
 
-        const c = this.cartesian = new Cartesian(this, 15, {round: true})
+        const c = this.cartesian = new Cartesian(this, 15, {round: false})
 
         c.points.push(
             new Point(-10, 7),

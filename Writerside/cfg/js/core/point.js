@@ -86,8 +86,8 @@ class Point {
         const by = b.#y
 
         const swap = () => {
-            if (c.pointDrag === this) c.pointDrag = b
-            else if (c.pointDrag === b) c.pointDrag = this
+            if (c.dragPoint === this) c.dragPoint = b
+            else if (c.dragPoint === b) c.dragPoint = this
         }
 
         if (ax > bx) {
