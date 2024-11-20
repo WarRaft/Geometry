@@ -13,7 +13,7 @@ class Cartesian {
 
         if (round !== null) {
             const c = document.createElement('label')
-            draw.container.appendChild(c)
+            draw.shadow.appendChild(c)
 
             c.classList.add('intval')
             c.innerHTML = '<input type="checkbox"><span>Выровнять по сетке</span>'

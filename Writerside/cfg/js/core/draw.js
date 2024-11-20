@@ -18,7 +18,7 @@ class CanvasDraw extends HTMLElement {
 
     constructor() {
         super()
-        const shadow = this.attachShadow({mode: 'open'})
+        const shadow = this.shadow = this.attachShadow({mode: 'open'})
         shadow.adoptedStyleSheets = [CanvasDraw.sheet]
 
         this.container = document.createElement('div')
@@ -35,6 +35,7 @@ class CanvasDraw extends HTMLElement {
         this.canvas.addEventListener('pointerdown', this.pointerdown, {passive: false})
     }
 
+    /** @type {ShadowRoot} */ shadow
     /** @type {HTMLDivElement} */ container
     /** @type {HTMLCanvasElement} */ canvas
     /** @type {CanvasRenderingContext2D} */ ctx
@@ -300,18 +301,20 @@ class CanvasDraw extends HTMLElement {
     }
 }
 
+// background-color: #0e0e2e;
+
 // noinspection CssUnusedSymbol,CssUnresolvedCustomProperty
 CanvasDraw.sheet.replaceSync(
     //language=CSS
     `
-        .container {
+        :host {
             display: block;
+            box-sizing: border-box;
+            border: 1px solid #3e4ab8;
+        }
+
+        .container {
             position: relative;
-            width: 100%;
-            margin: 0;
-            border-radius: 12px;
-            background-color: #0e0e2e;
-            overflow: hidden;
         }
 
         canvas {
@@ -324,11 +327,11 @@ CanvasDraw.sheet.replaceSync(
         }
 
         .intval {
+            background-color: #181831;
+            display: block;
             user-select: none;
-            position: absolute;
-            bottom: 8px;
-            left: 12px;
             cursor: pointer;
+            padding: 8px;
         }
 
         .intval span {
@@ -337,7 +340,7 @@ CanvasDraw.sheet.replaceSync(
         }
 
         [type=checkbox] {
-            --input-background: #32a1ce;
+            --input-background: #de3459;
             --m: 0px;
             --s: 16px;
             display: inline-block;
