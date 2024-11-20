@@ -29,7 +29,7 @@ class Cartesian {
             const step = this.#step
 
             const x = ((e.clientX - rect.x) * dpr - this.#ox) / step
-            const y = (this.#canvasHeight - (e.clientY - rect.y) * dpr - this.#oy) / step
+            const y = ((e.clientY - rect.y) * dpr - this.#oy) / -step
 
             const dist = p => (x - p.x) ** 2 + (y - p.y) ** 2
 
@@ -98,113 +98,105 @@ class Cartesian {
         const coh = stepNoDpr * this.#height + 1
         container.style.height = `${coh}px`
 
-        const caH = this.#canvasHeight = canvas.height = coh * dpr
-        const oY = this.#oy = caH * .5
+        const cah = this.#canvasHeight = canvas.height = coh * dpr
+        const oy = this.#oy = cah * .5
 
-        // -- scale
-        ctx.scale(1, -1)
-        ctx.translate(0, -caH)
-
-        const cminx = Math.trunc(ox / step)
-        const cminy = Math.trunc(oY / step)
-
-        const cmaxx = Math.trunc((caw - ox) / step)
-        const cmaxy = Math.trunc((caH - oY) / step)
 
         // -- grid
         ctx.lineJoin = 'miter'
         ctx.lineWidth = dpr
         ctx.font = `${12 * dpr}px ${cssvar('font-family')}`
+
+        ctx.fillStyle = Color.bg.fillStyle
+        ctx.fillRect(0, 0, caw, cah)
+
         ctx.beginPath()
-        for (let i = -cminx; i <= cmaxx; i++) {
-            const xx = ox + i * step
-            ctx.moveTo(xx, 0)
-            ctx.lineTo(xx, caH)
+        ctx.strokeStyle = Color.grid.strokeStyle
+        const xl = Math.trunc(ox / step)
+        const xr = Math.trunc((caw - ox) / step)
+        const yt = Math.trunc(oy / step)
+        const yb = Math.trunc((cah - oy) / step)
+
+        // X ➡️
+        const del = 3 * dpr
+        const xdl = ox - step + del
+        const xdr = ox + del
+        for (let i = -yt; i <= yb; i++) {
+            if (x && i === 0) continue
+            const yi = oy + i * step
+            ctx.moveTo(0, yi)
+            if (y && i > -yt && i < yb) {
+                ctx.lineTo(xdl, yi)
+                ctx.moveTo(xdr, yi)
+            }
+            ctx.lineTo(caw, yi)
         }
 
-        for (let i = -cminy; i <= cmaxy; i++) {
-            const yy = oY + i * step
-            ctx.moveTo(0, yy)
-            ctx.lineTo(caw, yy)
+        // Y ⬇️
+        const ydt = oy + del
+        const ydb = oy + step - del
+        for (let i = -xl; i <= xr; i++) {
+            if (y && i === 0) continue
+            const xi = ox + i * step
+            ctx.moveTo(xi, 0)
+            if (x && i > -xl && i < xr) {
+                ctx.lineTo(xi, ydt)
+                ctx.moveTo(xi, ydb)
+            }
+            ctx.lineTo(xi, cah)
         }
-        ctx.strokeStyle = Color.grid.strokeStyle
         ctx.stroke()
         ctx.closePath()
 
-        // === axis
         if (x || y) {
             ctx.beginPath()
-            if (x) {
-                ctx.moveTo(0, oY)
-                ctx.lineTo(caw, oY)
-            }
-            if (y) {
-                ctx.moveTo(ox, 0)
-                ctx.lineTo(ox, caH)
-            }
             ctx.strokeStyle = Color.axis.strokeStyle
-            ctx.stroke()
-            ctx.closePath()
-
-            ctx.beginPath()
-            const h = 5 * dpr
-
-            if (x) for (let i = -cminx; i <= cmaxx; i++) {
-                const xx = ox + i * step
-                ctx.moveTo(xx, oY - h)
-                ctx.lineTo(xx, oY + h)
-            }
-
-            if (y) for (let i = -cminy; i <= cmaxy; i++) {
-                const yy = oY + i * step
-                ctx.moveTo(ox - h, yy)
-                ctx.lineTo(ox + h, yy)
-            }
-
-            // text
-            ctx.save()
-            ctx.scale(1, -1)
             ctx.fillStyle = Color.axis.strokeStyle
 
+            // X ➡️
             if (x) {
                 ctx.textAlign = 'center'
-                for (let i = -cminx; i <= cmaxx; i++) {
-                    if (i === 0 && y) continue
-                    const xx = ox + i * step
-                    const text = `${i}`
-                    const metrics = ctx.measureText(text)
-                    const hwm = metrics.width * .5
-                    if (xx - hwm < 0) continue
-                    if (xx + hwm > caw) continue
+                ctx.moveTo(0, oy)
+                ctx.lineTo(caw, oy)
 
-                    const tw = metrics.width
-                    const th = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
+                const ydt = oy - del
+                const ydb = oy + del
+                for (let i = -xl; i <= xr; i++) {
+                    if (i === 0) continue
+                    const xi = ox + i * step
+                    ctx.moveTo(xi, ydt)
+                    ctx.lineTo(xi, ydb)
 
-                    const yy = -oY + th + h + 4 * dpr
-                    const p = 2 * dpr
-
-                    ctx.clearRect(xx - p - tw * .5, yy - p - th, tw + p * 2, th + p * 2)
-                    ctx.fillText(text, xx, yy)
+                    if (i === -xl || i === xr) continue
+                    const t = i.toString()
+                    const m = ctx.measureText(t)
+                    const wd = m.width - ctx.measureText(Math.abs(i).toString()).width
+                    const th = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent
+                    ctx.fillText(t, xi - wd * .5, th + ydb + 3 * dpr)
                 }
             }
 
+            // Y ⬇️
             if (y) {
                 ctx.textAlign = 'right'
-                for (let i = -cminy; i <= cmaxy; i++) {
-                    if (i === 0 && y) continue
-                    const yy = oY + i * step
-                    const text = `${i}`
-                    const metrics = ctx.measureText(text)
-                    const th = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
-                    const hth = th * .5
-                    if (yy - hth < 0) continue
-                    if (yy + hth > caH) continue
-                    ctx.fillText(text, ox - h - 4 * dpr, -yy + hth)
+                ctx.moveTo(ox, 0)
+                ctx.lineTo(ox, cah)
+                const xdl = ox - del
+                const xdr = ox + del
+                for (let i = -yt; i <= yb; i++) {
+                    if (i === 0) continue
+                    const yi = oy + i * step
+                    ctx.moveTo(xdl, yi)
+                    ctx.lineTo(xdr, yi)
+
+                    if (i === -yt || i === yb) continue
+                    const t = (-i).toString()
+                    const m = ctx.measureText(t)
+                    const th = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent
+                    ctx.fillText(t, xdl - 3 * dpr, yi + th * .5)
                 }
             }
 
-            ctx.restore()
-            ctx.strokeStyle = Color.axis.strokeStyle
             ctx.fill()
             ctx.stroke()
             ctx.closePath()
@@ -212,13 +204,10 @@ class Cartesian {
 
         // --- drag
         if (this.pointDrag !== null) {
-            const draw = this.#draw
-            const dpr = draw.dpr
-            const step = this.#step
             this.pointDrag.drag(draw.dx * dpr / step, -draw.dy * dpr / step)
         }
 
-        // --
+        // -- round
         for (const p of this.points) p.round = this.round
 
         return this
@@ -246,7 +235,7 @@ class Cartesian {
         point.name = name
 
         const x = this.#ox + point.x * this.#step
-        const y = this.#oy + point.y * this.#step
+        const y = this.#oy - point.y * this.#step
 
         ctx.beginPath()
         ctx.fillStyle = color.fillStyle
@@ -261,15 +250,13 @@ class Cartesian {
         if (name.length > 0) {
             ctx.beginPath()
             ctx.setLineDash([])
-            ctx.save()
-            ctx.scale(1, -1)
 
             const gap = 5 * dpr
 
             const ra = Rect.fromText(ctx, name, {
                 x: x,
                 alignX: .5,
-                y: -y - point.radius - gap,
+                y: y - point.radius - gap,
                 color: color,
                 fontSize: 16 * dpr,
             })
@@ -305,7 +292,6 @@ class Cartesian {
             ra.fill()
             rb.fill()
 
-            ctx.restore()
             ctx.closePath()
         }
 
@@ -359,9 +345,9 @@ class Cartesian {
         const cy = this.#oy
 
         let ax = cx + a.x * step
-        let ay = cy + a.y * step
+        let ay = cy + a.y * -step
         let bx = cx + b.x * step
-        let by = cy + b.y * step
+        let by = cy + b.y * -step
 
         const dx = bx - ax
         const dy = by - ay
@@ -383,7 +369,7 @@ class Cartesian {
         this.#segment(ax, ay, bx, by, a.color, b.color, dash)
 
         if (line > 0) {
-            const ld = this.#canvasHeight + this.#canvasHeight
+            const ld = this.#canvasWidth + this.#canvasHeight
             const cosld = cos * ld
             const sinld = sin * ld
 
@@ -406,8 +392,6 @@ class Cartesian {
      */
     rect(a, b) {
         const ctx = this.#ctx
-        const dpr = this.#dpr
-
         const step = this.#step
 
         const cx = this.#ox
@@ -417,9 +401,9 @@ class Cartesian {
         const br = b.radius
 
         const ax = cx + a.x * step
-        const ay = cy + a.y * step
+        const ay = cy + a.y * -step
         const bx = cx + b.x * step
-        const by = cy + b.y * step
+        const by = cy + b.y * -step
 
         const grad = ctx.createLinearGradient(ax, ay, bx, by)
         grad.addColorStop(0, a.color.strokeStyle)
@@ -428,26 +412,23 @@ class Cartesian {
 
         ctx.beginPath()
 
-        const brt = br + 20 * dpr
-
         // ↖️↗️
         if (bx - ax > ar) {
             ctx.moveTo(ax + ar, ay)
-
-            ctx.lineTo(ay - by > brt ? bx : bx - 10 * dpr, ay)
+            ctx.lineTo(bx, ay)
         }
 
         // ↗️
         // ↘️
-        if (ay - by > brt) {
+        if (by - ay > br) {
             ctx.moveTo(bx, ay)
-            ctx.lineTo(bx, by + brt)
+            ctx.lineTo(bx, by - br)
         }
 
         // ↖️
         // ↙️
-        if (ay - by > ar) {
-            ctx.moveTo(ax, ay - ar)
+        if (by - ay > ar) {
+            ctx.moveTo(ax, ay + ar)
             ctx.lineTo(ax, by)
         }
 
@@ -480,9 +461,9 @@ class Cartesian {
         const cy = this.#oy
 
         ctx.beginPath()
-        ctx.moveTo(cx + points[0].x * step, cy + points[0].y * step)
+        ctx.moveTo(cx + points[0].x * step, cy + points[0].y * -step)
         for (let i = 1; i < points.length; i++) {
-            ctx.lineTo(cx + points[i].x * step, cy + points[i].y * step)
+            ctx.lineTo(cx + points[i].x * step, cy + points[i].y * -step)
         }
         ctx.fillStyle = color.fillStyle
         //ctx.strokeStyle = Color.polygon.stroke

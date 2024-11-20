@@ -301,8 +301,6 @@ class CanvasDraw extends HTMLElement {
     }
 }
 
-// background-color: #0e0e2e;
-
 // noinspection CssUnusedSymbol,CssUnresolvedCustomProperty
 CanvasDraw.sheet.replaceSync(
     //language=CSS
@@ -310,7 +308,7 @@ CanvasDraw.sheet.replaceSync(
         :host {
             display: block;
             box-sizing: border-box;
-            border: 1px solid #3e4ab8;
+            border: 1px solid #1b289e;
         }
 
         .container {
@@ -327,7 +325,7 @@ CanvasDraw.sheet.replaceSync(
         }
 
         .intval {
-            background-color: #181831;
+            background-color: #0c0c3a;
             display: block;
             user-select: none;
             cursor: pointer;

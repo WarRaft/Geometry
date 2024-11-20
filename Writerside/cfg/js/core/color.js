@@ -1,4 +1,8 @@
 class Color {
+    static bg = new Color({
+        fillStyle: '#0e0e2e'
+    })
+
     static grid = new Color({
         strokeStyle: '#1b1b43',
     })
