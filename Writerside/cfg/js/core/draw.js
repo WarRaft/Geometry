@@ -309,8 +309,8 @@ CanvasDraw.sheet.replaceSync(
             position: relative;
             width: 100%;
             margin: 0;
-            border-radius: 8px;
-            background-color: var(--wh-color-white-t5);
+            border-radius: 12px;
+            background-color: #0e0e2e;
             overflow: hidden;
         }
 

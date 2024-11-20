@@ -20,13 +20,12 @@ class CanvasNumberLineDistance extends CanvasDraw {
         const A1 = new Point(0, 0, {round: c.round})
         const B1 = new Point(B.x - A.x, 0, {round: c.round})
 
-
         c
-            .point(A, {name: 'A', color: Color.red})
-            .point(A1, {name: 'A′', color: Color.redA, dash: [2, 2]})
+            .point(A, {name: 'A', color: Color.pointA})
+            .point(A1, {name: 'A′', color: Color.pointA1, dash: [2, 2]})
 
-            .point(B, {name: 'B', color: Color.green})
-            .point(B1, {name: 'B′', color: Color.greenA, dash: [2, 2]})
+            .point(B, {name: 'B', color: Color.pointB})
+            .point(B1, {name: 'B′', color: Color.pointB1, dash: [2, 2]})
     }
 }
 

@@ -17,20 +17,19 @@ class CartesianLineEquation extends CanvasDraw {
 
         const [A, B] = c.points
 
-
         c
-            .point(A, {name: 'A', color: Color.red})
-            .point(B, {name: 'B', color: Color.green})
+            .point(A, {name: 'A', color: Color.pointA})
+            .point(B, {name: 'B', color: Color.pointB})
 
         if (A.x === B.x && A.y === B.y) {
-            c.text('Прямая не определена', {x: 0, y: 4, color: Color.yellow})
+            c.text('Прямая не определена', {x: 0, y: 4, color: Color.pointA})
             return
         }
 
         c.segment(A, B, {line: 3})
 
         if (A.x === B.x) {
-            c.text('Уравнение не определено для вертикальной прямой', {x: 0, y: 6, color: Color.yellow})
+            c.text('Уравнение не определено для вертикальной прямой', {x: 0, y: 6, color: Color.pointA})
             return
         }
 

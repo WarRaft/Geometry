@@ -39,21 +39,21 @@ class CartesianRectOrientedIntersect extends CanvasDraw {
         Dx.round = Dy.round = c.round
 
         c
-            .point(A, {name: 'A', color: Color.red})
-            .point(Ax, {name: 'Ax', color: Color.redA})
-            .point(Ay, {name: 'Ay', color: Color.redA})
+            .point(A, {name: 'A', color: Color.pointA})
+            .point(Ax, {name: 'Ax', color: Color.pointA1})
+            .point(Ay, {name: 'Ay', color: Color.pointA1})
 
-            .point(B, {name: 'B', color: Color.green})
-            .point(Bx, {name: 'Bx', color: Color.greenA})
-            .point(By, {name: 'By', color: Color.greenA})
+            .point(B, {name: 'B', color: Color.pointB})
+            .point(Bx, {name: 'Bx', color: Color.pointB1})
+            .point(By, {name: 'By', color: Color.pointB1})
 
-            .point(C, {name: 'C', color: Color.blue})
-            .point(Cx, {name: 'Cx', color: Color.blueA})
-            .point(Cy, {name: 'Cy', color: Color.blueA})
+            .point(C, {name: 'C', color: Color.pointC})
+            .point(Cx, {name: 'Cx', color: Color.pointC1})
+            .point(Cy, {name: 'Cy', color: Color.pointC1})
 
-            .point(D, {name: 'D', color: Color.yellow})
-            .point(Dx, {name: 'Dx', color: Color.yellowA})
-            .point(Dy, {name: 'Dy', color: Color.yellowA})
+            .point(D, {name: 'D', color: Color.pointD})
+            .point(Dx, {name: 'Dx', color: Color.pointD1})
+            .point(Dy, {name: 'Dy', color: Color.pointD1})
 
             .rect(A, B)
             .rect(C, D)

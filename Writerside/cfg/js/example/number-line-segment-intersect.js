@@ -23,11 +23,11 @@ class CanvasNumberLineSegmentIntersect extends CanvasDraw {
         if (C.x > D.x) [C, D] = [D, C]
 
         c
-            .point(A, {name: 'A', color: Color.red})
-            .point(B, {name: 'B', color: Color.green})
+            .point(A, {name: 'A', color: Color.pointA})
+            .point(B, {name: 'B', color: Color.pointB})
 
-            .point(C, {name: 'C', color: Color.blue})
-            .point(D, {name: 'D', color: Color.yellow})
+            .point(C, {name: 'C', color: Color.pointC})
+            .point(D, {name: 'D', color: Color.pointD})
 
         const i = new NumberLineSegmentIntersection(A, B, C, D, c, {x: true})
 
@@ -36,7 +36,7 @@ class CanvasNumberLineSegmentIntersect extends CanvasDraw {
             : 'Отрезки не пересекаются', {
             x: 0,
             y: 2,
-            color: i.X ? Color.teal : Color.axis
+            color: i.X ? Color.pointD : Color.axis
         })
 
     }

@@ -20,8 +20,8 @@ class CanvasNumberLineSegment extends CanvasDraw {
         if (A.x > B.x) [A, B] = [B, A]
 
         c
-            .point(A, {name: 'A', color: Color.red})
-            .point(B, {name: 'B', color: Color.green})
+            .point(A, {name: 'A', color: Color.pointA})
+            .point(B, {name: 'B', color: Color.pointB})
             .segment(A, B)
     }
 }

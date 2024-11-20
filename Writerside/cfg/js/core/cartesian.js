@@ -234,7 +234,7 @@ class Cartesian {
      */
     point(point, {
         name = '',
-        color = Color.yellow,
+        color = Color.pointA,
         dash = [],
         radius = 6,
     } = {}) {
@@ -465,11 +465,11 @@ class Cartesian {
 
     /**
      * @param {Point[]} points
-     * @param {string} color
+     * @param {Color} color
      * @return {this}
      */
     polygon(points, {
-        color = Colors.polygon.fill
+        color = Color.polygon
     } = {}) {
         if (points.length < 2) return this
 
@@ -484,7 +484,7 @@ class Cartesian {
         for (let i = 1; i < points.length; i++) {
             ctx.lineTo(cx + points[i].x * step, cy + points[i].y * step)
         }
-        ctx.fillStyle = color
+        ctx.fillStyle = color.fillStyle
         //ctx.strokeStyle = Color.polygon.stroke
         ctx.fill('evenodd')
         ctx.closePath()
@@ -502,7 +502,7 @@ class Cartesian {
     text(text, {
         x = null,
         y = null,
-        color = Color.teal,
+        color = Color.pointD,
         fontSize = 18,
     } = {}) {
         const ctx = this.#ctx

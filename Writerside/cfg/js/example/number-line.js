@@ -9,19 +9,18 @@ class CanvasNumberLine extends CanvasDraw {
         c.points.push(
             new Point(-5, 0, {dragY: false}),
             new Point(5, 0, {dragY: false}),
-            new Point(0, 0, {dragY: false})
         )
     }
 
     draw() {
         const c = this.cartesian.axis({y: false})
 
-        const [A, B, X] = c.points
+        const [A, B] = c.points
 
         c
-            .point(A, {name: 'A', color: Color.red})
-            .point(B, {name: 'B', color: Color.green})
-            .point(X, {name: 'X', color: Color.blue})
+            .point(A, {name: 'A', color: Color.pointA})
+            .point(B, {name: 'B', color: Color.pointB})
+
     }
 }
 

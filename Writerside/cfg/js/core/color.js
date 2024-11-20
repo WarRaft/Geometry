@@ -1,78 +1,58 @@
-const Colors = {
-    /**
-     * @deprecated
-     */
-    point: {
-        fill: 'rgba(239,172,16,0.36)',
-        stroke: '#efac10',
-        name: '#519bf8',
-        track: {
-            fill: '#4d4444',
-            text: '#bd8a0e'
-        }
-    },
-    polygon: {
-        fill: 'rgba(19,140,222,0.25)',
-        stroke: 'rgba(5,238,213,0.48)'
-    }
-}
-
 class Color {
     static grid = new Color({
-        strokeStyle: '#373636',
+        strokeStyle: '#1b1b43',
     })
 
     static axis = new Color({
-        strokeStyle: '#616060',
+        strokeStyle: '#29295e',
     })
 
-    static teal = new Color({
-        fillStyle: 'rgba(16,232,239,0.36)',
-        strokeStyle: '#06ccae',
+    static polygon = new Color({
+        fillStyle: 'rgba(19,140,222,0.25)',
+        strokeStyle: 'rgba(5,238,213,0.48)',
     })
 
-    static yellow = new Color({
-        fillStyle: 'rgba(239,172,16,0.36)',
-        strokeStyle: '#efac10',
-    })
-    static yellowA = new Color({
-        fillStyle: 'rgba(189,140,21,0.36)',
-        strokeStyle: '#af8113',
-    })
-
-    static red = new Color({
-        fillStyle: 'rgba(239,16,16,0.36)',
+    // --- points
+    static pointA = new Color({
+        fillStyle: '#ed0c215b',
         strokeStyle: '#ed0c21',
     })
-
-    static redA = new Color({
-        fillStyle: 'rgba(211,14,14,0.36)',
-        strokeStyle: '#a30b13',
+    static pointA1 = new Color({
+        fillStyle: '#9c24295b',
+        strokeStyle: '#7c1f23',
     })
 
-    static green = new Color({
-        fillStyle: 'rgba(27,232,37,0.36)',
+    static pointB = new Color({
+        fillStyle: '#ed5ced5b',
+        strokeStyle: '#ed5ced',
+    })
+    static pointB1 = new Color({
+        fillStyle: '#6e316e5b',
+        strokeStyle: '#6e316e',
+    })
+
+    static pointC = new Color({
+        fillStyle: '#1bbd3c5b',
         strokeStyle: '#1bbd3c',
     })
 
-    static greenA = new Color({
-        fillStyle: 'rgba(28,193,35,0.36)',
-        strokeStyle: '#198532',
+    static pointC1 = new Color({
+        fillStyle: '#11501d5b',
+        strokeStyle: '#11501d',
     })
 
-    static blue = new Color({
-        fillStyle: 'rgba(27,85,232,0.36)',
-        strokeStyle: '#516ee8',
+    static pointD = new Color({
+        fillStyle: '#04c8d35b',
+        strokeStyle: '#04c8d3',
     })
 
-    static blueA = new Color({
-        fillStyle: 'rgba(26,68,174,0.36)',
-        strokeStyle: '#2e48af',
+    static pointD1 = new Color({
+        fillStyle: '#1c878f5b',
+        strokeStyle: '#0d6d75',
     })
 
     /**
      * @param {string} fillStyle
-     * @param {string} fillText
      * @param {string} strokeStyle
      */
     constructor({

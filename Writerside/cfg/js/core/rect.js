@@ -85,7 +85,7 @@ class Rect {
         x = 0,
         y = 0,
         alignX = 0,
-        color = Color.yellow,
+        color = Color.pointA,
         fontSize
     } = {}) {
         // x: left -> right

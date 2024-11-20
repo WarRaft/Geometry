@@ -22,8 +22,8 @@ class CartesianPointDistanceA extends CanvasDraw {
         const d = Math.sqrt(A.x * A.x + A.y * A.y)
 
         c
-            .point(A, {name: 'A', color: Color.red})
-            .point(O, {color: Color.redA, dash: [2, 2]})
+            .point(A, {name: 'A', color: Color.pointA})
+            .point(O, {color: Color.pointA1, dash: [2, 2]})
             .segment(A, O, {dash: [2, 2]})
             .text(`Расстояние ${d.toFixed(2)}`, {x: 0, y: 4})
     }

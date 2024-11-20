@@ -19,19 +19,18 @@ class CartesianLineSlopeTwo extends CanvasDraw {
 
         const [A, B, C, D] = c.points
 
-
         c
-            .point(A, {name: 'A', color: Color.red})
-            .point(B, {name: 'B', color: Color.green})
-            .point(C, {name: 'C', color: Color.blue})
-            .point(D, {name: 'D', color: Color.yellow})
+            .point(A, {name: 'A', color: Color.pointA})
+            .point(B, {name: 'B', color: Color.pointB})
+            .point(C, {name: 'C', color: Color.pointC})
+            .point(D, {name: 'D', color: Color.pointD})
 
 
         const errA = A.x === B.x && A.y === B.y
         const errB = C.x === D.x && C.y === D.y
 
-        if (errA) c.text('Прямая AB не определена', {x: 0, y: 8, color: Color.yellow})
-        if (errB) c.text('Прямая CD не определена', {x: 0, y: 7, color: Color.yellow})
+        if (errA) c.text('Прямая AB не определена', {x: 0, y: 8, color: Color.pointA})
+        if (errB) c.text('Прямая CD не определена', {x: 0, y: 7, color: Color.pointA})
 
         if (errA || errB) return
 

@@ -17,13 +17,12 @@ class CartesianLine extends CanvasDraw {
 
         const [A, B] = c.points
 
-
         c
-            .point(A, {name: 'A', color: Color.red})
-            .point(B, {name: 'B', color: Color.green})
+            .point(A, {name: 'A', color: Color.pointA})
+            .point(B, {name: 'B', color: Color.pointB})
 
         if (A.x === B.x && A.y === B.y) {
-            c.text('Прямая не определена', {x: 0, y: 4, color: Color.yellow})
+            c.text('Прямая не определена', {x: 0, y: 4, color: Color.pointA})
             return
         }
 

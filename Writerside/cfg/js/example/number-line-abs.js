@@ -18,8 +18,8 @@ class CanvasNumberLineAbs extends CanvasDraw {
         const A1 = new Point(Math.abs(A.x), 0, {round: c.round})
 
         c
-            .point(A, {name: 'A', color: Color.red})
-            .point(A1, {name: '|A|', color: Color.redA, dash: [2, 2]})
+            .point(A, {name: 'A', color: Color.pointA})
+            .point(A1, {name: '|A|', color: Color.pointA1, dash: [2, 2]})
 
     }
 }
