@@ -7,8 +7,8 @@ class CartesianLine extends CanvasDraw {
         const c = this.cartesian = new Cartesian(this, 7, {round: true})
 
         c.points.push(
-            new Point(2, 3),
-            new Point(-2, 1),
+            new Point(2, 3, {name: 'A', color: Color.pointA}),
+            new Point(-2, 1, {name: 'B', color: Color.pointB}),
         )
     }
 
@@ -17,16 +17,16 @@ class CartesianLine extends CanvasDraw {
 
         const [A, B] = c.points
 
-        c
-            .pointOld(A, {name: 'A', color: Color.pointA})
-            .pointOld(B, {name: 'B', color: Color.pointB})
+        A.draw(c)
+        B.draw(c)
 
         if (A.x === B.x && A.y === B.y) {
             c.text('Прямая не определена', {x: 0, y: 4, color: Color.pointA})
-            return
+        } else {
+            new Segment(A, B, {line: 3}).draw(c)
         }
 
-        c.segment(A, B, {line: 3})
+        c.draw()
     }
 }
 

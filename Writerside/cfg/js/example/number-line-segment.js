@@ -17,12 +17,11 @@ class CanvasNumberLineSegment extends CanvasDraw {
 
         let [A, B] = c.points
 
-        A.parent(B, c).draw(c)
+        A.parent(B.draw(c), c).draw(c)
 
-        B.draw(c)
+        new Segment(A, B).draw(c)
 
         c.draw()
-        //.segment(A, B)
     }
 }
 

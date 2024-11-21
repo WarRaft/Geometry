@@ -8,6 +8,7 @@ class Point {
      * @param {boolean} dragY
      * @param {number[]} dash
      * @param round
+     * @param hidden
      */
     constructor(x, y, {
         name = '',
@@ -16,6 +17,7 @@ class Point {
         dragY = true,
         dash = [],
         round = false,
+        hidden = false,
     } = {}) {
         this.#x = x
         this.#y = y
@@ -25,6 +27,7 @@ class Point {
         this.dragY = dragY
         this.round = round
         this.dash = dash
+        this.hidden = hidden
     }
 
     #x = 0
@@ -33,6 +36,7 @@ class Point {
     radius = 6
     /** @type {number} */ cx = 0
     /** @type {number} */ cy = 0
+    /** @type {number} */ cr = 0
 
     /**
      * @param {Cartesian} ctx
@@ -103,39 +107,10 @@ class Point {
             if (c.dragPoint === this) b.#x = this.#x
             else this.#x = b.#x
         }
-        //if (this.#x < b.#x) b.#x = this.#x
-
+        if (this.#y < b.#y) {
+            if (c.dragPoint === this) b.#y = this.#y
+            else this.#y = b.#y
+        }
         return this
     }
-
-
-    /**
-     * @param {Cartesian} c
-     * @param {Point} b
-     * @deprecated
-     */
-    cartesianRectSwapOld(c, b) {
-        const ax = this.#x
-        const ay = this.#y
-        const bx = b.#x
-        const by = b.#y
-
-        const swap = () => {
-            if (c.dragPoint === this) c.dragPoint = b
-            else if (c.dragPoint === b) c.dragPoint = this
-        }
-
-        if (ax > bx) {
-            this.#x = bx
-            b.#x = ax
-            swap()
-        }
-
-        if (ay < by) {
-            this.#y = by
-            b.#y = ay
-            swap()
-        }
-    }
-
 }

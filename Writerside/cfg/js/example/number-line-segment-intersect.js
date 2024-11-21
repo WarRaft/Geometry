@@ -7,10 +7,10 @@ class CanvasNumberLineSegmentIntersect extends CanvasDraw {
         const c = this.cartesian = new Cartesian(this, 4, {round: true})
 
         c.points.push(
-            new Point(-5, 0, {dragY: false}),
-            new Point(1, 0, {dragY: false}),
-            new Point(-2, 0, {dragY: false}),
-            new Point(4, 0, {dragY: false}),
+            new Point(-5, 0, {name: 'A', color: Color.pointA, dragY: false}),
+            new Point(1, 0, {name: 'B', color: Color.pointB, dragY: false}),
+            new Point(-2, 0, {name: 'C', color: Color.pointC, dragY: false}),
+            new Point(4, 0, {name: 'D', color: Color.pointD, dragY: false}),
         )
     }
 
@@ -19,17 +19,12 @@ class CanvasNumberLineSegmentIntersect extends CanvasDraw {
 
         let [A, B, C, D] = c.points
 
-        if (A.x > B.x) [A, B] = [B, A]
-        if (C.x > D.x) [C, D] = [D, C]
-
-        c
-            .pointOld(A, {name: 'A', color: Color.pointA})
-            .pointOld(B, {name: 'B', color: Color.pointB})
-
-            .pointOld(C, {name: 'C', color: Color.pointC})
-            .pointOld(D, {name: 'D', color: Color.pointD})
+        A.parent(B.draw(c), c).draw(c)
+        C.parent(D.draw(c), c).draw(c)
 
         const i = new NumberLineSegmentIntersection(A, B, C, D, c, {x: true})
+
+        c.draw()
 
         c.text(i.X
             ? `Пересечением является [${i.XA.name}, ${i.XB.name}]`
@@ -68,10 +63,15 @@ class NumberLineSegmentIntersection {
     constructor(A, B, C, D, cartesian, {x = false, y = false} = {}) {
         const points = [A, B, C, D]
 
-        const draw = () => {
+        const drawTrue = () => {
             for (let i = 1; i < points.length; i++) {
-                cartesian.segment(points[i - 1], points[i])
+                new Segment(points[i - 1], points[i]).draw(cartesian)
             }
+        }
+
+        const drawFalse = () => {
+            new Segment(A, B).draw(cartesian)
+            new Segment(C, D).draw(cartesian)
         }
 
         // --- X
@@ -82,9 +82,9 @@ class NumberLineSegmentIntersection {
         if (x) {
             if (this.X) {
                 points.sort((a, b) => a.x - b.x)
-                draw()
+                drawTrue()
             } else {
-                cartesian.segment(A, B).segment(C, D)
+                drawFalse()
             }
         }
 
@@ -96,9 +96,9 @@ class NumberLineSegmentIntersection {
         if (y) {
             if (this.Y) {
                 points.sort((a, b) => a.y - b.y)
-                draw()
+                drawTrue()
             } else {
-                cartesian.segment(A, B).segment(C, D)
+                drawFalse()
             }
         }
     }

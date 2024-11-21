@@ -7,8 +7,8 @@ class CartesianLineEquation extends CanvasDraw {
         const c = this.cartesian = new Cartesian(this, 10, {round: true})
 
         c.points.push(
-            new Point(2, 3),
-            new Point(-2, -5),
+            new Point(2, 3, {name: 'A', color: Color.pointA}),
+            new Point(-2, -5, {name: 'B', color: Color.pointB}),
         )
     }
 
@@ -17,18 +17,19 @@ class CartesianLineEquation extends CanvasDraw {
 
         const [A, B] = c.points
 
-        c
-            .pointOld(A, {name: 'A', color: Color.pointA})
-            .pointOld(B, {name: 'B', color: Color.pointB})
+        A.draw(c)
+        B.draw(c)
 
         if (A.x === B.x && A.y === B.y) {
+            c.draw()
             c.text('Прямая не определена', {x: 0, y: 4, color: Color.pointA})
             return
         }
 
-        c.segment(A, B, {line: 3})
+        new Segment(A, B, {line: 3}).draw(c)
 
         if (A.x === B.x) {
+            c.draw()
             c.text('Уравнение не определено для вертикальной прямой', {x: 0, y: 6, color: Color.pointA})
             return
         }
@@ -36,6 +37,7 @@ class CartesianLineEquation extends CanvasDraw {
         const k = (B.y - A.y) / (B.x - A.x)
         const b = A.y - k * A.x
 
+        c.draw()
         c.text(`y = ${k.toFixed(2)} * x + ${b.toFixed(2)}`, {x: 0, y: 6})
     }
 }

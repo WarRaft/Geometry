@@ -7,8 +7,8 @@ class CartesianLineSlope extends CanvasDraw {
         const c = this.cartesian = new Cartesian(this, 8, {round: true})
 
         c.points.push(
-            new Point(3, 2),
-            new Point(5, -2),
+            new Point(3, 2, {name: 'A', color: Color.pointA}),
+            new Point(5, -2, {name: 'B', color: Color.pointB}),
         )
     }
 
@@ -17,29 +17,26 @@ class CartesianLineSlope extends CanvasDraw {
 
         const [A, B] = c.points
 
-
-        c
-            .pointOld(A, {name: 'A', color: Color.pointA})
-            .pointOld(B, {name: 'B', color: Color.pointB})
+        A.draw(c)
+        B.draw(c)
 
         if (A.x === B.x && A.y === B.y) {
+            c.draw()
             c.text('Прямая не определена', {x: 0, y: 4, color: Color.pointA})
             return
         }
 
-        const A1 = new Point(0, 0)
+        const A1 = new Point(0, 0, {name: 'A′', color: Color.pointA1, dash: [2, 2]}).draw(c)
 
         const dx = B.x - A.x
         const dy = B.y - A.y
 
-        const B1 = new Point(dx, dy)
+        const B1 = new Point(dx, dy, {name: 'B′', color: Color.pointB1, dash: [2, 2]}).draw(c)
 
-        c
-            .pointOld(A1, {name: 'A′', color: Color.pointA1, dash: [2, 2]})
-            .pointOld(B1, {name: 'B′', color: Color.pointB1, dash: [2, 2]})
-            .segment(A, B, {line: 3})
-            .segment(A1, B1, {line: 3, dash: [2, 2]})
+        new Segment(A, B, {line: 3}).draw(c)
+        new Segment(A1, B1, {line: 3, dash: [2, 2]}).draw(c)
 
+        c.draw()
 
         if (dx === 0) {
             c.text('Коэффициент не определён', {x: 0, y: 6})

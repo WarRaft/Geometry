@@ -60,8 +60,10 @@ class Cartesian {
     /** @type {Point[]} */ points = []
     /** @type {Point|null} */ dragPoint = null
 
-    /** @type {Rect[]} */ #drawPointName = []
     /** @type {Point[]} */ drawPoint = []
+    /** @type {Segment[]} */ drawSegment = []
+    /** @type {Rect[]} */ drawRect = []
+    /** @type {Polygon[]} */ drawPolygon = []
 
     /**
      * @param {boolean} x
@@ -75,7 +77,9 @@ class Cartesian {
     ) {
         this.#axisY = y
         this.drawPoint = []
-        this.#drawPointName = []
+        this.drawSegment = []
+        this.drawRect = []
+        this.drawPolygon = []
 
         // -- vars
         const draw = this.#draw
@@ -222,24 +226,31 @@ class Cartesian {
         const ctx = this.#ctx
         const dpr = this.#dpr
         const step = this.#step
+        /** @type {TextRect[]} */ const pointName = []
+        /** @type {TextRect[]} */ const pointNameClip = []
+
+        const ox = this.#ox
+        const oy = this.#oy
 
         // -- point
         for (const p of this.drawPoint) {
-            const x = p.cx = this.#ox + p.x * step
-            const y = p.cy = this.#oy - p.y * step
-            const r = p.radius * dpr
+            p.cx = ox + p.x * step
+            p.cy = oy - p.y * step
+            p.cr = p.radius * dpr
+
+            if (p.hidden) continue
 
             ctx.beginPath()
             ctx.fillStyle = p.color.fillStyle
             ctx.strokeStyle = p.color.strokeStyle
 
             ctx.setLineDash(p.dash.map(v => v * dpr))
-            ctx.arc(x, y, r, 0, Math.PI * 2)
+            ctx.arc(p.cx, p.cy, p.cr, 0, Math.PI * 2)
             ctx.fill()
             ctx.stroke()
             ctx.closePath()
 
-            this.#drawPointName.push(new Rect(x - r, x + r, y - r, y + r))
+            pointName.push(new TextRect(p.cx - p.cr, p.cx + p.cr, p.cy - p.cr, p.cy + p.cr))
         }
 
         // -- point name
@@ -248,20 +259,17 @@ class Cartesian {
                 ctx.beginPath()
                 ctx.setLineDash([])
 
-                const x = p.cx
-                const y = p.cy
-                const r = p.radius * dpr
                 const gap = 5 * dpr
 
-                const ra = Rect.fromText(ctx, p.name, {
-                    x: x,
+                const ra = TextRect.fromText(ctx, p.name, {
+                    x: p.cx,
                     alignX: .5,
-                    y: y - r - gap,
+                    y: p.cy - p.cr - gap,
                     color: p.color,
                     fontSize: 16 * dpr,
                 })
 
-                const rb = Rect.fromText(
+                const rb = TextRect.fromText(
                     ctx, `(${p.xs}${this.#axisY ? `, ${p.ys}` : ''})`, {
                         fontSize: 12 * dpr,
                         color: p.color,
@@ -271,8 +279,8 @@ class Cartesian {
                 )
 
                 const i = () => {
-                    for (const r of this.#drawPointName) {
-                        /** @type {Rect} */ let cur = null
+                    for (const r of pointName) {
+                        /** @type {TextRect} */ let cur = null
                         if (r.intesect(ra)) cur = ra
                         else if (r.intesect(rb)) cur = rb
                         if (cur === null) continue
@@ -287,209 +295,155 @@ class Cartesian {
                 }
                 i()
 
-                this.#drawPointName.push(ra.fill(), rb.fill())
+                pointName.push(ra.fill(), rb.fill())
+
+                pointNameClip.push(ra.expand(2 * dpr), rb)
                 ctx.closePath()
             }
         }
 
-        // -- return
-        return this
-    }
+        ctx.save()
+        if (pointNameClip.length > 0) {
+            for (const p of pointNameClip) {
+                const path = new Path2D()
+                path.rect(0, 0, this.#canvasWidth, this.#canvasHeight)
+                path.rect(p.minX, p.minY, p.width, p.height)
+                ctx.clip(path, 'evenodd')
+            }
+        }
 
+        // -- segment
+        /**
+         * @param {number} ax
+         * @param {number} ay
+         * @param {number} bx
+         * @param {number} by
+         * @param {Color} ca
+         * @param {?Color} cb
+         * @param {number[]} dash
+         */
+        const _segment = (ax, ay, bx, by, ca, cb, dash) => {
+            const ctx = this.#ctx
 
-    /**
-     * @param {Point} point
-     * @param dash
-     * @param {number} radius
-     * @param {Color} color
-     * @param name
-     * @return {this}
-     * @deprecated
-     */
-    pointOld(point, {
-        name = '',
-        color = Color.pointA,
-        dash = [],
-        radius = 6,
-    } = {}) {
-        return this
-    }
+            if (cb instanceof Color) {
+                const grad = ctx.createLinearGradient(ax, ay, bx, by)
+                grad.addColorStop(0, ca.strokeStyle)
+                grad.addColorStop(1, cb.strokeStyle)
+                ctx.strokeStyle = grad
+            } else {
+                ctx.strokeStyle = ca.strokeStyle
+            }
 
-    /**
-     * @param {number} ax
-     * @param {number} ay
-     * @param {number} bx
-     * @param {number} by
-     * @param {Color} ca
-     * @param {?Color} cb
-     * @param {number[]} dash
-     */
-    #segment(ax, ay, bx, by, ca, cb, dash) {
-        const ctx = this.#ctx
+            ctx.beginPath()
+            ctx.moveTo(ax, ay)
+            ctx.lineTo(bx, by)
+            ctx.setLineDash(dash)
+            ctx.stroke()
+            ctx.closePath()
+        }
 
-        if (cb instanceof Color) {
+        for (const s of this.drawSegment) {
+            const dx = s.b.cx - s.a.cx
+            const dy = s.b.cy - s.a.cy
+
+            const angle = Math.atan2(dy, dx)
+            const dist = Math.sqrt(dx * dx + dy * dy) - s.b.cr
+            if (dist < s.a.cr + s.b.cr) continue
+
+            const cos = Math.cos(angle)
+            const sin = Math.sin(angle)
+
+            const ax = cos * s.a.cr + s.a.cx
+            const ay = sin * s.a.cr + s.a.cy
+
+            const bx = cos * dist + s.a.cx
+            const by = sin * dist + s.a.cy
+
+            const dash = s.dash.map(v => v * dpr)
+
+            _segment(ax, ay, bx, by, s.a.color, s.b.color, dash)
+
+            if (s.line > 0) {
+                const ld = this.#canvasWidth + this.#canvasHeight
+                const cosld = cos * ld
+                const sinld = sin * ld
+
+                if (s.line >= 3 || s.line === 1) {
+                    const r = s.a.cr * 2
+                    _segment(-cos * r + ax, -sin * r + ay, ax - cosld, ay - sinld, s.a.color, null, dash)
+                }
+                if (s.line >= 3 || s.line === 2) {
+                    const r = s.b.cr * 2
+                    _segment(cos * r + bx, sin * r + by, cosld + bx, sinld + by, s.b.color, null, dash)
+                }
+            }
+        }
+
+        // -- rect
+        for (const r of this.drawRect) {
+            const ar = r.a.cr
+            const br = r.b.cr
+
+            const ax = r.a.cx
+            const ay = r.a.cy
+            const bx = r.b.cx
+            const by = r.b.cy
+
             const grad = ctx.createLinearGradient(ax, ay, bx, by)
-            grad.addColorStop(0, ca.strokeStyle)
-            grad.addColorStop(1, cb.strokeStyle)
+            grad.addColorStop(0, r.a.color.strokeStyle)
+            grad.addColorStop(1, r.b.color.strokeStyle)
             ctx.strokeStyle = grad
-        } else {
-            ctx.strokeStyle = ca.strokeStyle
-        }
 
-        ctx.beginPath()
-        ctx.moveTo(ax, ay)
-        ctx.lineTo(bx, by)
-        ctx.setLineDash(dash)
-        ctx.stroke()
-        ctx.closePath()
-    }
+            ctx.beginPath()
 
-    /**
-     * @param {Point} a
-     * @param {Point} b
-     * @param {number[]} dash
-     * @param {number} line
-     * @return {this}
-     */
-    segment(a, b, {
-        dash = [],
-        line = 0
-    } = {}) {
-        return this
-
-        const dpr = this.#dpr
-        const step = this.#step
-
-        const cx = this.#ox
-        const cy = this.#oy
-
-        let ax = cx + a.x * step
-        let ay = cy + a.y * -step
-        let bx = cx + b.x * step
-        let by = cy + b.y * -step
-
-        const dx = bx - ax
-        const dy = by - ay
-
-        const angle = Math.atan2(dy, dx)
-        const dist = Math.sqrt(dx * dx + dy * dy) - b.radius
-
-        const cos = Math.cos(angle)
-        const sin = Math.sin(angle)
-
-        bx = cos * dist + ax
-        by = sin * dist + ay
-
-        ax += cos * a.radius
-        ay += sin * a.radius
-
-        dash = dash.map(v => v * dpr)
-
-        this.#segment(ax, ay, bx, by, a.color, b.color, dash)
-
-        if (line > 0) {
-            const ld = this.#canvasWidth + this.#canvasHeight
-            const cosld = cos * ld
-            const sinld = sin * ld
-
-            if (line >= 3 || line === 1) {
-                const r = a.radius * 2
-                this.#segment(-cos * r + ax, -sin * r + ay, ax - cosld, ay - sinld, a.color, null, dash)
+            // ↖️↗️
+            if (bx - ax > ar) {
+                ctx.moveTo(ax + ar, ay)
+                ctx.lineTo(bx, ay)
             }
-            if (line >= 3 || line === 2) {
-                const r = b.radius * 2
-                this.#segment(cos * r + bx, sin * r + by, cosld + bx, sinld + by, b.color, null, dash)
+
+            // ↗️
+            // ↘️
+            if (by - ay > br) {
+                ctx.moveTo(bx, ay)
+                ctx.lineTo(bx, by - br)
             }
+
+            // ↖️
+            // ↙️
+            if (by - ay > ar) {
+                ctx.moveTo(ax, ay + ar)
+                ctx.lineTo(ax, by)
+            }
+
+            // ↙️↘️
+            if (bx - ax > ar) {
+                ctx.moveTo(ax, by)
+                ctx.lineTo(bx - br, by)
+            }
+
+            ctx.stroke()
+            ctx.closePath()
         }
 
-        return this
-    }
+        ctx.restore()
 
-    /**
-     * @param {Point} a
-     * @param {Point} b
-     */
-    rect(a, b) {
-        return this
+        // -- polygon
+        for (const p of this.drawPolygon) {
+            if (p.points.length < 2) continue
 
-        const ctx = this.#ctx
-        const step = this.#step
-
-        const cx = this.#ox
-        const cy = this.#oy
-
-        const ar = a.radius
-        const br = b.radius
-
-        const ax = cx + a.x * step
-        const ay = cy + a.y * -step
-        const bx = cx + b.x * step
-        const by = cy + b.y * -step
-
-        const grad = ctx.createLinearGradient(ax, ay, bx, by)
-        grad.addColorStop(0, a.color.strokeStyle)
-        grad.addColorStop(1, b.color.strokeStyle)
-        ctx.strokeStyle = grad
-
-        ctx.beginPath()
-
-        // ↖️↗️
-        if (bx - ax > ar) {
-            ctx.moveTo(ax + ar, ay)
-            ctx.lineTo(bx, ay)
+            ctx.beginPath()
+            ctx.moveTo(p.points[0].cx, p.points[0].cy)
+            for (let i = 1; i < p.points.length; i++) {
+                ctx.lineTo(p.points[i].cx, p.points[i].cy)
+            }
+            ctx.fillStyle = p.color.fillStyle
+            //ctx.strokeStyle = p.color.strokeStyle
+            ctx.fill('evenodd')
+            ctx.closePath()
         }
 
-        // ↗️
-        // ↘️
-        if (by - ay > br) {
-            ctx.moveTo(bx, ay)
-            ctx.lineTo(bx, by - br)
-        }
-
-        // ↖️
-        // ↙️
-        if (by - ay > ar) {
-            ctx.moveTo(ax, ay + ar)
-            ctx.lineTo(ax, by)
-        }
-
-        // ↙️↘️
-        if (bx - ax > ar) {
-            ctx.moveTo(ax, by)
-            ctx.lineTo(bx - br, by)
-        }
-
-        ctx.stroke()
-        ctx.closePath()
-
-        return this
-    }
-
-    /**
-     * @param {Point[]} points
-     * @param {Color} color
-     * @return {this}
-     */
-    polygon(points, {
-        color = Color.polygon
-    } = {}) {
-        if (points.length < 2) return this
-
-        const ctx = this.#ctx
-        const step = this.#step
-
-        const cx = this.#ox
-        const cy = this.#oy
-
-        ctx.beginPath()
-        ctx.moveTo(cx + points[0].x * step, cy + points[0].y * -step)
-        for (let i = 1; i < points.length; i++) {
-            ctx.lineTo(cx + points[i].x * step, cy + points[i].y * -step)
-        }
-        ctx.fillStyle = color.fillStyle
-        //ctx.strokeStyle = Color.polygon.stroke
-        ctx.fill('evenodd')
-        ctx.closePath()
+        // -- return
         return this
     }
 
