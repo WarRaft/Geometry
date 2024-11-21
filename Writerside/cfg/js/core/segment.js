@@ -30,10 +30,6 @@ class Segment {
     /** @type {Point} */ a
     /** @type {Point} */ b
 
-    get angle() {
-        return Math.atan2(this.b.y - this.a.y, this.b.x - this.a.x)
-    }
-
     /**
      * @param {Point} point
      * @param {Point} output

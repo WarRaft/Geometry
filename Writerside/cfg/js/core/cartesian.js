@@ -112,6 +112,7 @@ class Cartesian {
         ctx.lineJoin = 'miter'
         ctx.lineWidth = dpr
         ctx.font = `${12 * dpr}px ${cssvar('font-family')}`
+        ctx.textRendering = 'optimizeLegibility'
 
         ctx.fillStyle = Color.bg.fillStyle
         ctx.fillRect(0, 0, caw, cah)
@@ -229,11 +230,15 @@ class Cartesian {
         /** @type {TextRect[]} */ const pointName = []
         /** @type {TextRect[]} */ const pointNameClip = []
 
+        const caw = this.#canvasWidth, cah = this.#canvasHeight
+
         const ox = this.#ox
         const oy = this.#oy
 
+        const points = [...this.drawPoint].sort((a, b) => a.y - b.y)
+
         // -- point
-        for (const p of this.drawPoint) {
+        for (const p of points) {
             p.cx = ox + p.x * step
             p.cy = oy - p.y * step
             p.cr = p.radius * dpr
@@ -243,7 +248,6 @@ class Cartesian {
             ctx.beginPath()
             ctx.fillStyle = p.color.fillStyle
             ctx.strokeStyle = p.color.strokeStyle
-
             ctx.setLineDash(p.dash.map(v => v * dpr))
             ctx.arc(p.cx, p.cy, p.cr, 0, Math.PI * 2)
             ctx.fill()
@@ -254,7 +258,7 @@ class Cartesian {
         }
 
         // -- point name
-        for (const p of this.drawPoint) {
+        for (const p of points) {
             if (p.name.length > 0) {
                 ctx.beginPath()
                 ctx.setLineDash([])
@@ -278,7 +282,7 @@ class Cartesian {
                     }
                 )
 
-                const i = () => {
+                const intersect = () => {
                     for (const r of pointName) {
                         /** @type {TextRect} */ let cur = null
                         if (r.intesect(ra)) cur = ra
@@ -289,27 +293,39 @@ class Cartesian {
                         if (ty > 0) continue
                         ra.translate(0, ty)
                         rb.translate(0, ty)
-                        i()
+                        intersect()
                         break
                     }
                 }
-                i()
+                intersect()
+                ctx.closePath()
 
                 pointName.push(ra.fill(), rb.fill())
-
-                pointNameClip.push(ra.expand(2 * dpr), rb)
-                ctx.closePath()
+                rb.maxY += 3 * dpr
+                pointNameClip.push(ra, rb)
             }
         }
 
         ctx.save()
         if (pointNameClip.length > 0) {
             for (const p of pointNameClip) {
+                //ctx.fillStyle = 'rgba(0, 100, 0, .3)'
+                //ctx.fillRect(p.minX, p.minY, p.width, p.height)
                 const path = new Path2D()
-                path.rect(0, 0, this.#canvasWidth, this.#canvasHeight)
+                path.rect(0, 0, caw, cah)
                 path.rect(p.minX, p.minY, p.width, p.height)
                 ctx.clip(path, 'evenodd')
             }
+        }
+
+        /**
+         * @param {Point} p
+         */
+        const _clipPoint = (p) => {
+            const path = new Path2D()
+            path.rect(0, 0, caw, cah)
+            path.arc(p.cx, p.cy, p.cr, 0, Math.PI * 2)
+            ctx.clip(path, 'evenodd')
         }
 
         // -- segment
@@ -343,87 +359,58 @@ class Cartesian {
         }
 
         for (const s of this.drawSegment) {
-            const dx = s.b.cx - s.a.cx
-            const dy = s.b.cy - s.a.cy
-
-            const angle = Math.atan2(dy, dx)
-            const dist = Math.sqrt(dx * dx + dy * dy) - s.b.cr
-            if (dist < s.a.cr + s.b.cr) continue
-
-            const cos = Math.cos(angle)
-            const sin = Math.sin(angle)
-
-            const ax = cos * s.a.cr + s.a.cx
-            const ay = sin * s.a.cr + s.a.cy
-
-            const bx = cos * dist + s.a.cx
-            const by = sin * dist + s.a.cy
+            const ax = s.a.cx, ay = s.a.cy
+            const bx = s.b.cx, by = s.b.cy
 
             const dash = s.dash.map(v => v * dpr)
 
+            const dx = s.b.cx - s.a.cx, dy = s.b.cy - s.a.cy
+            const angle = Math.atan2(dy, dx)
+
+            ctx.save()
+            _clipPoint(s.a)
+            _clipPoint(s.b)
             _segment(ax, ay, bx, by, s.a.color, s.b.color, dash)
 
             if (s.line > 0) {
                 const ld = this.#canvasWidth + this.#canvasHeight
-                const cosld = cos * ld
-                const sinld = sin * ld
+                const cos = Math.cos(angle) * ld
+                const sin = Math.sin(angle) * ld
 
                 if (s.line >= 3 || s.line === 1) {
-                    const r = s.a.cr * 2
-                    _segment(-cos * r + ax, -sin * r + ay, ax - cosld, ay - sinld, s.a.color, null, dash)
+                    _segment(ax, ay, ax - cos, ay - sin, s.a.color, null, dash)
                 }
                 if (s.line >= 3 || s.line === 2) {
-                    const r = s.b.cr * 2
-                    _segment(cos * r + bx, sin * r + by, cosld + bx, sinld + by, s.b.color, null, dash)
+                    _segment(bx, by, bx + cos, by + sin, s.b.color, null, dash)
                 }
             }
+            ctx.restore()
         }
 
         // -- rect
         for (const r of this.drawRect) {
-            const ar = r.a.cr
-            const br = r.b.cr
-
-            const ax = r.a.cx
-            const ay = r.a.cy
-            const bx = r.b.cx
-            const by = r.b.cy
+            const ax = r.a.cx, ay = r.a.cy
+            const bx = r.b.cx, by = r.b.cy
 
             const grad = ctx.createLinearGradient(ax, ay, bx, by)
             grad.addColorStop(0, r.a.color.strokeStyle)
             grad.addColorStop(1, r.b.color.strokeStyle)
             ctx.strokeStyle = grad
 
+            ctx.save()
+            _clipPoint(r.a)
+            _clipPoint(r.b)
+
             ctx.beginPath()
 
-            // ↖️↗️
-            if (bx - ax > ar) {
-                ctx.moveTo(ax + ar, ay)
-                ctx.lineTo(bx, ay)
-            }
-
-            // ↗️
-            // ↘️
-            if (by - ay > br) {
-                ctx.moveTo(bx, ay)
-                ctx.lineTo(bx, by - br)
-            }
-
-            // ↖️
-            // ↙️
-            if (by - ay > ar) {
-                ctx.moveTo(ax, ay + ar)
-                ctx.lineTo(ax, by)
-            }
-
-            // ↙️↘️
-            if (bx - ax > ar) {
-                ctx.moveTo(ax, by)
-                ctx.lineTo(bx - br, by)
-            }
+            ctx.moveTo(ax, ay) // ↖️
+            ctx.lineTo(bx, ay) // ↗️
+            ctx.lineTo(bx, by) // ↘️
+            ctx.lineTo(ax, by) // ↙️
+            ctx.closePath()
 
             ctx.stroke()
-            ctx.closePath()
+            ctx.restore()
         }
 
         ctx.restore()
