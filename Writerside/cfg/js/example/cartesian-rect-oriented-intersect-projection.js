@@ -1,39 +1,52 @@
-class CartesianRectOrientedIntersect extends CanvasDraw {
-    static name = 'canvas-cartesian-rect-oriented-intersect'
+class CartesianRectOrientedIntersectProjection extends CanvasDraw {
+    static name = 'canvas-cartesian-rect-oriented-intersect-projection'
 
     constructor() {
         super()
 
-        const c = this.cartesian = new Cartesian(this, 15, {round: true})
+        const c = this.cartesian = new Cartesian(this, 13, {round: true})
 
         c.points.push(
-            new Point(-10, 7, {name: 'A', color: Color.pointA}),
-            new Point(4, -3, {name: 'B', color: Color.pointB}),
-            new Point(-4, 3, {name: 'C', color: Color.pointC}),
-            new Point(8, -9, {name: 'D', color: Color.pointD}),
+            new Point(5, 15, {name: 'A', color: Color.pointA}),
+            new Point(15, 7, {name: 'B', color: Color.pointB}),
+            new Point(10, 10, {name: 'C', color: Color.pointC}),
+            new Point(20, 5, {name: 'D', color: Color.pointD}),
         )
     }
 
     draw() {
-        const c = this.cartesian.axis()
+        const c = this.cartesian.axis({xalign: -1, yalign: -1})
 
         const [A, B, C, D] = c.points
 
         A.parent(B.draw(c), c).draw(c)
         C.parent(D.draw(c), c).draw(c)
 
+        const dash = [10, 10,10]
 
         const Ax = new Point(A.x, 0, {name: 'Ax', color: Color.pointA1, round: c.round}).draw(c)
         const Ay = new Point(0, A.y, {name: 'Ay', color: Color.pointA1, round: c.round}).draw(c)
 
+        new Segment(A, Ax, {dash: dash}).draw(c)
+        new Segment(A, Ay, {dash: dash}).draw(c)
+
         const Bx = new Point(B.x, 0, {name: 'Bx', color: Color.pointB1, round: c.round}).draw(c)
         const By = new Point(0, B.y, {name: 'By', color: Color.pointB1, round: c.round}).draw(c)
+
+        new Segment(B, Bx, {dash: dash}).draw(c)
+        new Segment(B, By, {dash: dash}).draw(c)
 
         const Cx = new Point(C.x, 0, {name: 'Cx', color: Color.pointC1, round: c.round}).draw(c)
         const Cy = new Point(0, C.y, {name: 'Cy', color: Color.pointC1, round: c.round}).draw(c)
 
+        new Segment(C, Cx, {dash: dash}).draw(c)
+        new Segment(C, Cy, {dash: dash}).draw(c)
+
         const Dx = new Point(D.x, 0, {name: 'Dx', color: Color.pointD1, round: c.round}).draw(c)
         const Dy = new Point(0, D.y, {name: 'Dy', color: Color.pointD1, round: c.round}).draw(c)
+
+        new Segment(D, Dx, {dash: dash}).draw(c)
+        new Segment(D, Dy, {dash: dash}).draw(c)
 
         new Rect(A, B).draw(c)
         new Rect(C, D).draw(c)
@@ -52,12 +65,12 @@ class CartesianRectOrientedIntersect extends CanvasDraw {
             ]).draw(c)
 
             c
-                .text(`Пересечение по оси X: ${ix.XA.name}, ${ix.XB.name}`, {x: 0, y: 12})
-                .text(`Пересечение по оси Y: ${iy.YA.name}, ${iy.YB.name}`, {x: 0, y: 11})
+                .text(`Пересечение по оси X: ${ix.XA.name}, ${ix.XB.name}`, {x: 13, y: 18})
+                .text(`Пересечение по оси Y: ${iy.YA.name}, ${iy.YB.name}`, {x: 13, y: 17})
         }
 
         c.draw()
     }
 }
 
-CanvasDraw.define(CartesianRectOrientedIntersect)
+CanvasDraw.define(CartesianRectOrientedIntersectProjection)

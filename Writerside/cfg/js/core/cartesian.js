@@ -68,11 +68,15 @@ class Cartesian {
     /**
      * @param {boolean} x
      * @param {boolean} y
+     * @param {0|-1} xalign
+     * @param {0|-1} yalign
      * @return {this}
      */
     axis({
              x = true,
              y = true,
+             xalign = 0,
+             yalign = 0,
          } = {}
     ) {
         this.#axisY = y
@@ -91,7 +95,7 @@ class Cartesian {
         // -- width
         const cow = container.getBoundingClientRect().width
         const caw = canvas.width = this.#canvasWidth = cow * dpr
-        const ox = this.#ox = caw * .5
+        let ox = this.#ox = caw * .5
 
         // -- step
         const stepSize = 25
@@ -106,7 +110,16 @@ class Cartesian {
         container.style.height = `${coh}px`
 
         const cah = this.#canvasHeight = canvas.height = coh * dpr
-        const oy = this.#oy = cah * .5
+        let oy = this.#oy = cah * .5
+
+        // --- align
+        if (xalign === -1) {
+            ox = this.#ox = step
+        }
+
+        if (yalign === -1) {
+            oy = this.#oy = cah - step
+        }
 
         // -- grid
         ctx.lineJoin = 'miter'
