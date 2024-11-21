@@ -59,7 +59,9 @@ class Cartesian {
     round = false
     /** @type {Point[]} */ points = []
     /** @type {Point|null} */ dragPoint = null
-    /** @type {Rect[]} */ #pointNames = []
+
+    /** @type {Rect[]} */ #drawPointName = []
+    /** @type {Point[]} */ drawPoint = []
 
     /**
      * @param {boolean} x
@@ -72,7 +74,8 @@ class Cartesian {
          } = {}
     ) {
         this.#axisY = y
-        this.#pointNames = []
+        this.drawPoint = []
+        this.#drawPointName = []
 
         // -- vars
         const draw = this.#draw
@@ -161,7 +164,7 @@ class Cartesian {
                 const ydt = oy - del
                 const ydb = oy + del
                 for (let i = -xl; i <= xr; i++) {
-                    if (i === 0) continue
+                    if (y && i === 0) continue
                     const xi = ox + i * step
                     ctx.moveTo(xi, ydt)
                     ctx.lineTo(xi, ydb)
@@ -183,7 +186,7 @@ class Cartesian {
                 const xdl = ox - del
                 const xdr = ox + del
                 for (let i = -yt; i <= yb; i++) {
-                    if (i === 0) continue
+                    if (x && i === 0) continue
                     const yi = oy + i * step
                     ctx.moveTo(xdl, yi)
                     ctx.lineTo(xdr, yi)
@@ -213,85 +216,102 @@ class Cartesian {
     }
 
     /**
+     * @return {this}
+     */
+    draw() {
+        const ctx = this.#ctx
+        const dpr = this.#dpr
+        const step = this.#step
+
+        // -- point
+        for (const p of this.drawPoint) {
+            const x = p.cx = this.#ox + p.x * step
+            const y = p.cy = this.#oy - p.y * step
+            const r = p.radius * dpr
+
+            ctx.beginPath()
+            ctx.fillStyle = p.color.fillStyle
+            ctx.strokeStyle = p.color.strokeStyle
+
+            ctx.setLineDash(p.dash.map(v => v * dpr))
+            ctx.arc(x, y, r, 0, Math.PI * 2)
+            ctx.fill()
+            ctx.stroke()
+            ctx.closePath()
+
+            this.#drawPointName.push(new Rect(x - r, x + r, y - r, y + r))
+        }
+
+        // -- point name
+        for (const p of this.drawPoint) {
+            if (p.name.length > 0) {
+                ctx.beginPath()
+                ctx.setLineDash([])
+
+                const x = p.cx
+                const y = p.cy
+                const r = p.radius * dpr
+                const gap = 5 * dpr
+
+                const ra = Rect.fromText(ctx, p.name, {
+                    x: x,
+                    alignX: .5,
+                    y: y - r - gap,
+                    color: p.color,
+                    fontSize: 16 * dpr,
+                })
+
+                const rb = Rect.fromText(
+                    ctx, `(${p.xs}${this.#axisY ? `, ${p.ys}` : ''})`, {
+                        fontSize: 12 * dpr,
+                        color: p.color,
+                        x: ra.maxX,
+                        y: ra.maxY,
+                    }
+                )
+
+                const i = () => {
+                    for (const r of this.#drawPointName) {
+                        /** @type {Rect} */ let cur = null
+                        if (r.intesect(ra)) cur = ra
+                        else if (r.intesect(rb)) cur = rb
+                        if (cur === null) continue
+
+                        const ty = r.minY - cur.maxY - gap
+                        if (ty > 0) continue
+                        ra.translate(0, ty)
+                        rb.translate(0, ty)
+                        i()
+                        break
+                    }
+                }
+                i()
+
+                this.#drawPointName.push(ra.fill(), rb.fill())
+                ctx.closePath()
+            }
+        }
+
+        // -- return
+        return this
+    }
+
+
+    /**
      * @param {Point} point
      * @param dash
      * @param {number} radius
      * @param {Color} color
      * @param name
      * @return {this}
+     * @deprecated
      */
-    point(point, {
+    pointOld(point, {
         name = '',
         color = Color.pointA,
         dash = [],
         radius = 6,
     } = {}) {
-        const ctx = this.#ctx
-        const dpr = this.#dpr
-
-        const r = point.radius = radius * dpr
-        point.color = color
-        point.name = name
-
-        const x = this.#ox + point.x * this.#step
-        const y = this.#oy - point.y * this.#step
-
-        ctx.beginPath()
-        ctx.fillStyle = color.fillStyle
-        ctx.strokeStyle = color.strokeStyle
-
-        ctx.setLineDash(dash.map(v => v * dpr))
-        ctx.arc(x, y, point.radius, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.stroke()
-        ctx.closePath()
-
-        if (name.length > 0) {
-            ctx.beginPath()
-            ctx.setLineDash([])
-
-            const gap = 5 * dpr
-
-            const ra = Rect.fromText(ctx, name, {
-                x: x,
-                alignX: .5,
-                y: y - r - gap,
-                color: color,
-                fontSize: 16 * dpr,
-            })
-
-            const rb = Rect.fromText(
-                ctx, `(${point.xs}${this.#axisY ? `, ${point.ys}` : ''})`, {
-                    fontSize: 12 * dpr,
-                    color: color,
-                    x: ra.maxX,
-                    y: ra.maxY,
-                }
-            )
-
-            const i = () => {
-                for (const r of this.#pointNames) {
-                    /** @type {Rect} */ let cur = null
-                    if (r.intesect(ra)) cur = ra
-                    else if (r.intesect(rb)) cur = rb
-                    if (cur === null) continue
-
-                    const ty = r.minY - cur.maxY - gap
-                    if (ty > 0) continue
-                    ra.translate(0, ty)
-                    rb.translate(0, ty)
-                    i()
-                    break
-                }
-            }
-            i()
-
-            this.#pointNames.push(ra.fill(), rb.fill())
-            ctx.closePath()
-        }
-
-        this.#pointNames.push(new Rect(x - r, x + r, y - r, y + r))
-
         return this
     }
 
@@ -335,6 +355,8 @@ class Cartesian {
         dash = [],
         line = 0
     } = {}) {
+        return this
+
         const dpr = this.#dpr
         const step = this.#step
 
@@ -388,6 +410,8 @@ class Cartesian {
      * @param {Point} b
      */
     rect(a, b) {
+        return this
+
         const ctx = this.#ctx
         const step = this.#step
 

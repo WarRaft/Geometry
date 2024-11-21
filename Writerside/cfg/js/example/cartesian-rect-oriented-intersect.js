@@ -19,8 +19,8 @@ class CartesianRectOrientedIntersect extends CanvasDraw {
 
         let [A, B, C, D] = c.points
 
-        A.cartesianRectSwap(c, B)
-        C.cartesianRectSwap(c, D)
+        A.cartesianRectSwapOld(c, B)
+        C.cartesianRectSwapOld(c, D)
 
         const Ax = new Point(A.x, 0)
         const Ay = new Point(0, A.y)
@@ -39,21 +39,21 @@ class CartesianRectOrientedIntersect extends CanvasDraw {
         Dx.round = Dy.round = c.round
 
         c
-            .point(A, {name: 'A', color: Color.pointA})
-            .point(Ax, {name: 'Ax', color: Color.pointA1})
-            .point(Ay, {name: 'Ay', color: Color.pointA1})
+            .pointOld(A, {name: 'A', color: Color.pointA})
+            .pointOld(Ax, {name: 'Ax', color: Color.pointA1})
+            .pointOld(Ay, {name: 'Ay', color: Color.pointA1})
 
-            .point(B, {name: 'B', color: Color.pointB})
-            .point(Bx, {name: 'Bx', color: Color.pointB1})
-            .point(By, {name: 'By', color: Color.pointB1})
+            .pointOld(B, {name: 'B', color: Color.pointB})
+            .pointOld(Bx, {name: 'Bx', color: Color.pointB1})
+            .pointOld(By, {name: 'By', color: Color.pointB1})
 
-            .point(C, {name: 'C', color: Color.pointC})
-            .point(Cx, {name: 'Cx', color: Color.pointC1})
-            .point(Cy, {name: 'Cy', color: Color.pointC1})
+            .pointOld(C, {name: 'C', color: Color.pointC})
+            .pointOld(Cx, {name: 'Cx', color: Color.pointC1})
+            .pointOld(Cy, {name: 'Cy', color: Color.pointC1})
 
-            .point(D, {name: 'D', color: Color.pointD})
-            .point(Dx, {name: 'Dx', color: Color.pointD1})
-            .point(Dy, {name: 'Dy', color: Color.pointD1})
+            .pointOld(D, {name: 'D', color: Color.pointD})
+            .pointOld(Dx, {name: 'Dx', color: Color.pointD1})
+            .pointOld(Dy, {name: 'Dy', color: Color.pointD1})
 
             .rect(A, B)
             .rect(C, D)

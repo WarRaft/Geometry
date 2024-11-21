@@ -26,12 +26,12 @@ class CartesianPointDistanceB extends CanvasDraw {
         const B1 = new Point(dx, dy, {round: c.round})
 
         c
-            .point(A, {name: 'A', color: Color.pointA})
-            .point(B, {name: 'B', color: Color.pointB})
+            .pointOld(A, {name: 'A', color: Color.pointA})
+            .pointOld(B, {name: 'B', color: Color.pointB})
             .segment(A, B)
 
-            .point(A1, {name: 'A′', color: Color.pointA1, dash: [2, 2]})
-            .point(B1, {name: 'B′', color: Color.pointB1, dash: [2, 2]})
+            .pointOld(A1, {name: 'A′', color: Color.pointA1, dash: [2, 2]})
+            .pointOld(B1, {name: 'B′', color: Color.pointB1, dash: [2, 2]})
             .segment(A1, B1, {dash: [2, 2]})
 
             .text(`Расстояние ${d.toFixed(2)}`, {x: 0, y: 5})

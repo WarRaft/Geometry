@@ -19,8 +19,8 @@ class CartesianLineSlope extends CanvasDraw {
 
 
         c
-            .point(A, {name: 'A', color: Color.pointA})
-            .point(B, {name: 'B', color: Color.pointB})
+            .pointOld(A, {name: 'A', color: Color.pointA})
+            .pointOld(B, {name: 'B', color: Color.pointB})
 
         if (A.x === B.x && A.y === B.y) {
             c.text('Прямая не определена', {x: 0, y: 4, color: Color.pointA})
@@ -35,8 +35,8 @@ class CartesianLineSlope extends CanvasDraw {
         const B1 = new Point(dx, dy)
 
         c
-            .point(A1, {name: 'A′', color: Color.pointA1, dash: [2, 2]})
-            .point(B1, {name: 'B′', color: Color.pointB1, dash: [2, 2]})
+            .pointOld(A1, {name: 'A′', color: Color.pointA1, dash: [2, 2]})
+            .pointOld(B1, {name: 'B′', color: Color.pointB1, dash: [2, 2]})
             .segment(A, B, {line: 3})
             .segment(A1, B1, {line: 3, dash: [2, 2]})
 

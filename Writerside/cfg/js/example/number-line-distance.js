@@ -7,8 +7,8 @@ class CanvasNumberLineDistance extends CanvasDraw {
         const c = this.cartesian = new Cartesian(this, 4, {round: true})
 
         c.points.push(
-            new Point(-6, 0, {dragY: false}),
-            new Point(-3, 0, {dragY: false}),
+            new Point(-6, 0, {name: 'A', color: Color.pointA, dragY: false}),
+            new Point(-3, 0, {name: 'B', color: Color.pointB, dragY: false}),
         )
     }
 
@@ -17,15 +17,13 @@ class CanvasNumberLineDistance extends CanvasDraw {
 
         const [A, B] = c.points
 
-        const A1 = new Point(0, 0, {round: c.round})
-        const B1 = new Point(B.x - A.x, 0, {round: c.round})
+        A.draw(c)
+        new Point(0, 0, {name: 'A′', color: Color.pointA1, dash: [2, 2], round: c.round}).draw(c)
 
-        c
-            .point(A, {name: 'A', color: Color.pointA})
-            .point(A1, {name: 'A′', color: Color.pointA1, dash: [2, 2]})
+        B.draw(c)
+        new Point(B.x - A.x, 0, {name: 'B′', color: Color.pointB1, dash: [2, 2], round: c.round}).draw(c)
 
-            .point(B, {name: 'B', color: Color.pointB})
-            .point(B1, {name: 'B′', color: Color.pointB1, dash: [2, 2]})
+        c.draw()
     }
 }
 

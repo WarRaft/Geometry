@@ -17,11 +17,11 @@ class CartesianRectOriented extends CanvasDraw {
 
         let [A, B] = c.points
 
-        A.cartesianRectSwap(c, B)
+        A.cartesianRectSwapOld(c, B)
 
         c
-            .point(A, {name: 'A', color: Color.pointA})
-            .point(B, {name: 'B', color: Color.pointB})
+            .pointOld(A, {name: 'A', color: Color.pointA})
+            .pointOld(B, {name: 'B', color: Color.pointB})
             .rect(A, B)
     }
 }

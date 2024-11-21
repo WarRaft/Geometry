@@ -7,7 +7,7 @@ class CanvasNumberLineAbs extends CanvasDraw {
         const c = this.cartesian = new Cartesian(this, 4, {round: true})
 
         c.points.push(
-            new Point(-5, 0, {dragY: false})
+            new Point(-5, 0, {name: 'A', color: Color.pointA, dragY: false})
         )
     }
 
@@ -15,12 +15,11 @@ class CanvasNumberLineAbs extends CanvasDraw {
         const c = this.cartesian.axis({y: false})
 
         const [A] = c.points
-        const A1 = new Point(Math.abs(A.x), 0, {round: c.round})
 
-        c
-            .point(A, {name: 'A', color: Color.pointA})
-            .point(A1, {name: '|A|', color: Color.pointA1, dash: [2, 2]})
+        A.draw(c)
+        new Point(Math.abs(A.x), 0, {name: '|A|', color: Color.pointA1, dash: [2, 2], round: c.round}).draw(c)
 
+        c.draw()
     }
 }
 

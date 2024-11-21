@@ -2,30 +2,48 @@ class Point {
     /**
      * @param {number} x
      * @param {number} y
+     * @param {string} name
+     * @param {Color} color
      * @param {boolean} dragX
      * @param {boolean} dragY
+     * @param {number[]} dash
      * @param round
      */
     constructor(x, y, {
+        name = '',
+        color = Color.pointA,
         dragX = true,
         dragY = true,
+        dash = [],
         round = false,
     } = {}) {
         this.#x = x
         this.#y = y
+        this.name = name
+        this.color = color
         this.dragX = dragX
         this.dragY = dragY
         this.round = round
+        this.dash = dash
     }
 
     #x = 0
     #y = 0
-    round = false
-    radius = 0
-    name = ''
 
-    /** @type {Rect} */ rect
-    /** @type {Color} */ color
+    radius = 6
+    /** @type {number} */ cx = 0
+    /** @type {number} */ cy = 0
+
+    /**
+     * @param {Cartesian} ctx
+     * @return {this}
+     */
+    draw(ctx) {
+        if (ctx instanceof Cartesian) {
+            ctx.drawPoint.push(this)
+        }
+        return this
+    }
 
     get x() {
         return this.round ? Math.round(this.#x) : this.#x
@@ -76,10 +94,27 @@ class Point {
     }
 
     /**
+     * @param {Point} b
+     * @param {Cartesian} c
+     * @return {Point}
+     */
+    parent(b, c) {
+        if (this.#x > b.#x) {
+            if (c.dragPoint === this) b.#x = this.#x
+            else this.#x = b.#x
+        }
+        //if (this.#x < b.#x) b.#x = this.#x
+
+        return this
+    }
+
+
+    /**
      * @param {Cartesian} c
      * @param {Point} b
+     * @deprecated
      */
-    cartesianRectSwap(c, b) {
+    cartesianRectSwapOld(c, b) {
         const ax = this.#x
         const ay = this.#y
         const bx = b.#x
@@ -101,35 +136,6 @@ class Point {
             b.#y = ay
             swap()
         }
-    }
-
-    /**
-     * @param {Point} point
-     * @return {Point}
-     */
-    fromPoint(point) {
-        this.#x = point.x
-        this.#y = point.y
-        return this
-    }
-
-    /**
-     * @param {number} angle
-     * @param {number} distance
-     * @return {Point}
-     */
-    polar(angle, distance) {
-        this.#x += Math.cos(angle) * distance
-        this.#y += Math.sin(angle) * distance
-        return this
-    }
-
-    /**
-     * @param {Point} point
-     * @return {Segment}
-     */
-    segment(point) {
-        return new Segment(this, point)
     }
 
 }
