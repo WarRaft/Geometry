@@ -160,6 +160,7 @@ CanvasDraw.sheet.replaceSync(
             margin: var(--m) calc(.5rem + var(--m)) var(--m) calc(var(--m));
             vertical-align: middle;
             border: 1px solid var(--input-background);
+            border-radius: 0;
         }
 
         [type=checkbox]:checked {

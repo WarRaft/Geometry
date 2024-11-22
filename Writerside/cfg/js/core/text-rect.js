@@ -37,18 +37,6 @@ class TextRect {
     }
 
     /**
-     * @param {number} p
-     * @return {this}
-     */
-    expand(p) {
-        this.minX -= p
-        this.maxX += p
-        this.minY -= p
-        this.maxY += p
-        return this
-    }
-
-    /**
      * @param {TextRect} b
      * @return {boolean}
      */

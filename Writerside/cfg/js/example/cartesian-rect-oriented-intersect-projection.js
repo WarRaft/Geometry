@@ -22,31 +22,31 @@ class CartesianRectOrientedIntersectProjection extends CanvasDraw {
         A.parent(B.draw(c), c).draw(c)
         C.parent(D.draw(c), c).draw(c)
 
-        const dash = [10, 10,10]
+        const dash = [10, 10]
 
         const Ax = new Point(A.x, 0, {name: 'Ax', color: Color.pointA1, round: c.round}).draw(c)
         const Ay = new Point(0, A.y, {name: 'Ay', color: Color.pointA1, round: c.round}).draw(c)
 
-        new Segment(A, Ax, {dash: dash}).draw(c)
-        new Segment(A, Ay, {dash: dash}).draw(c)
+        new Segment(Ax, A, {dash: dash}).draw(c)
+        new Segment(Ay, A, {dash: dash}).draw(c)
 
         const Bx = new Point(B.x, 0, {name: 'Bx', color: Color.pointB1, round: c.round}).draw(c)
         const By = new Point(0, B.y, {name: 'By', color: Color.pointB1, round: c.round}).draw(c)
 
-        new Segment(B, Bx, {dash: dash}).draw(c)
-        new Segment(B, By, {dash: dash}).draw(c)
+        new Segment(Bx, B, {dash: dash}).draw(c)
+        new Segment(By, B, {dash: dash}).draw(c)
 
         const Cx = new Point(C.x, 0, {name: 'Cx', color: Color.pointC1, round: c.round}).draw(c)
         const Cy = new Point(0, C.y, {name: 'Cy', color: Color.pointC1, round: c.round}).draw(c)
 
-        new Segment(C, Cx, {dash: dash}).draw(c)
-        new Segment(C, Cy, {dash: dash}).draw(c)
+        new Segment(Cx, C, {dash: dash}).draw(c)
+        new Segment(Cy, C, {dash: dash}).draw(c)
 
         const Dx = new Point(D.x, 0, {name: 'Dx', color: Color.pointD1, round: c.round}).draw(c)
         const Dy = new Point(0, D.y, {name: 'Dy', color: Color.pointD1, round: c.round}).draw(c)
 
-        new Segment(D, Dx, {dash: dash}).draw(c)
-        new Segment(D, Dy, {dash: dash}).draw(c)
+        new Segment(Dx, D, {dash: dash}).draw(c)
+        new Segment(Dy, D, {dash: dash}).draw(c)
 
         new Rect(A, B).draw(c)
         new Rect(C, D).draw(c)
@@ -63,6 +63,11 @@ class CartesianRectOrientedIntersectProjection extends CanvasDraw {
             new Polygon([
                 lt, rt, rb, lb
             ]).draw(c)
+
+            const t = new TextDraw(this)
+
+            new TextSpan('Пересечение по оси X: ').draw(t)
+
 
             c
                 .text(`Пересечение по оси X: ${ix.XA.name}, ${ix.XB.name}`, {x: 13, y: 18})

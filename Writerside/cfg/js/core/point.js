@@ -76,17 +76,6 @@ class Point {
     }
 
     /**
-     * @param {number} x
-     * @param {number} y
-     * @return {Point}
-     */
-    move(x, y) {
-        this.#x = x
-        this.#y = y
-        return this
-    }
-
-    /**
      * @param {number} dx
      * @param {number} dy
      * @return {Point}
