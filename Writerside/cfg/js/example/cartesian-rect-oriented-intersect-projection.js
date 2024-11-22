@@ -54,6 +54,8 @@ class CartesianRectOrientedIntersectProjection extends CanvasDraw {
         const ix = new NumberLineSegmentIntersection(Ax, Bx, Cx, Dx, c, {x: true})
         const iy = new NumberLineSegmentIntersection(By, Ay, Dy, Cy, c, {y: true})
 
+        const t = new TextDraw(this)
+
         if (ix.X && iy.Y) {
             const lt = new Point(ix.XA.x, iy.YB.y, {hidden: true}).draw(c)
             const rb = new Point(ix.XB.x, iy.YA.y, {hidden: true}).draw(c)
@@ -64,17 +66,26 @@ class CartesianRectOrientedIntersectProjection extends CanvasDraw {
                 lt, rt, rb, lb
             ]).draw(c)
 
-            const t = new TextDraw(this)
+            t.spans.push(
+                new TextSpan('Пересечение по оси X = ['),
+                new TextSpan(ix.XA.name, {color: ix.XA.color}),
+                new TextSpan(', '),
+                new TextSpan(ix.XB.name, {color: ix.XB.color}),
+                new TextSpan(']'),
 
-            new TextSpan('Пересечение по оси X: ').draw(t)
+                new TextSpan('\n'),
 
-
-            c
-                .text(`Пересечение по оси X: ${ix.XA.name}, ${ix.XB.name}`, {x: 13, y: 18})
-                .text(`Пересечение по оси Y: ${iy.YA.name}, ${iy.YB.name}`, {x: 13, y: 17})
+                new TextSpan('Пересечение по оси Y = ['),
+                new TextSpan(iy.YA.name, {color: iy.YA.color}),
+                new TextSpan(', '),
+                new TextSpan(iy.YB.name, {color: iy.YB.color}),
+                new TextSpan(']'),
+            )
         }
 
+
         c.draw()
+        t.draw({xalign: 1})
     }
 }
 

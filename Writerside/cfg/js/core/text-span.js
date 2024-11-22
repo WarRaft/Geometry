@@ -1,16 +1,17 @@
 class TextSpan {
     /**
      * @param {string} text
-     * @param {TextSpan[]} children
+     * @param {Color} color
      */
     constructor(text, {
-        children = [],
+        color = Color.text,
     } = {}) {
         this.text = text
+        this.color = color
     }
 
-    /** @type {TextMetrics} */
-    metrics
+    /** @type {TextRect} */
+    rect
 
     /**
      * @param {TextDraw} t

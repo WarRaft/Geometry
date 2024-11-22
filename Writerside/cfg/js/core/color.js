@@ -16,6 +16,11 @@ class Color {
         strokeStyle: 'rgba(5,238,213,0.48)',
     })
 
+    static text = new Color({
+        fillStyle: 'rgba(14,14,46,0.75)',
+        strokeStyle: '#bcbcc3',
+    })
+
     // --- points
     static pointA = new Color({
         fillStyle: '#ed0c215b',

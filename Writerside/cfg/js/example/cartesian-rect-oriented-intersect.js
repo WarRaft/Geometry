@@ -51,9 +51,25 @@ class CartesianRectOrientedIntersect extends CanvasDraw {
                 lt, rt, rb, lb
             ]).draw(c)
 
-            c
-                .text(`Пересечение по оси X: ${ix.XA.name}, ${ix.XB.name}`, {x: 0, y: 12})
-                .text(`Пересечение по оси Y: ${iy.YA.name}, ${iy.YB.name}`, {x: 0, y: 11})
+            const t = new TextDraw(this)
+
+            t.spans.push(
+                new TextSpan('Пересечение по оси X = ['),
+                new TextSpan(ix.XA.name, {color: ix.XA.color}),
+                new TextSpan(', '),
+                new TextSpan(ix.XB.name, {color: ix.XB.color}),
+                new TextSpan(']'),
+
+                new TextSpan('\n'),
+
+                new TextSpan('Пересечение по оси Y = ['),
+                new TextSpan(iy.YA.name, {color: iy.YA.color}),
+                new TextSpan(', '),
+                new TextSpan(iy.YB.name, {color: iy.YB.color}),
+                new TextSpan(']'),
+            )
+
+            t.draw()
         }
 
         c.draw()

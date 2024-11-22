@@ -41,6 +41,7 @@
             <include-in-head>js/core/polygon.js</include-in-head>
 
             <include-in-head>js/core/text-span.js</include-in-head>
+            <include-in-head>js/core/text-line.js</include-in-head>
             <include-in-head>js/core/text-draw.js</include-in-head>
             <include-in-head>js/core/text-rect.js</include-in-head>
 

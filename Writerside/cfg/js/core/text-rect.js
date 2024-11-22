@@ -19,6 +19,13 @@ class TextRect {
     maxY = 0
 
 
+    fontSize = 0
+    fontFamily = ''
+    text = ''
+    /** @type {CanvasRenderingContext2D} */ ctx
+    /** @type {Color} */ #color
+    /** @type {TextMetrics} */ metrics
+
     get width() {
         return this.maxX - this.minX
     }
@@ -26,7 +33,6 @@ class TextRect {
     get height() {
         return this.maxY - this.minY
     }
-
 
     translate(x, y) {
         this.minX += x
@@ -48,52 +54,47 @@ class TextRect {
         return li < ri && ti < bi
     }
 
-
     fill() {
-        const ctx = this.#ctx
+        const ctx = this.ctx
         ctx.textAlign = 'left'
-        ctx.font = `${this.#fontSize}px ${cssvar('font-family')}`
+        ctx.font = `${this.fontSize}px ${this.fontFamily}`
         ctx.fillStyle = this.#color.strokeStyle
-        ctx.fillText(this.#text, this.minX, this.maxY)
+        ctx.fillText(this.text, this.minX, this.maxY)
         return this
     }
-
-    #text = ''
-    /** @type {CanvasRenderingContext2D} */ #ctx
-    /** @type {Color} */ #color
-    #fontSize = 0
 
     /**
      * @param {CanvasRenderingContext2D} ctx
      * @param {string} text
      * @param {number} x
      * @param {number} y
+     * @param {number} fontSize
+     * @param {string} fontFamily
      * @param {number} alignX
      * @param {Color} color
-     * @param {number} fontSize
      * @return {TextRect}
      */
-    static fromText(ctx, text, {
+    static fromText(ctx, text, fontSize, fontFamily, {
         x = 0,
         y = 0,
         alignX = 0,
         color = Color.pointA,
-        fontSize
     } = {}) {
         // x: left -> right
         // y: top -> bottom
-
-        ctx.font = `${fontSize}px ${cssvar('font-family')}`
+        ctx.font = `${fontSize}px ${fontFamily}`
         const m = ctx.measureText(text)
         const w = m.width
         const h = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent
 
         x -= alignX * w
         const r = new TextRect(x, x + w, y - h, y)
-        r.#ctx = ctx
-        r.#text = text
-        r.#fontSize = fontSize
+        r.ctx = ctx
+        r.text = text
+        r.fontSize = fontSize
+        r.fontFamily = fontFamily
         r.#color = color
+        r.metrics = m
         return r
     }
 

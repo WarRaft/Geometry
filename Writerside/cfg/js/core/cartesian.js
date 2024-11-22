@@ -240,6 +240,7 @@ class Cartesian {
         const ctx = this.#ctx
         const dpr = this.#dpr
         const step = this.#step
+        const fontFamily = cssvar('font-family')
         /** @type {TextRect[]} */ const pointName = []
         /** @type {TextRect[]} */ const pointNameClip = []
 
@@ -249,6 +250,8 @@ class Cartesian {
         const oy = this.#oy
 
         const points = [...this.drawPoint].sort((a, b) => a.y - b.y)
+
+        ctx.lineWidth = dpr
 
         // -- point
         for (const p of points) {
@@ -278,17 +281,15 @@ class Cartesian {
 
                 const gap = 5 * dpr
 
-                const ra = TextRect.fromText(ctx, p.name, {
+                const ra = TextRect.fromText(ctx, p.name, 16 * dpr, fontFamily, {
                     x: p.cx,
                     alignX: .5,
                     y: p.cy - p.cr - gap,
                     color: p.color,
-                    fontSize: 16 * dpr,
                 })
 
                 const rb = TextRect.fromText(
-                    ctx, `(${p.xs}${this.#axisY ? `, ${p.ys}` : ''})`, {
-                        fontSize: 12 * dpr,
+                    ctx, `(${p.xs}${this.#axisY ? `, ${p.ys}` : ''})`, 12 * dpr, fontFamily, {
                         color: p.color,
                         x: ra.maxX,
                         y: ra.maxY,
@@ -454,6 +455,7 @@ class Cartesian {
      * @param {Color} color
      * @param {number} fontSize
      * @return {this}
+     * @deprecated
      */
     text(text, {
         x = null,

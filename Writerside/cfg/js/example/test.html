@@ -21,11 +21,9 @@
 
         div[id]::before {
             content: attr(id);
-            position: absolute;
             z-index: 9999;
             font-size: 12px;
-            top: 3px;
-            right: 8px;
+
         }
 
         /* @formatter:off  */
@@ -59,6 +57,7 @@
     <script type="text/javascript" src="../core/polygon.js"></script>
 
     <script type="text/javascript" src="../core/text-span.js"></script>
+    <script type="text/javascript" src="../core/text-line.js"></script>
     <script type="text/javascript" src="../core/text-draw.js"></script>
     <script type="text/javascript" src="../core/text-rect.js"></script>
 
@@ -88,9 +87,9 @@
 <body>
 
 <div id="canvas-cartesian-rect-oriented-intersect-projection"></div>
-
-<!--
 <div id="canvas-cartesian-rect-oriented-intersect"></div>
+
+
 <div id="canvas-cartesian-rect-oriented"></div>
 
 <div id="canvas-cartesian-line-equation"></div>
@@ -107,8 +106,8 @@
 <div id="canvas-number-line-distance"></div>
 <div id="canvas-number-line-abs"></div>
 <div id="canvas-number-line"></div>
+<!--
 -->
-
 </body>
 
 
