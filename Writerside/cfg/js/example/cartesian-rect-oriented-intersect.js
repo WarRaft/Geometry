@@ -41,6 +41,8 @@ class CartesianRectOrientedIntersect extends CanvasDraw {
         const ix = new NumberLineSegmentIntersection(Ax, Bx, Cx, Dx, c, {x: true})
         const iy = new NumberLineSegmentIntersection(By, Ay, Dy, Cy, c, {y: true})
 
+        const t = new TextDraw(this)
+
         if (ix.X && iy.Y) {
             const lt = new Point(ix.XA.x, iy.YB.y, {hidden: true}).draw(c)
             const rb = new Point(ix.XB.x, iy.YA.y, {hidden: true}).draw(c)
@@ -50,8 +52,6 @@ class CartesianRectOrientedIntersect extends CanvasDraw {
             new Polygon([
                 lt, rt, rb, lb
             ]).draw(c)
-
-            const t = new TextDraw(this)
 
             t.spans.push(
                 new TextSpan('Пересечение по оси X = ['),
@@ -68,11 +68,13 @@ class CartesianRectOrientedIntersect extends CanvasDraw {
                 new TextSpan(iy.YB.name, {color: iy.YB.color}),
                 new TextSpan(']'),
             )
-
-            t.draw()
+        } else {
+            t.spans.push(new TextSpan('Прямоугольники не пересекаются'))
         }
 
+
         c.draw()
+        t.draw()
     }
 }
 

@@ -24,7 +24,15 @@ class CartesianPointDistanceA extends CanvasDraw {
         c.draw()
 
         const d = Math.sqrt(A.x * A.x + A.y * A.y)
-        c.text(`Расстояние ${d.toFixed(2)}`, {x: 0, y: 4})
+
+        const t = new TextDraw(this)
+
+        t.spans.push(
+            new TextSpan(`Расстояние = ${d.toFixed(2)}`),
+        )
+
+        t.draw()
+
     }
 }
 

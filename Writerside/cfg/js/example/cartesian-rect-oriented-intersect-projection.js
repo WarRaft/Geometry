@@ -81,6 +81,8 @@ class CartesianRectOrientedIntersectProjection extends CanvasDraw {
                 new TextSpan(iy.YB.name, {color: iy.YB.color}),
                 new TextSpan(']'),
             )
+        } else {
+            t.spans.push(new TextSpan('Прямоугольники не пересекаются'))
         }
 
 

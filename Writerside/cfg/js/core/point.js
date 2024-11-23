@@ -70,6 +70,11 @@ class Point {
         return out === '-0' ? '0' : out
     }
 
+    /**  @return {string} */ get xsabs() {
+        const out = Math.abs(this.#x).toFixed(this.round ? 0 : 2)
+        return out === '-0' ? '0' : out
+    }
+
     /**  @return {string} */ get ys() {
         const out = this.#y.toFixed(this.round ? 0 : 2)
         return out === '-0' ? '0' : out

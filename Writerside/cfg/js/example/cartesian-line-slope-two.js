@@ -19,38 +19,23 @@ class CartesianLineSlopeTwo extends CanvasDraw {
 
         const [A, B, C, D] = c.points
 
-        A.draw(c)
-        B.draw(c)
-        C.draw(c)
-        D.draw(c)
+        const t = new TextDraw(this)
 
-        const errA = A.x === B.x && A.y === B.y
-        const errB = C.x === D.x && C.y === D.y
+        const kAB = new CartesianLineSloper(c, t, A, B)
+        const kCD = new CartesianLineSloper(c, t, C, D)
 
-        if (errA) c.text('Прямая AB не определена', {x: 0, y: 8, color: Color.pointA})
-        if (errB) c.text('Прямая CD не определена', {x: 0, y: 7, color: Color.pointA})
+        if (kAB.hasK && kCD.hasK) {
+            t.spans.push(
+                ...kAB.name,
+                new TextSpan(' * '),
+                ...kCD.name,
+                new TextSpan(` = ${(kAB.k * kCD.k).toFixed(2)}`),
+            )
 
-        if (errA || errB) {
-            c.draw()
-            return
         }
 
-        new Segment(A, B, {line: 3}).draw(c)
-        new Segment(C, D, {line: 3}).draw(c)
-
-        const xA = B.x - A.x
-        const yA = B.y - A.y
-        const kAB = xA === 0 ? null : yA / xA
-
-        const xB = D.x - C.x
-        const yB = D.y - C.y
-        const kCD = xB === 0 ? null : yB / xB
-
         c.draw()
-
-        c.text(kAB === null ? 'kAB не определён' : `kAB = ${kAB.toFixed(2)}`, {x: 0, y: 8})
-        c.text(kCD === null ? 'kCD не определён' : `kCD = ${kCD.toFixed(2)}`, {x: 0, y: 7})
-        if (kAB !== null && kCD !== null) c.text(`kAB * kCD = ${(kAB * kCD).toFixed(2)}`, {x: 0, y: 6})
+        t.draw()
     }
 }
 

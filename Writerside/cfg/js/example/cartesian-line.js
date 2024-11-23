@@ -20,13 +20,16 @@ class CartesianLine extends CanvasDraw {
         A.draw(c)
         B.draw(c)
 
+        const t = new TextDraw(this)
+
         if (A.x === B.x && A.y === B.y) {
-            c.text('Прямая не определена', {x: 0, y: 4, color: Color.pointA})
+            t.noline(A, B)
         } else {
             new Segment(A, B, {line: 3}).draw(c)
         }
 
         c.draw()
+        t.draw()
     }
 }
 

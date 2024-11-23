@@ -4,7 +4,7 @@ class CanvasNumberLineSegment extends CanvasDraw {
     constructor() {
         super()
 
-        const c = this.cartesian = new Cartesian(this, 4, {round: true})
+        const c = this.cartesian = new Cartesian(this, 2, {round: true})
 
         c.points.push(
             new Point(-3, 0, {name: 'A', color: Color.pointA, dragY: false}),
@@ -13,7 +13,7 @@ class CanvasNumberLineSegment extends CanvasDraw {
     }
 
     draw() {
-        const c = this.cartesian.axis({y: false})
+        const c = this.cartesian.axis({y: false, yalign: -1})
 
         let [A, B] = c.points
 

@@ -253,6 +253,8 @@ class Cartesian {
 
         ctx.lineWidth = dpr
 
+        /** @type {Point[]} */ const pointI = []
+
         // -- point
         for (const p of points) {
             p.cx = ox + p.x * step
@@ -260,6 +262,15 @@ class Cartesian {
             p.cr = p.radius * dpr
 
             if (p.hidden) continue
+            for (const pp of pointI) {
+                const da = (p.cx - pp.cx) ** 2 + (p.cy - pp.cy) ** 2
+                const db = (p.cr + pp.cr) ** 2
+
+                if (da < db) {
+                    p.cr += (2 * dpr) * (1 - da / db)
+                }
+            }
+            pointI.push(p)
 
             ctx.beginPath()
             ctx.fillStyle = p.color.fillStyle
@@ -445,46 +456,6 @@ class Cartesian {
         }
 
         // -- return
-        return this
-    }
-
-    /**
-     * @param {string} text
-     * @param {?number} x
-     * @param {?number} y
-     * @param {Color} color
-     * @param {number} fontSize
-     * @return {this}
-     * @deprecated
-     */
-    text(text, {
-        x = null,
-        y = null,
-        color = Color.pointD,
-        fontSize = 18,
-    } = {}) {
-        const ctx = this.#ctx
-        const dpr = this.#dpr
-        const step = this.#step
-
-        let cx = 0, cy = 0
-
-        const mt = ctx.measureText(text)
-        const th = mt.actualBoundingBoxAscent + mt.actualBoundingBoxDescent
-
-        if (x !== null && y !== null) {
-            cx = this.#ox + x * step
-            cy = this.#oy + y * -step
-            if (step > th) cy -= (step - th) * .5
-        }
-
-        ctx.beginPath()
-        ctx.textAlign = 'center'
-        ctx.fillStyle = color.strokeStyle
-        ctx.font = `${fontSize * dpr}px ${cssvar('font-family')}`
-        ctx.fillText(text, cx, cy)
-        ctx.closePath()
-
         return this
     }
 }

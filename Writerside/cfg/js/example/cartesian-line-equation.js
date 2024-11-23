@@ -17,28 +17,19 @@ class CartesianLineEquation extends CanvasDraw {
 
         const [A, B] = c.points
 
-        A.draw(c)
-        B.draw(c)
+        const t = new TextDraw(this)
 
-        if (A.x === B.x && A.y === B.y) {
-            c.draw()
-            c.text('Прямая не определена', {x: 0, y: 4, color: Color.pointA})
-            return
+        const kAB = new CartesianLineSloper(c, t, A, B)
+
+        if (kAB.hasK) {
+            const b = A.y - kAB.k * A.x
+            t.spans.push(
+                new TextSpan(`y = ${kAB.k.toFixed(2)} * x + ${b.toFixed(2)}`)
+            )
         }
-
-        new Segment(A, B, {line: 3}).draw(c)
-
-        if (A.x === B.x) {
-            c.draw()
-            c.text('Уравнение не определено для вертикальной прямой', {x: 0, y: 6, color: Color.pointA})
-            return
-        }
-
-        const k = (B.y - A.y) / (B.x - A.x)
-        const b = A.y - k * A.x
 
         c.draw()
-        c.text(`y = ${k.toFixed(2)} * x + ${b.toFixed(2)}`, {x: 0, y: 6})
+        t.draw()
     }
 }
 

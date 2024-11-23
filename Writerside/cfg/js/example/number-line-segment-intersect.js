@@ -26,14 +26,23 @@ class CanvasNumberLineSegmentIntersect extends CanvasDraw {
 
         c.draw()
 
-        c.text(i.X
-            ? `Пересечением является [${i.XA.name}, ${i.XB.name}]`
-            : 'Отрезки не пересекаются', {
-            x: 0,
-            y: 2,
-            color: i.X ? Color.pointD : Color.axis
-        })
+        const t = new TextDraw(this)
 
+        if (i.X) {
+            t.spans.push(
+                new TextSpan('Пересечением является ['),
+                new TextSpan(i.XA.name, {color: i.XA.color}),
+                new TextSpan(', '),
+                new TextSpan(i.XB.name, {color: i.XB.color}),
+                new TextSpan(']'),
+            )
+        } else {
+            t.spans.push(
+                new TextSpan('Отрезки не пересекаются')
+            )
+        }
+
+        t.draw()
     }
 }
 

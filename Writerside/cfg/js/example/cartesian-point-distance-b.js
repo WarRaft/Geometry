@@ -33,7 +33,13 @@ class CartesianPointDistanceB extends CanvasDraw {
 
         c.draw()
 
-        c.text(`Расстояние ${d.toFixed(2)}`, {x: 0, y: 5})
+        const t = new TextDraw(this)
+
+        t.spans.push(
+            new TextSpan(`Расстояние = ${d.toFixed(2)}`),
+        )
+
+        t.draw()
     }
 }
 
