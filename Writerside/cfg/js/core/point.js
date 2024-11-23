@@ -81,6 +81,17 @@ class Point {
     }
 
     /**
+     * @param {number} x
+     * @param {number} y
+     * @return {this}
+     */
+    position(x, y) {
+        this.#x = x
+        this.#y = y
+        return this
+    }
+
+    /**
      * @param {number} dx
      * @param {number} dy
      * @return {Point}
@@ -89,6 +100,10 @@ class Point {
         if (this.dragX) this.#x += dx
         if (this.dragY) this.#y += dy
         return this
+    }
+
+    get dragCan() {
+        return this.dragX || this.dragY
     }
 
     /**

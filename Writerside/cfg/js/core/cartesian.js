@@ -35,7 +35,10 @@ class Cartesian {
 
             let lowest = 0
             for (let i = 1; i < this.points.length; i++) {
-                if (dist(this.points[i]) < dist(this.points[lowest])) lowest = i
+                const pi = this.points[i]
+                if (!pi.dragCan) continue
+                const pl = this.points[lowest]
+                if (!pl.dragCan || (dist(pi) < dist(pl))) lowest = i
             }
             this.dragPoint = this.points[lowest]
         }
@@ -395,8 +398,9 @@ class Cartesian {
             ctx.save()
             _clipPoint(s.a)
             _clipPoint(s.b)
-            _segment(ax, ay, bx, by, s.a.color, s.b.color, dash)
-
+            if (s.line >= 0) {
+                _segment(ax, ay, bx, by, s.a.color, s.b.color, dash)
+            }
             if (s.line > 0) {
                 const ld = this.#canvasWidth + this.#canvasHeight
                 const cos = Math.cos(angle) * ld
@@ -410,6 +414,15 @@ class Cartesian {
                 }
             }
             ctx.restore()
+
+            if (s.name.length > 0) {
+                ctx.strokeStyle = s.b.color.strokeStyle
+                ctx.font = `${14 * dpr}px ${fontFamily}`
+                ctx.textAlign = 'left'
+                const m = ctx.measureText(s.name)
+                const th = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent
+                ctx.fillText(s.name, bx + s.b.cr + 8 * dpr, by + th * .5)
+            }
         }
 
         // -- rect
@@ -458,4 +471,5 @@ class Cartesian {
         // -- return
         return this
     }
+
 }
