@@ -99,10 +99,82 @@ class CanvasDraw extends HTMLElement {
         }
     }
 
+    /**
+     * @param {number} value
+     * @return {this}
+     */
+    lerp(value) {
+        const menu = document.createElement('div')
+        this.shadow.appendChild(menu)
+        menu.classList.add('menu', 'menu-lerp')
+
+        const label = document.createElement('label')
+        label.classList.add('menu-lerp-label')
+        menu.appendChild(label)
+
+        const checkbox = this.#lerpCheckbox = document.createElement('input')
+        checkbox.type = 'checkbox'
+        checkbox.checked = false
+        label.appendChild(checkbox)
+
+        const range = this.#lerpRange = document.createElement('input')
+        range.type = 'range'
+        range.min = '0'
+        range.max = '1'
+        range.step = '0.0001'
+        range.value = value.toString()
+        menu.appendChild(range)
+
+        const data = this.#lerpRangeData = document.createElement('div')
+        data.classList.add('menu-lerp-data')
+        menu.appendChild(data)
+
+        this.lerpK = value
+        this.#lerpRangeUpdate()
+        range.addEventListener('input', () => {
+            this.lerpK = +range.value
+            this.#lerpRangeUpdate()
+        })
+
+        checkbox.addEventListener('change', () => {
+            range.disabled = checkbox.checked
+        })
+
+        return this
+    }
+
+    /** @type {HTMLDivElement} */ #lerpRangeData
+    /** @type {HTMLInputElement} */ #lerpRange
+    /** @type {HTMLInputElement} */ #lerpCheckbox
+
+    #lerpRangeUpdate() {
+        this.#lerpRangeData.innerText = this.lerpK.toFixed(2)
+    }
+
+    lerpK = 0
+    #lerpDk = 1
+
+    #drawStart = null
+
     draw() {
     }
 
-    redraw() {
+    redraw(ts) {
+        if (ts && this.#lerpRange) {
+            if (this.#drawStart === null) this.#drawStart = ts
+            let ds = ts - this.#drawStart
+            this.#drawStart = ts
+
+            if (this.#lerpCheckbox?.checked ?? false) {
+                if ((this.#lerpDk > 0 && this.lerpK >= 1) || (this.#lerpDk < 0 && this.lerpK <= 0)) this.#lerpDk *= -1
+                ds *= .00055 * this.#lerpDk
+
+                this.lerpK = Math.min(Math.max(this.lerpK + ds, 0), 1)
+                this.#lerpRange.value = this.lerpK.toString()
+                this.#lerpRangeUpdate()
+            }
+        }
+
         const draw = this.draw()
 
         this.dx = 0
@@ -117,9 +189,12 @@ CanvasDraw.sheet.replaceSync(
     //language=CSS
     `
         :host {
+            --active: #de3459;
+            --bc: #1b289e;
+            --bg-menu: #0c0c3a;
             display: block;
             box-sizing: border-box;
-            border: 1px solid #1b289e;
+            border: 1px solid var(--bc);
         }
 
         .container {
@@ -135,23 +210,57 @@ CanvasDraw.sheet.replaceSync(
             height: 100%;
         }
 
-        .intval {
-            background-color: #0c0c3a;
-            display: block;
+        .menu {
+            --p: 8px;
+            border-top: 1px solid var(--bc);
+            background-color: var(--bg-menu);
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
             user-select: none;
-            cursor: pointer;
-            padding: 8px;
         }
 
-        .intval span {
+        label.menu {
+            cursor: pointer;
+        }
+
+        .menu-round {
+            padding: var(--p);
+        }
+
+        .menu-round span {
             display: inline-block;
             vertical-align: middle;
         }
 
+        .menu-lerp [type=range] {
+            border-left: 1px solid var(--bc);
+        }
+
+        .menu-lerp-label,
+        .menu-lerp-data {
+            align-self: stretch;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .menu-lerp-label {
+            cursor: pointer;
+            padding-left: var(--p);
+        }
+
+        .menu-lerp-data {
+            min-width: 3rem;
+            border-left: 1px solid var(--bc);
+            padding-left: 10px;
+        }
+
+
         [type=checkbox] {
-            --input-background: #de3459;
             --m: 0px;
             --s: 16px;
+            pointer-events: none;
             display: inline-block;
             box-sizing: border-box;
             appearance: none;
@@ -159,16 +268,50 @@ CanvasDraw.sheet.replaceSync(
             height: calc(var(--s) - var(--m) * 2);
             margin: var(--m) calc(.5rem + var(--m)) var(--m) calc(var(--m));
             vertical-align: middle;
-            border: 1px solid var(--input-background);
+            border: 1px solid var(--active);
             border-radius: 0;
         }
 
         [type=checkbox]:checked {
             --m: 4px;
-            outline: var(--m) double var(--input-background);
-            background-color: var(--input-background);
+            outline: var(--m) double var(--active);
+            background-color: var(--active);
         }
 
+        /* Range */
+        [type=range] {
+            --thumb: var(--active);
+            margin: auto;
+            appearance: none;
+            position: relative;
+            overflow: hidden;
+            height: 36px;
+            width: 100%;
+            cursor: pointer;
+            border-radius: 0;
+            background: var(--bg-menu);
+        }
+
+        [type=range]:active {
+            --thumb: #da4e6f;
+        }
+
+        [type=range]:disabled {
+            --thumb: #431823;
+        }
+
+        ::-webkit-slider-runnable-track {
+            background-color: transparent;
+        }
+
+        ::-webkit-slider-thumb {
+            display: block;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--thumb);
+            border: 0;
+        }
     `)
 
 

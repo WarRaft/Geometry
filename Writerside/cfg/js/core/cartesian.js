@@ -15,7 +15,7 @@ class Cartesian {
             const c = document.createElement('label')
             draw.shadow.appendChild(c)
 
-            c.classList.add('intval')
+            c.classList.add('menu', 'menu-round')
             c.innerHTML = '<input type="checkbox"><span>Выровнять по сетке</span>'
 
             const ch = c.querySelector('input')

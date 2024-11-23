@@ -16,7 +16,10 @@
                 if (mutation.type === 'childList') {
                     for (const node of mutation.addedNodes) {
                         if (node.nodeType !== Node.ELEMENT_NODE) continue
-                        if (node.id === '') continue
+                        if (node.id === '') {
+                            node.querySelectorAll('[id]').forEach(el => check(el.id))
+                            continue
+                        }
                         check(node.id)
                     }
                 }

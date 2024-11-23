@@ -34,6 +34,6 @@ $$ k = \frac{B_y - A_y}{B_x - A_x}, \quad \text{если } B_x \neq A_x $$
 Для двух прямых $AB$ и $CD$, заданых соответствующими точками верны следующие утверждения:
 
 - при $ k_{AB} = k_{CD} $ прямые паралельны
-- при $ k_{AB} * k_{CD} = -1 $ прямые перепендикулярны
+- при $ k_{AB} \cdot k_{CD} = -1 $ прямые перепендикулярны
 
-```.``` {id=canvas-cartesian-line-slope-two}
+```.``` {id=canvas-cartesian-line-slope-intersect}

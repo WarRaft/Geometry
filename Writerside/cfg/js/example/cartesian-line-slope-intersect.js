@@ -1,5 +1,5 @@
-class CartesianLineSlopeTwo extends CanvasDraw {
-    static name = 'canvas-cartesian-line-slope-two'
+class CartesianLineSlopeIntersect extends CanvasDraw {
+    static name = 'canvas-cartesian-line-slope-intersect'
 
     constructor() {
         super()
@@ -39,4 +39,4 @@ class CartesianLineSlopeTwo extends CanvasDraw {
     }
 }
 
-CanvasDraw.define(CartesianLineSlopeTwo)
+CanvasDraw.define(CartesianLineSlopeIntersect)
