@@ -39,6 +39,7 @@
             <include-in-head>js/core/segment.js</include-in-head>
             <include-in-head>js/core/rect.js</include-in-head>
             <include-in-head>js/core/polygon.js</include-in-head>
+            <include-in-head>js/core/cubic.js</include-in-head>
 
             <include-in-head>js/core/text-span.js</include-in-head>
             <include-in-head>js/core/text-line.js</include-in-head>
@@ -49,6 +50,7 @@
             <include-in-head>js/example/number-line-abs.js</include-in-head>
             <include-in-head>js/example/number-line-distance.js</include-in-head>
             <include-in-head>js/example/number-line-lerp.js</include-in-head>
+            <include-in-head>js/example/number-line-lerp-easing.js</include-in-head>
             <include-in-head>js/example/number-line-segment.js</include-in-head>
             <include-in-head>js/example/number-line-segment-intersect.js</include-in-head>
 

@@ -10,7 +10,9 @@
     <toc-element topic="number-line.md">
         <toc-element topic="number-line-abs.md"/>
         <toc-element topic="number-line-distance.md"/>
-        <toc-element topic="number-line-lerp.md"/>
+        <toc-element topic="number-line-lerp.md">
+            <toc-element topic="number-line-lerp-easing.md"/>
+        </toc-element>
         <toc-element topic="number-line-segment.md">
             <toc-element topic="number-line-segment-intersect.md"/>
         </toc-element>
