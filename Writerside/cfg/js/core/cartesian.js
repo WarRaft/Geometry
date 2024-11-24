@@ -61,9 +61,10 @@ class Cartesian {
     #height = 0
     round = false
     /** @type {Point[]} */ points = []
+    /** @type {Point[]} */ drawPoint = []
+
     /** @type {Point|null} */ dragPoint = null
 
-    /** @type {Point[]} */ drawPoint = []
     /** @type {Segment[]} */ drawSegment = []
     /** @type {Rect[]} */ drawRect = []
     /** @type {Polygon[]} */ drawPolygon = []

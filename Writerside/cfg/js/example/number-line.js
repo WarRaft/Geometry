@@ -17,8 +17,8 @@ class CanvasNumberLine extends CanvasDraw {
 
         const [A, B] = c.points
 
-        A.draw(c)
-        B.draw(c)
+        A.push(c)
+        B.push(c)
 
         c.draw()
     }

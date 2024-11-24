@@ -24,8 +24,6 @@ class Cubic {
     }
 
     #solveCurveX(x, epsilon) {
-        let t0
-        let t1
         let t2
         let x2
         let d2
@@ -41,8 +39,8 @@ class Cubic {
             t2 = t2 - x2 / d2
         }
 
-        t0 = 0.0
-        t1 = 1.0
+        let t0 = 0.0
+        let t1 = 1.0
         t2 = x
 
         if (t2 < t0) return t0

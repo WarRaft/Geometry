@@ -49,18 +49,24 @@
             <include-in-head>js/example/number-line.js</include-in-head>
             <include-in-head>js/example/number-line-abs.js</include-in-head>
             <include-in-head>js/example/number-line-distance.js</include-in-head>
+
             <include-in-head>js/example/number-line-lerp.js</include-in-head>
             <include-in-head>js/example/number-line-lerp-easing.js</include-in-head>
+
             <include-in-head>js/example/number-line-segment.js</include-in-head>
             <include-in-head>js/example/number-line-segment-intersect.js</include-in-head>
 
             <include-in-head>js/example/cartesian-coordinate-system.js</include-in-head>
+
             <include-in-head>js/example/cartesian-point-distance-a.js</include-in-head>
             <include-in-head>js/example/cartesian-point-distance-b.js</include-in-head>
+
             <include-in-head>js/example/cartesian-line.js</include-in-head>
             <include-in-head>js/example/cartesian-line-slope.js</include-in-head>
             <include-in-head>js/example/cartesian-line-slope-intersect.js</include-in-head>
             <include-in-head>js/example/cartesian-line-equation.js</include-in-head>
+
+            <include-in-head>js/example/cartesian-ray.js</include-in-head>
 
             <include-in-head>js/example/cartesian-rect-oriented.js</include-in-head>
             <include-in-head>js/example/cartesian-rect-oriented-intersect.js</include-in-head>

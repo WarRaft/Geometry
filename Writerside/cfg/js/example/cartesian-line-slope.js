@@ -21,8 +21,8 @@ class CartesianLineSlope extends CanvasDraw {
         const kAB = new CartesianLineSloper(c, t, A, B)
 
         if (kAB.hasL) {
-            const A1 = new Point(0, 0, {name: 'A′', color: Color.pointA1, dash: [2, 2]}).draw(c)
-            const B1 = new Point(kAB.dx, kAB.dy, {name: 'B′', color: Color.pointB1, dash: [2, 2]}).draw(c)
+            const A1 = new Point(0, 0, {name: 'A′', color: Color.pointA1, dash: [2, 2]}).push(c)
+            const B1 = new Point(kAB.dx, kAB.dy, {name: 'B′', color: Color.pointB1, dash: [2, 2]}).push(c)
             new Segment(A1, B1, {line: 3, dash: [2, 2]}).draw(c)
         }
 
@@ -41,8 +41,8 @@ class CartesianLineSloper {
      * @param {Point} b
      */
     constructor(c, t, a, b) {
-        this.a = a.draw(c)
-        this.b = b.draw(c)
+        this.a = a.push(c)
+        this.b = b.push(c)
         this.t = t
 
         if (a.x === b.x && a.y === b.y) {

@@ -17,14 +17,14 @@ class CanvasNumberLineLerp extends CanvasDraw {
 
         const [A, B] = c.points
 
-        A.draw(c)
-        B.draw(c)
+        A.push(c)
+        B.push(c)
 
         const C = new Point(A.x + (B.x - A.x) * this.lerpK, -0.0000001, {
             name: 'C',
             color: Color.pointC,
             dash: [2, 2]
-        }).draw(c)
+        }).push(c)
 
         new Segment(A, C, {dash: [2, 2]}).draw(c)
         new Segment(B, C, {dash: [2, 2]}).draw(c)

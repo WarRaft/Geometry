@@ -19,8 +19,8 @@ class CanvasNumberLineSegmentIntersect extends CanvasDraw {
 
         let [A, B, C, D] = c.points
 
-        A.parent(B.draw(c), c).draw(c)
-        C.parent(D.draw(c), c).draw(c)
+        A.parent(B.push(c), c).push(c)
+        C.parent(D.push(c), c).push(c)
 
         const i = new NumberLineSegmentIntersection(A, B, C, D, c, {x: true})
 

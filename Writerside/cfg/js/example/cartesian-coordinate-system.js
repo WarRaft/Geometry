@@ -19,10 +19,10 @@ class CartesianCoordinateSystem extends CanvasDraw {
 
         const [A, B, C, D] = c.points
 
-        A.draw(c)
-        B.draw(c)
-        C.draw(c)
-        D.draw(c)
+        A.push(c)
+        B.push(c)
+        C.push(c)
+        D.push(c)
 
         c.draw()
     }

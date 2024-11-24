@@ -22,11 +22,11 @@ class CartesianPointDistanceB extends CanvasDraw {
 
         const d = Math.sqrt(dx * dx + dy * dy)
 
-        A.draw(c)
-        const A1 = new Point(0, 0, {name: 'A′', color: Color.pointA1, dash: [2, 2], round: c.round}).draw(c)
+        A.push(c)
+        const A1 = new Point(0, 0, {name: 'A′', color: Color.pointA1, dash: [2, 2], round: c.round}).push(c)
 
-        B.draw(c)
-        const B1 = new Point(dx, dy, {name: 'B′', color: Color.pointB1, dash: [2, 2], round: c.round}).draw(c)
+        B.push(c)
+        const B1 = new Point(dx, dy, {name: 'B′', color: Color.pointB1, dash: [2, 2], round: c.round}).push(c)
 
         new Segment(A, B).draw(c)
         new Segment(A1, B1, {dash: [2, 2]}).draw(c)

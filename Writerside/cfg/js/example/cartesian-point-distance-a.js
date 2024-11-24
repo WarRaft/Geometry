@@ -16,8 +16,8 @@ class CartesianPointDistanceA extends CanvasDraw {
 
         const [A] = c.points
 
-        A.draw(c)
-        const O = new Point(0, 0, {color: Color.pointA1, dash: [2, 2], round: c.round}).draw(c)
+        A.push(c)
+        const O = new Point(0, 0, {color: Color.pointA1, dash: [2, 2], round: c.round}).push(c)
 
         new Segment(A, O, {dash: [2, 2]}).draw(c)
 

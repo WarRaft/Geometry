@@ -16,13 +16,13 @@ class CanvasNumberLineAbs extends CanvasDraw {
 
         const [A] = c.points
 
-        A.draw(c)
+        A.push(c)
         const A1 = new Point(Math.abs(A.x), 0, {
             name: '|A|',
             color: Color.pointA1,
             dash: [2, 2],
             round: c.round
-        }).draw(c)
+        }).push(c)
 
         c.draw()
 

@@ -17,11 +17,11 @@ class CanvasNumberLineDistance extends CanvasDraw {
 
         const [A, B] = c.points
 
-        A.draw(c)
-        new Point(0, 0, {name: 'A′', color: Color.pointA1, dash: [2, 2], round: c.round}).draw(c)
+        A.push(c)
+        new Point(0, 0, {name: 'A′', color: Color.pointA1, dash: [2, 2], round: c.round}).push(c)
 
-        B.draw(c)
-        const B1 = new Point(B.x - A.x, 0, {name: 'B′', color: Color.pointB1, dash: [2, 2], round: c.round}).draw(c)
+        B.push(c)
+        const B1 = new Point(B.x - A.x, 0, {name: 'B′', color: Color.pointB1, dash: [2, 2], round: c.round}).push(c)
 
         c.draw()
 

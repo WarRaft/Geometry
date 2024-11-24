@@ -42,7 +42,7 @@ class Point {
      * @param {Cartesian} ctx
      * @return {this}
      */
-    draw(ctx) {
+    push(ctx) {
         if (ctx instanceof Cartesian) {
             ctx.drawPoint.push(this)
         }

@@ -1,15 +1,15 @@
-class CartesianLine extends CanvasDraw {
-    static name = 'canvas-cartesian-line'
+class CartesianRay extends CanvasDraw {
+    static name = 'canvas-cartesian-ray'
 
     constructor() {
         super()
 
         const c = this.cartesian = new Cartesian(this, 7, {round: true})
 
-        c.points.push(
-            new Point(2, 3, {name: 'A', color: Color.pointA}),
-            new Point(-2, 1, {name: 'B', color: Color.pointB}),
-        )
+        const A = new Point(2, 3, {name: 'A', color: Color.pointA})
+        const B = new Point(-2, 1, {name: 'B', color: Color.pointB})
+
+        c.points.push(A, B)
     }
 
     draw() {
@@ -33,4 +33,4 @@ class CartesianLine extends CanvasDraw {
     }
 }
 
-CanvasDraw.define(CartesianLine)
+CanvasDraw.define(CartesianRay)

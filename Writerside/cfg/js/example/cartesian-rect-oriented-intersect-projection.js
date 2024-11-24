@@ -19,31 +19,31 @@ class CartesianRectOrientedIntersectProjection extends CanvasDraw {
 
         const [A, B, C, D] = c.points
 
-        A.parent(B.draw(c), c).draw(c)
-        C.parent(D.draw(c), c).draw(c)
+        A.parent(B.push(c), c).push(c)
+        C.parent(D.push(c), c).push(c)
 
         const dash = [10, 10]
 
-        const Ax = new Point(A.x, 0, {name: 'Ax', color: Color.pointA1, round: c.round}).draw(c)
-        const Ay = new Point(0, A.y, {name: 'Ay', color: Color.pointA1, round: c.round}).draw(c)
+        const Ax = new Point(A.x, 0, {name: 'Ax', color: Color.pointA1, round: c.round}).push(c)
+        const Ay = new Point(0, A.y, {name: 'Ay', color: Color.pointA1, round: c.round}).push(c)
 
         new Segment(Ax, A, {dash: dash}).draw(c)
         new Segment(Ay, A, {dash: dash}).draw(c)
 
-        const Bx = new Point(B.x, 0, {name: 'Bx', color: Color.pointB1, round: c.round}).draw(c)
-        const By = new Point(0, B.y, {name: 'By', color: Color.pointB1, round: c.round}).draw(c)
+        const Bx = new Point(B.x, 0, {name: 'Bx', color: Color.pointB1, round: c.round}).push(c)
+        const By = new Point(0, B.y, {name: 'By', color: Color.pointB1, round: c.round}).push(c)
 
         new Segment(Bx, B, {dash: dash}).draw(c)
         new Segment(By, B, {dash: dash}).draw(c)
 
-        const Cx = new Point(C.x, 0, {name: 'Cx', color: Color.pointC1, round: c.round}).draw(c)
-        const Cy = new Point(0, C.y, {name: 'Cy', color: Color.pointC1, round: c.round}).draw(c)
+        const Cx = new Point(C.x, 0, {name: 'Cx', color: Color.pointC1, round: c.round}).push(c)
+        const Cy = new Point(0, C.y, {name: 'Cy', color: Color.pointC1, round: c.round}).push(c)
 
         new Segment(Cx, C, {dash: dash}).draw(c)
         new Segment(Cy, C, {dash: dash}).draw(c)
 
-        const Dx = new Point(D.x, 0, {name: 'Dx', color: Color.pointD1, round: c.round}).draw(c)
-        const Dy = new Point(0, D.y, {name: 'Dy', color: Color.pointD1, round: c.round}).draw(c)
+        const Dx = new Point(D.x, 0, {name: 'Dx', color: Color.pointD1, round: c.round}).push(c)
+        const Dy = new Point(0, D.y, {name: 'Dy', color: Color.pointD1, round: c.round}).push(c)
 
         new Segment(Dx, D, {dash: dash}).draw(c)
         new Segment(Dy, D, {dash: dash}).draw(c)
@@ -57,10 +57,10 @@ class CartesianRectOrientedIntersectProjection extends CanvasDraw {
         const t = new TextDraw(this)
 
         if (ix.X && iy.Y) {
-            const lt = new Point(ix.XA.x, iy.YB.y, {hidden: true}).draw(c)
-            const rb = new Point(ix.XB.x, iy.YA.y, {hidden: true}).draw(c)
-            const rt = new Point(rb.x, lt.y, {hidden: true}).draw(c)
-            const lb = new Point(lt.x, rb.y, {hidden: true}).draw(c)
+            const lt = new Point(ix.XA.x, iy.YB.y, {hidden: true}).push(c)
+            const rb = new Point(ix.XB.x, iy.YA.y, {hidden: true}).push(c)
+            const rt = new Point(rb.x, lt.y, {hidden: true}).push(c)
+            const lb = new Point(lt.x, rb.y, {hidden: true}).push(c)
 
             new Polygon([
                 lt, rt, rb, lb
