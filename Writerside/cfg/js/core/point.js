@@ -4,30 +4,36 @@ class Point {
      * @param {number} y
      * @param {string} name
      * @param {Color} color
+     * @param {number[]} dash
+     * @param {boolean} round
+     * @param {boolean} roundIgnore
+     * @param {boolean} hidden
+     * @param {boolean} drag
      * @param {boolean} dragX
      * @param {boolean} dragY
-     * @param {number[]} dash
-     * @param round
-     * @param hidden
      */
     constructor(x, y, {
         name = '',
         color = Color.pointA,
-        dragX = true,
-        dragY = true,
         dash = [],
         round = false,
+        roundIgnore = false,
         hidden = false,
+        drag = true,
+        dragX = true,
+        dragY = true,
     } = {}) {
         this.#x = x
         this.#y = y
         this.name = name
         this.color = color
-        this.dragX = dragX
-        this.dragY = dragY
-        this.round = round
         this.dash = dash
+        this.round = round
+        this.roundIgnore = roundIgnore
         this.hidden = hidden
+
+        this.dragX = drag && dragX
+        this.dragY = drag && dragY
     }
 
     #x = 0
@@ -38,19 +44,12 @@ class Point {
     /** @type {number} */ cy = 0
     /** @type {number} */ cr = 0
 
-    /**
-     * @param {Cartesian} ctx
-     * @return {this}
-     */
-    push(ctx) {
-        if (ctx instanceof Cartesian) {
-            ctx.drawPoint.push(this)
-        }
-        return this
+    get #round() {
+        return this.round && !this.roundIgnore
     }
 
     get x() {
-        return this.round ? Math.round(this.#x) : this.#x
+        return this.#round ? Math.round(this.#x) : this.#x
     }
 
     /** @param {number} x */ set x(x) {
@@ -58,7 +57,7 @@ class Point {
     }
 
     get y() {
-        return this.round ? Math.round(this.#y) : this.#y
+        return this.#round ? Math.round(this.#y) : this.#y
     }
 
     /** @param {number} y */ set y(y) {
@@ -66,17 +65,17 @@ class Point {
     }
 
     /**  @return {string} */ get xs() {
-        const out = this.#x.toFixed(this.round ? 0 : 2)
+        const out = this.#x.toFixed(this.#round ? 0 : 2)
         return out === '-0' ? '0' : out
     }
 
     /**  @return {string} */ get xsabs() {
-        const out = Math.abs(this.#x).toFixed(this.round ? 0 : 2)
+        const out = Math.abs(this.#x).toFixed(this.#round ? 0 : 2)
         return out === '-0' ? '0' : out
     }
 
     /**  @return {string} */ get ys() {
-        const out = this.#y.toFixed(this.round ? 0 : 2)
+        const out = this.#y.toFixed(this.#round ? 0 : 2)
         return out === '-0' ? '0' : out
     }
 
@@ -103,13 +102,14 @@ class Point {
     }
 
     get dragCan() {
-        return this.dragX || this.dragY
+        return !this.hidden && (this.dragX || this.dragY)
     }
 
     /**
      * @param {Point} b
      * @param {Cartesian} c
      * @return {Point}
+     * @deprecated
      */
     parent(b, c) {
         if (this.#x > b.#x) {

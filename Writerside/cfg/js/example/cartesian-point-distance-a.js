@@ -5,10 +5,16 @@ class CartesianPointDistanceA extends CanvasDraw {
         super()
 
         const c = this.cartesian = new Cartesian(this, 7, {round: true})
+        this.text = new TextDraw(this)
 
-        c.points.push(
+        const AO = new Segment(
             new Point(4, 3, {name: 'A', color: Color.pointA}),
+            new Point(0, 0, {color: Color.pointA1, dash: [2, 2]}),
+            {dash: [2, 2]}
         )
+
+        c.points.push(...AO.points)
+        c.segments.push(AO)
     }
 
     draw() {
@@ -16,23 +22,13 @@ class CartesianPointDistanceA extends CanvasDraw {
 
         const [A] = c.points
 
-        A.push(c)
-        const O = new Point(0, 0, {color: Color.pointA1, dash: [2, 2], round: c.round}).push(c)
-
-        new Segment(A, O, {dash: [2, 2]}).draw(c)
-
         c.draw()
 
         const d = Math.sqrt(A.x * A.x + A.y * A.y)
 
-        const t = new TextDraw(this)
-
-        t.spans.push(
+        this.text.clear().push(
             new TextSpan(`Расстояние = ${d.toFixed(2)}`),
-        )
-
-        t.draw()
-
+        ).draw()
     }
 }
 

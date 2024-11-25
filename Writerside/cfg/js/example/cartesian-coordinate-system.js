@@ -15,16 +15,7 @@ class CartesianCoordinateSystem extends CanvasDraw {
     }
 
     draw() {
-        const c = this.cartesian.axis()
-
-        const [A, B, C, D] = c.points
-
-        A.push(c)
-        B.push(c)
-        C.push(c)
-        D.push(c)
-
-        c.draw()
+        this.cartesian.axis().draw()
     }
 }
 

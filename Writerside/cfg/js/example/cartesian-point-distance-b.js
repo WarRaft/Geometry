@@ -5,41 +5,40 @@ class CartesianPointDistanceB extends CanvasDraw {
         super()
 
         const c = this.cartesian = new Cartesian(this, 9, {round: true})
+        this.text = new TextDraw(this)
 
-        c.points.push(
+        const AB = new Segment(
             new Point(5, -2, {name: 'A', color: Color.pointA}),
-            new Point(8, -6, {name: 'B', color: Color.pointB}),
+            new Point(8, -6, {name: 'B', color: Color.pointB})
         )
+
+        const AB1 = new Segment(
+            new Point(0, 0, {name: 'A′', color: Color.pointA1, dash: [2, 2]}),
+            new Point(0, 0, {name: 'B′', color: Color.pointB1, dash: [2, 2]})
+            , {dash: [2, 2]}
+        )
+
+        c.points.push(...AB.points, ...AB1.points)
+        c.segments.push(AB, AB1)
     }
 
     draw() {
         const c = this.cartesian.axis()
 
-        const [A, B] = c.points
+        const [A, B, , B1] = c.points
 
         const dx = B.x - A.x
         const dy = B.y - A.y
 
         const d = Math.sqrt(dx * dx + dy * dy)
 
-        A.push(c)
-        const A1 = new Point(0, 0, {name: 'A′', color: Color.pointA1, dash: [2, 2], round: c.round}).push(c)
-
-        B.push(c)
-        const B1 = new Point(dx, dy, {name: 'B′', color: Color.pointB1, dash: [2, 2], round: c.round}).push(c)
-
-        new Segment(A, B).draw(c)
-        new Segment(A1, B1, {dash: [2, 2]}).draw(c)
+        B1.position(dx, dy)
 
         c.draw()
 
-        const t = new TextDraw(this)
-
-        t.spans.push(
+        this.text.clear().push(
             new TextSpan(`Расстояние = ${d.toFixed(2)}`),
-        )
-
-        t.draw()
+        ).draw()
     }
 }
 

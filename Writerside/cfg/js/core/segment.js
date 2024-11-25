@@ -1,31 +1,35 @@
 class Segment {
     /**
-     * @param {Point} a
-     * @param {Point} b
+     * @param {Point} A
+     * @param {Point} B
      * @param {number[]} dash
      * @param {number} line
      * @param {string} name
      */
-    constructor(a, b, {
+    constructor(A, B, {
         dash = [],
         line = 0,
         name = ''
     } = {}) {
-        this.a = a
-        this.b = b
+        this.A = A
+        this.B = B
         this.dash = dash
         this.line = line
         this.name = name
     }
 
+    get points() {
+        return [this.A, this.B]
+    }
+
     /**
-     * @param {Cartesian} ctx
+     * @param {Point} A
+     * @param {Point} B
      * @return {this}
      */
-    draw(ctx) {
-        if (ctx instanceof Cartesian) {
-            ctx.drawSegment.push(this)
-        }
+    position(A, B) {
+        this.A = A
+        this.B = B
         return this
     }
 }

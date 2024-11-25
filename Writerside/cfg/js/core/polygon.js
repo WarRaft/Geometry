@@ -1,27 +1,17 @@
 class Polygon {
-
     /**
      * @param {Color} color
      * @param {Point[]} points
+     * @param hidden
      */
     constructor(points, {
-        color = Color.polygon
+        color = Color.polygon,
+        hidden = false
     } = {}) {
-
         this.color = color
         this.points = points
+        this.hidden = hidden
     }
 
     /** @type {Point[]} */ points = []
-
-    /**
-     * @param {Cartesian} ctx
-     * @return {this}
-     */
-    draw(ctx) {
-        if (ctx instanceof Cartesian) {
-            ctx.drawPolygon.push(this)
-        }
-        return this
-    }
 }

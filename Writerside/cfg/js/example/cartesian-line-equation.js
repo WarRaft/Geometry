@@ -5,26 +5,31 @@ class CartesianLineEquation extends CanvasDraw {
         super()
 
         const c = this.cartesian = new Cartesian(this, 10, {round: true})
+        this.text = new TextDraw(this)
 
-        c.points.push(
+        const AB = new CartesianLineSloper(
             new Point(2, 3, {name: 'A', color: Color.pointA}),
             new Point(-2, -5, {name: 'B', color: Color.pointB}),
         )
+
+        c.points.push(...AB.points)
+        c.segments.push(AB)
     }
 
     draw() {
         const c = this.cartesian.axis()
 
-        const [A, B] = c.points
+        const [A] = c.points
+        const [AB] = /** @type {CartesianLineSloper[]} */ c.segments
 
-        const t = new TextDraw(this)
+        const t = this.text.clear()
 
-        const kAB = new CartesianLineSloper(c, t, A, B)
+        AB.calc(this.text).line = AB.hasL ? 3 : 0
 
-        if (kAB.hasK) {
-            const b = A.y - kAB.k * A.x
+        if (AB.hasK) {
+            const b = A.y - AB.k * A.x
             t.spans.push(
-                new TextSpan(`y = ${kAB.k.toFixed(2)} * x + ${b.toFixed(2)}`)
+                new TextSpan(`y = ${AB.k.toFixed(2)} * x + ${b.toFixed(2)}`)
             )
         }
 

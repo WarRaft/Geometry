@@ -13,14 +13,7 @@ class CanvasNumberLine extends CanvasDraw {
     }
 
     draw() {
-        const c = this.cartesian.axis({y: false, yalign: -1})
-
-        const [A, B] = c.points
-
-        A.push(c)
-        B.push(c)
-
-        c.draw()
+        this.cartesian.axis({y: false, yalign: -1}).draw()
     }
 }
 

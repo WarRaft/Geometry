@@ -27,6 +27,7 @@
     "no-unsafe-optional-chaining": "off",
     "no-console": "warn",
     "no-eq-null": "warn",
+    "no-cond-assign": "off",
     "no-case-declarations": "off"
   }
 }

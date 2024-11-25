@@ -6,20 +6,21 @@ class CartesianRectOriented extends CanvasDraw {
 
         const c = this.cartesian = new Cartesian(this, 8, {round: true})
 
-        c.points.push(
+        const AB = new Rect(
             new Point(-3, 5, {name: 'A', color: Color.pointA}),
             new Point(2, -4, {name: 'B', color: Color.pointB}),
         )
+
+        c.points.push(...AB.points)
+        c.rects.push(AB)
     }
 
     draw() {
         const c = this.cartesian.axis()
 
-        let [A, B] = c.points
+        const [A, B] = c.points
 
-        A.parent(B.push(c), c).push(c)
-
-        new Rect(A, B).draw(c)
+        A.parent(B, c)
 
         c.draw()
     }

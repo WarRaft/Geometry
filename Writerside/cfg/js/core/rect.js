@@ -1,27 +1,20 @@
 class Rect {
 
     /**
-     * @param {Point} a
-     * @param {Point} b
+     * @param {Point} A
+     * @param {Point} B
      * @param {number[]} dash
      * @param {number} line
      */
-    constructor(a, b, {
+    constructor(A, B, {
         dash = [],
     } = {}) {
-        this.a = a
-        this.b = b
+        this.A = A
+        this.B = B
         this.dash = dash
     }
 
-    /**
-     * @param {Cartesian} ctx
-     * @return {this}
-     */
-    draw(ctx) {
-        if (ctx instanceof Cartesian) {
-            ctx.drawRect.push(this)
-        }
-        return this
+    get points() {
+        return [this.A, this.B]
     }
 }

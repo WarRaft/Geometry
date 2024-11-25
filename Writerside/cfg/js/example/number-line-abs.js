@@ -5,40 +5,31 @@ class CanvasNumberLineAbs extends CanvasDraw {
         super()
 
         const c = this.cartesian = new Cartesian(this, 2, {round: true})
+        this.text = new TextDraw(this)
 
         c.points.push(
-            new Point(-5, 0, {name: 'A', color: Color.pointA, dragY: false})
+            new Point(-5, 0, {name: 'A', color: Color.pointA, dragY: false}),
+            new Point(0, 0, {name: '|A|', color: Color.pointA1, drag: false, dash: [2, 2]}),
         )
     }
 
     draw() {
         const c = this.cartesian.axis({y: false, yalign: -1})
 
-        const [A] = c.points
+        const [A, A1] = c.points
 
-        A.push(c)
-        const A1 = new Point(Math.abs(A.x), 0, {
-            name: '|A|',
-            color: Color.pointA1,
-            dash: [2, 2],
-            round: c.round
-        }).push(c)
+        A1.x = Math.abs(A.x)
 
         c.draw()
 
-        const t = new TextDraw(this)
-
-        t.spans.push(
+        this.text.clear().push(
             new TextSpan('|'),
             new TextSpan(A.name, {color: A.color}),
             new TextSpan('| = |'),
             new TextSpan(A.xs, {color: A.color}),
             new TextSpan('| = '),
             new TextSpan(A1.xs, {color: A1.color}),
-        )
-
-        t.draw()
-
+        ).draw()
     }
 }
 

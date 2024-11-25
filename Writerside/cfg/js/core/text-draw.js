@@ -10,6 +10,20 @@ class TextDraw {
 
     /** @type {TextSpan[]} */ spans = []
 
+    clear() {
+        this.spans = []
+        return this
+    }
+
+    /**
+     * @param {TextSpan} spans
+     * @return {this}
+     */
+    push(...spans) {
+        this.spans.push(...spans)
+        return this
+    }
+
     /**
      * @param {-1|1} xalign
      */

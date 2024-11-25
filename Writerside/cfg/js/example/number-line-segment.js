@@ -6,22 +6,19 @@ class CanvasNumberLineSegment extends CanvasDraw {
 
         const c = this.cartesian = new Cartesian(this, 2, {round: true})
 
-        c.points.push(
-            new Point(-3, 0, {name: 'A', color: Color.pointA, dragY: false}),
-            new Point(5, 0, {name: 'B', color: Color.pointB, dragY: false}),
-        )
+        const A = new Point(-3, 0, {name: 'A', color: Color.pointA, dragY: false})
+        const B = new Point(5, 0, {name: 'B', color: Color.pointB, dragY: false})
+
+        c.points.push(A, B)
+        c.segments.push(new Segment(A, B))
     }
 
     draw() {
-        const c = this.cartesian.axis({y: false, yalign: -1})
+        const c = this.cartesian.axis({y: false, yalign: -1}).draw()
 
-        let [A, B] = c.points
+        const [A, B] = c.points
 
-        A.parent(B.push(c), c).push(c)
-
-        new Segment(A, B).draw(c)
-
-        c.draw()
+        A.parent(B, c)
     }
 }
 

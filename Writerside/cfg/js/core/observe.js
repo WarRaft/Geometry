@@ -6,6 +6,8 @@
         const elem = document.getElementById(id)
         if (elem === null || !elem.isConnected) return
         if (!CanvasDraw.map.get(id)) return
+        if (elem.dataset.skip === '1') return
+
         elem.textContent = ''
         elem.appendChild(document.createElement(id))
     }

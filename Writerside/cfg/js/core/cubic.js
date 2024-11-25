@@ -1,7 +1,15 @@
+// https://github.com/WebKit/WebKit/blob/main/Source/WebCore/platform/graphics/UnitBezier.h
 // https://codepen.io/onedayitwillmake/pen/nJjYRp
 
 class Cubic {
-    constructor(p1x, p1y, p2x, p2y) {
+    /**
+     * @param {number} p1x
+     * @param {number} p1y
+     * @param {number} p2x
+     * @param {number} p2y
+     * @param name
+     */
+    constructor(p1x, p1y, p2x, p2y, {name = ''} = {}) {
         this.cx = 3.0 * p1x
         this.bx = 3.0 * (p2x - p1x) - this.cx
         this.ax = 1.0 - this.cx - this.bx
@@ -9,6 +17,8 @@ class Cubic {
         this.cy = 3.0 * p1y
         this.by = 3.0 * (p2y - p1y) - this.cy
         this.ay = 1.0 - this.cy - this.by
+
+        this.name = name
     }
 
     #sampleCurveX(t) {

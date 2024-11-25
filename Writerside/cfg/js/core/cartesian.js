@@ -60,14 +60,12 @@ class Cartesian {
     #axisY = true
     #height = 0
     round = false
-    /** @type {Point[]} */ points = []
-    /** @type {Point[]} */ drawPoint = []
-
     /** @type {Point|null} */ dragPoint = null
 
-    /** @type {Segment[]} */ drawSegment = []
-    /** @type {Rect[]} */ drawRect = []
-    /** @type {Polygon[]} */ drawPolygon = []
+    /** @type {Point[]} */ points = []
+    /** @type {Segment[]} */ segments = []
+    /** @type {Rect[]} */ rects = []
+    /** @type {Polygon[]} */ polygons = []
 
     /**
      * @param {boolean} x
@@ -84,10 +82,6 @@ class Cartesian {
          } = {}
     ) {
         this.#axisY = y
-        this.drawPoint = []
-        this.drawSegment = []
-        this.drawRect = []
-        this.drawPolygon = []
 
         // -- vars
         const draw = this.#draw
@@ -232,7 +226,7 @@ class Cartesian {
         }
 
         // -- round
-        for (const p of this.points) p.round = this.round
+        for (const p of this.points) p.round = p.roundIgnore ? false : this.round
 
         return this
     }
@@ -253,11 +247,11 @@ class Cartesian {
         const ox = this.#ox
         const oy = this.#oy
 
-        const points = [...this.drawPoint].sort((a, b) => a.y - b.y)
+        const points = [...this.points].sort((a, b) => a.y - b.y)
 
         ctx.lineWidth = dpr
 
-        /** @type {Point[]} */ const pointI = []
+        /** @type {Point[]} */ const pointRI = []
 
         // -- point
         for (const p of points) {
@@ -266,15 +260,12 @@ class Cartesian {
             p.cr = p.radius * dpr
 
             if (p.hidden) continue
-            for (const pp of pointI) {
-                const da = (p.cx - pp.cx) ** 2 + (p.cy - pp.cy) ** 2
-                const db = (p.cr + pp.cr) ** 2
-
-                if (da < db) {
-                    p.cr += (2 * dpr) * (1 - da / db)
-                }
+            for (const cp of pointRI) {
+                const da = (p.cx - cp.cx) ** 2 + (p.cy - cp.cy) ** 2
+                const db = (p.cr + cp.cr) ** 2
+                if (da < db) p.cr += (2 * dpr) * (1 - da / db)
             }
-            pointI.push(p)
+            pointRI.push(p)
 
             ctx.beginPath()
             ctx.fillStyle = p.color.fillStyle
@@ -387,20 +378,20 @@ class Cartesian {
             ctx.closePath()
         }
 
-        for (const s of this.drawSegment) {
-            const ax = s.a.cx, ay = s.a.cy
-            const bx = s.b.cx, by = s.b.cy
+        for (const s of this.segments) {
+            const ax = s.A.cx, ay = s.A.cy
+            const bx = s.B.cx, by = s.B.cy
 
             const dash = s.dash.map(v => v * dpr)
 
-            const dx = s.b.cx - s.a.cx, dy = s.b.cy - s.a.cy
+            const dx = s.B.cx - s.A.cx, dy = s.B.cy - s.A.cy
             const angle = Math.atan2(dy, dx)
 
             ctx.save()
-            _clipPoint(s.a)
-            _clipPoint(s.b)
+            _clipPoint(s.A)
+            _clipPoint(s.B)
             if (s.line >= 0) {
-                _segment(ax, ay, bx, by, s.a.color, s.b.color, dash)
+                _segment(ax, ay, bx, by, s.A.color, s.B.color, dash)
             }
             if (s.line > 0) {
                 const ld = this.#canvasWidth + this.#canvasHeight
@@ -408,37 +399,36 @@ class Cartesian {
                 const sin = Math.sin(angle) * ld
 
                 if (s.line >= 3 || s.line === 1) {
-                    _segment(ax, ay, ax - cos, ay - sin, s.a.color, null, dash)
+                    _segment(ax, ay, ax - cos, ay - sin, s.A.color, null, dash)
                 }
                 if (s.line >= 3 || s.line === 2) {
-                    _segment(bx, by, bx + cos, by + sin, s.b.color, null, dash)
+                    _segment(bx, by, bx + cos, by + sin, s.B.color, null, dash)
                 }
             }
             ctx.restore()
-
             if (s.name.length > 0) {
-                ctx.strokeStyle = s.b.color.strokeStyle
+                ctx.fillStyle = s.B.color.strokeStyle
                 ctx.font = `${14 * dpr}px ${fontFamily}`
                 ctx.textAlign = 'left'
                 const m = ctx.measureText(s.name)
                 const th = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent
-                ctx.fillText(s.name, bx + s.b.cr + 8 * dpr, by + th * .5)
+                ctx.fillText(s.name, bx + s.B.cr + 8 * dpr, by + th * .5)
             }
         }
 
         // -- rect
-        for (const r of this.drawRect) {
-            const ax = r.a.cx, ay = r.a.cy
-            const bx = r.b.cx, by = r.b.cy
+        for (const r of this.rects) {
+            const ax = r.A.cx, ay = r.A.cy
+            const bx = r.B.cx, by = r.B.cy
 
             const grad = ctx.createLinearGradient(ax, ay, bx, by)
-            grad.addColorStop(0, r.a.color.strokeStyle)
-            grad.addColorStop(1, r.b.color.strokeStyle)
+            grad.addColorStop(0, r.A.color.strokeStyle)
+            grad.addColorStop(1, r.B.color.strokeStyle)
             ctx.strokeStyle = grad
 
             ctx.save()
-            _clipPoint(r.a)
-            _clipPoint(r.b)
+            _clipPoint(r.A)
+            _clipPoint(r.B)
 
             ctx.beginPath()
 
@@ -455,8 +445,8 @@ class Cartesian {
         ctx.restore()
 
         // -- polygon
-        for (const p of this.drawPolygon) {
-            if (p.points.length < 2) continue
+        for (const p of this.polygons) {
+            if (p.hidden || p.points.length < 2) continue
 
             ctx.beginPath()
             ctx.moveTo(p.points[0].cx, p.points[0].cy)
@@ -465,6 +455,7 @@ class Cartesian {
             }
             ctx.fillStyle = p.color.fillStyle
             //ctx.strokeStyle = p.color.strokeStyle
+            //ctx.stroke()
             ctx.fill('evenodd')
             ctx.closePath()
         }

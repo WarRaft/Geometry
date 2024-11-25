@@ -5,31 +5,30 @@ class CartesianRay extends CanvasDraw {
         super()
 
         const c = this.cartesian = new Cartesian(this, 7, {round: true})
+        this.text = new TextDraw(this)
 
-        const A = new Point(2, 3, {name: 'A', color: Color.pointA})
-        const B = new Point(-2, 1, {name: 'B', color: Color.pointB})
+        const AB = new Segment(
+            new Point(2, 3, {name: 'A', color: Color.pointA}),
+            new Point(-2, 1, {name: 'B', color: Color.pointB})
+        )
 
-        c.points.push(A, B)
+        c.points.push(...AB.points)
+        c.segments.push(AB)
     }
 
     draw() {
         const c = this.cartesian.axis()
 
         const [A, B] = c.points
+        const [AB] = c.segments
 
-        A.push(c)
-        B.push(c)
+        const noline = A.x === B.x && A.y === B.y
+        AB.line = noline ? -1 : 2
 
-        const t = new TextDraw(this)
-
-        if (A.x === B.x && A.y === B.y) {
-            t.noline(A, B)
-        } else {
-            new Segment(A, B, {line: 3}).draw(c)
-        }
+        this.text.clear()
+        if (noline) this.text.noline(A, B).draw()
 
         c.draw()
-        t.draw()
     }
 }
 
