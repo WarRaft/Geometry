@@ -28,5 +28,15 @@
             <toc-element topic="cartesian-rect-oriented-intersect.md"/>
         </toc-element>
     </toc-element>
+    <toc-element topic="testmap.md">
+        <toc-element topic="testmap-version.md"/>
+        <toc-element topic="testmap-editor.md"/>
+        <toc-element topic="testmap-ui.md">
+        </toc-element>
+        <toc-element topic="testmap-font.md"/>
+        <toc-element topic="testmap-tileset.md"/>
+        <toc-element topic="testmap-dnc.md"/>
+        <toc-element topic="testmap-credits.md"/>
+    </toc-element>
     <toc-element topic="donate.md"/>
 </instance-profile>
