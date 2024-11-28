@@ -43,6 +43,6 @@ $$ (\max(A_x, C_x), \min(D_y, B_y)), (\min(B_x, D_x), \max(C_y, A_y)) $$
 
 ```.``` {id=canvas-cartesian-rect-oriented-intersect}
 
-Для большей наглядности сместим оси и нарисуем линии проекции:
+Для большей наглядности сместим оси чтоб стали видны линии проекции:
 
 ```.``` {id=canvas-cartesian-rect-oriented-intersect-projection}

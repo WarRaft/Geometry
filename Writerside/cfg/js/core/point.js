@@ -8,6 +8,7 @@ class Point {
      * @param {boolean} round
      * @param {boolean} roundIgnore
      * @param {boolean} hidden
+     * @param {Segment} segment
      * @param {boolean} drag
      * @param {boolean} dragX
      * @param {boolean} dragY
@@ -19,6 +20,7 @@ class Point {
         round = false,
         roundIgnore = false,
         hidden = false,
+        segment = null,
         drag = true,
         dragX = true,
         dragY = true,
@@ -31,6 +33,7 @@ class Point {
         this.round = round
         this.roundIgnore = roundIgnore
         this.hidden = hidden
+        this.segment = segment
 
         this.dragX = drag && dragX
         this.dragY = drag && dragY
@@ -38,6 +41,9 @@ class Point {
 
     #x = 0
     #y = 0
+
+    /** @type {Point} */  maxThan
+    /** @type {Point} */  minThan
 
     radius = 6
     /** @type {number} */ cx = 0
@@ -96,30 +102,22 @@ class Point {
      * @return {Point}
      */
     drag(dx, dy) {
-        if (this.dragX) this.#x += dx
-        if (this.dragY) this.#y += dy
+        const mit = this.minThan
+        const mat = this.maxThan
+        if (this.dragX) {
+            this.#x += dx
+            if (mit && this.#x > mit.#x) mit.#x = this.#x
+            if (mat && this.#x < mat.#x) mat.#x = this.#x
+        }
+        if (this.dragY) {
+            this.#y += dy
+            if (mit && this.#y < mit.#y) mit.#y = this.#y
+            if (mat && this.#y > mat.#y) mat.#y = this.#y
+        }
         return this
     }
 
     get dragCan() {
         return !this.hidden && (this.dragX || this.dragY)
-    }
-
-    /**
-     * @param {Point} b
-     * @param {Cartesian} c
-     * @return {Point}
-     * @deprecated
-     */
-    parent(b, c) {
-        if (this.#x > b.#x) {
-            if (c.dragPoint === this) b.#x = this.#x
-            else this.#x = b.#x
-        }
-        if (this.#y < b.#y) {
-            if (c.dragPoint === this) b.#y = this.#y
-            else this.#y = b.#y
-        }
-        return this
     }
 }

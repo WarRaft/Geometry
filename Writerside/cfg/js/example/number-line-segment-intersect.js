@@ -24,10 +24,6 @@ class CanvasNumberLineSegmentIntersect extends CanvasDraw {
     draw() {
         const c = this.cartesian.axis({y: false})
 
-        let [A, B, C, D] = c.points
-        A.parent(B, c)
-        C.parent(D, c)
-
         const X = this.X.calcX()
 
         c.draw()
@@ -64,8 +60,14 @@ class NumberLineSegmentX {
     constructor(A, B, C, D, AB, CD, ABCD) {
         this.A = A
         this.B = B
+        A.minThan = B
+        B.maxThan = A
+
         this.C = C
         this.D = D
+        C.minThan = D
+        D.maxThan = C
+
         this.AB = AB
         this.CD = CD
         this.ABCD = ABCD
@@ -90,7 +92,7 @@ class NumberLineSegmentX {
     #true(points, sort) {
         points.sort(sort)
         this.AB.position(points[0], points[1])
-        this.ABCD.position(points[1], points[2]).line = 0
+        this.ABCD.position(points[1], points[2]).lineOld = 0
         this.CD.position(points[2], points[3])
         return this
     }
@@ -98,7 +100,7 @@ class NumberLineSegmentX {
     #false() {
         this.AB.position(this.A, this.B)
         this.CD.position(this.C, this.D)
-        this.ABCD.position(this.A, this.D).line = -1
+        this.ABCD.position(this.A, this.D).lineOld = -1
         return this
     }
 

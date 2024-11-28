@@ -221,9 +221,7 @@ class Cartesian {
         }
 
         // --- drag
-        if (this.dragPoint !== null) {
-            this.dragPoint.drag(draw.dx * dpr / step, -draw.dy * dpr / step)
-        }
+        this.dragPoint?.drag(draw.dx * dpr / step, -draw.dy * dpr / step)
 
         // -- round
         for (const p of this.points) p.round = p.roundIgnore ? false : this.round
@@ -271,6 +269,7 @@ class Cartesian {
             ctx.fillStyle = p.color.fillStyle
             ctx.strokeStyle = p.color.strokeStyle
             ctx.setLineDash(p.dash.map(v => v * dpr))
+
             ctx.arc(p.cx, p.cy, p.cr, 0, Math.PI * 2)
             ctx.fill()
             ctx.stroke()
@@ -390,22 +389,30 @@ class Cartesian {
             ctx.save()
             _clipPoint(s.A)
             _clipPoint(s.B)
-            if (s.line >= 0) {
+
+            const ld = this.#canvasWidth + this.#canvasHeight
+            const cos = Math.cos(angle) * ld
+            const sin = Math.sin(angle) * ld
+
+            if (s.ray) {
+                _segment(bx, by, bx + cos, by + sin, s.B.color, null, dash)
+            }
+
+            if (s.lineOld >= 0) {
                 _segment(ax, ay, bx, by, s.A.color, s.B.color, dash)
             }
-            if (s.line > 0) {
-                const ld = this.#canvasWidth + this.#canvasHeight
-                const cos = Math.cos(angle) * ld
-                const sin = Math.sin(angle) * ld
+            if (s.lineOld > 0) {
 
-                if (s.line >= 3 || s.line === 1) {
+
+                if (s.lineOld >= 3 || s.lineOld === 1) {
                     _segment(ax, ay, ax - cos, ay - sin, s.A.color, null, dash)
                 }
-                if (s.line >= 3 || s.line === 2) {
+                if (s.lineOld >= 3 || s.lineOld === 2) {
                     _segment(bx, by, bx + cos, by + sin, s.B.color, null, dash)
                 }
             }
             ctx.restore()
+
             if (s.name.length > 0) {
                 ctx.fillStyle = s.B.color.strokeStyle
                 ctx.font = `${14 * dpr}px ${fontFamily}`

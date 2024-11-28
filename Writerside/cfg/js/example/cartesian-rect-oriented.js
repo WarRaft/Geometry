@@ -16,13 +16,7 @@ class CartesianRectOriented extends CanvasDraw {
     }
 
     draw() {
-        const c = this.cartesian.axis()
-
-        const [A, B] = c.points
-
-        A.parent(B, c)
-
-        c.draw()
+        this.cartesian.axis().draw()
     }
 }
 

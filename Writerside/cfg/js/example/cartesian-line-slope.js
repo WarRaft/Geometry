@@ -32,7 +32,7 @@ class CartesianLineSlope extends CanvasDraw {
 
         this.text.clear()
 
-        AB.calc(this.text).line = AB.hasL ? 3 : 0
+        AB.calc(this.text).lineOld = AB.hasL ? 3 : 0
         AB1.line = AB.hasL ? 3 : 0
 
         c.draw()
@@ -67,7 +67,7 @@ class CartesianLineSloper extends Segment {
         }
 
         this.hasL = true
-        this.line = 3
+        this.lineOld = 3
 
         t.spans.push(
             ...this.textName,

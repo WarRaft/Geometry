@@ -84,9 +84,6 @@ class CartesianRectOrientedIntersect extends CanvasDraw {
 
         const [A, B, C, D] = c.points
 
-        A.parent(B, c)
-        C.parent(D, c)
-
         const t = this.text.clear()
 
         const X = this.X

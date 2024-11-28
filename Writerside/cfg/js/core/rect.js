@@ -11,6 +11,8 @@ class Rect {
     } = {}) {
         this.A = A
         this.B = B
+        A.minThan = B
+        B.maxThan = A
         this.dash = dash
     }
 

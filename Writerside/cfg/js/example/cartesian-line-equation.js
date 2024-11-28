@@ -24,7 +24,7 @@ class CartesianLineEquation extends CanvasDraw {
 
         const t = this.text.clear()
 
-        AB.calc(this.text).line = AB.hasL ? 3 : 0
+        AB.calc(this.text).lineOld = AB.hasL ? 3 : 0
 
         if (AB.hasK) {
             const b = A.y - AB.k * A.x

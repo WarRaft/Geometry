@@ -29,8 +29,8 @@ class CartesianLineSlopeIntersect extends CanvasDraw {
 
         const t = this.text.clear()
 
-        AB.calc(t).line = AB.hasL ? 3 : 0
-        CD.calc(t).line = CD.hasL ? 3 : 0
+        AB.calc(t).lineOld = AB.hasL ? 3 : 0
+        CD.calc(t).lineOld = CD.hasL ? 3 : 0
 
         if (AB.hasK && CD.hasK) {
             t.spans.push(

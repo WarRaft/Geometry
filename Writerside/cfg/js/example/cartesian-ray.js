@@ -9,7 +9,8 @@ class CartesianRay extends CanvasDraw {
 
         const AB = new Segment(
             new Point(2, 3, {name: 'A', color: Color.pointA}),
-            new Point(-2, 1, {name: 'B', color: Color.pointB})
+            new Point(-2, 1, {name: 'B', color: Color.pointB}),
+            {ray: true}
         )
 
         c.points.push(...AB.points)
