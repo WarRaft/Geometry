@@ -20,16 +20,13 @@ class CartesianRay extends CanvasDraw {
     draw() {
         const c = this.cartesian.axis()
 
-        const [A, B] = c.points
         const [AB] = c.segments
 
-        const noline = A.x === B.x && A.y === B.y
-        AB.line = noline ? -1 : 2
-
-        this.text.clear()
-        if (noline) this.text.noline(A, B).draw()
+        const t = this.text.clear()
+        if (!AB.hasLine) AB.noline(t)
 
         c.draw()
+        t.draw()
     }
 }
 

@@ -19,15 +19,15 @@ class CartesianLineEquation extends CanvasDraw {
     draw() {
         const c = this.cartesian.axis()
 
-        const [A] = c.points
         const [AB] = /** @type {CartesianLineSloper[]} */ c.segments
 
         const t = this.text.clear()
 
-        AB.calc(this.text).lineOld = AB.hasL ? 3 : 0
+        AB.calc(t)
 
         if (AB.hasK) {
-            const b = A.y - AB.k * A.x
+            const a = AB.A
+            const b = a.y - AB.k * a.x
             t.spans.push(
                 new TextSpan(`y = ${AB.k.toFixed(2)} * x + ${b.toFixed(2)}`)
             )

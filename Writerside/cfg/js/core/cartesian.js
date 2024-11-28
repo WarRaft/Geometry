@@ -251,6 +251,14 @@ class Cartesian {
 
         /** @type {Point[]} */ const pointRI = []
 
+        const _drawPoint = (p) => {
+            ctx.fillStyle = p.color.fillStyle
+            ctx.strokeStyle = p.color.strokeStyle
+            ctx.setLineDash(p.dash.map(v => v * dpr))
+            ctx.fill(p.cpath)
+            ctx.stroke(p.cpath)
+        }
+
         // -- point
         for (const p of points) {
             p.cx = ox + p.x * step
@@ -265,17 +273,12 @@ class Cartesian {
             }
             pointRI.push(p)
 
-            ctx.beginPath()
-            ctx.fillStyle = p.color.fillStyle
-            ctx.strokeStyle = p.color.strokeStyle
-            ctx.setLineDash(p.dash.map(v => v * dpr))
-
-            ctx.arc(p.cx, p.cy, p.cr, 0, Math.PI * 2)
-            ctx.fill()
-            ctx.stroke()
-            ctx.closePath()
-
+            p.cpath = new Path2D()
             pointName.push(new TextRect(p.cx - p.cr, p.cx + p.cr, p.cy - p.cr, p.cy + p.cr))
+
+            if (p.segment?.ray && p.segment.B === p) continue
+            p.cpath.arc(p.cx, p.cy, p.cr, 0, Math.PI * 2)
+            _drawPoint(p)
         }
 
         // -- point name
@@ -341,9 +344,8 @@ class Cartesian {
          * @param {Point} p
          */
         const _clipPoint = (p) => {
-            const path = new Path2D()
+            const path = new Path2D(p.cpath)
             path.rect(0, 0, caw, cah)
-            path.arc(p.cx, p.cy, p.cr, 0, Math.PI * 2)
             ctx.clip(path, 'evenodd')
         }
 
@@ -378,48 +380,56 @@ class Cartesian {
         }
 
         for (const s of this.segments) {
-            const ax = s.A.cx, ay = s.A.cy
-            const bx = s.B.cx, by = s.B.cy
+            const a = s.A, b = s.B
+            const ax = a.cx, ay = a.cy
+            const bx = b.cx, by = b.cy
 
             const dash = s.dash.map(v => v * dpr)
 
-            const dx = s.B.cx - s.A.cx, dy = s.B.cy - s.A.cy
+            const dx = b.cx - s.A.cx, dy = b.cy - s.A.cy
             const angle = Math.atan2(dy, dx)
-
-            ctx.save()
-            _clipPoint(s.A)
-            _clipPoint(s.B)
 
             const ld = this.#canvasWidth + this.#canvasHeight
             const cos = Math.cos(angle) * ld
             const sin = Math.sin(angle) * ld
 
             if (s.ray) {
-                _segment(bx, by, bx + cos, by + sin, s.B.color, null, dash)
+                const da = 2 * Math.PI / 3
+                let ta = angle
+                //b.cpath.arc(bx, by, b.cr, 0, Math.PI * 2)
+                b.cpath.moveTo(bx + b.cr * Math.cos(ta), by + b.cr * Math.sin(ta))
+                ta += da
+                b.cpath.lineTo(bx + b.cr * Math.cos(ta), by + b.cr * Math.sin(ta))
+                ta += da
+                b.cpath.lineTo(bx + b.cr * Math.cos(ta), by + b.cr * Math.sin(ta))
+                b.cpath.closePath()
+                _drawPoint(b)
             }
 
-            if (s.lineOld >= 0) {
-                _segment(ax, ay, bx, by, s.A.color, s.B.color, dash)
-            }
-            if (s.lineOld > 0) {
+            ctx.save()
+            if (s.drawLine && s.hasLine) {
+                _clipPoint(a)
+                _clipPoint(b)
 
+                _segment(ax, ay, bx, by, a.color, b.color, dash)
 
-                if (s.lineOld >= 3 || s.lineOld === 1) {
-                    _segment(ax, ay, ax - cos, ay - sin, s.A.color, null, dash)
+                if (s.line) {
+                    _segment(ax, ay, ax - cos, ay - sin, a.color, null, dash)
                 }
-                if (s.lineOld >= 3 || s.lineOld === 2) {
-                    _segment(bx, by, bx + cos, by + sin, s.B.color, null, dash)
+
+                if (s.line || s.ray) {
+                    _segment(bx, by, bx + cos, by + sin, b.color, null, dash)
                 }
             }
             ctx.restore()
 
             if (s.name.length > 0) {
-                ctx.fillStyle = s.B.color.strokeStyle
+                ctx.fillStyle = b.color.strokeStyle
                 ctx.font = `${14 * dpr}px ${fontFamily}`
                 ctx.textAlign = 'left'
                 const m = ctx.measureText(s.name)
                 const th = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent
-                ctx.fillText(s.name, bx + s.B.cr + 8 * dpr, by + th * .5)
+                ctx.fillText(s.name, bx + b.cr + 8 * dpr, by + th * .5)
             }
         }
 

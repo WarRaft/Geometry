@@ -1,0 +1,91 @@
+Version {
+    FormatVersion 800,
+}
+Model "Name" {
+    BlendTime 150,
+}
+Sequences 1 {
+    Anim "Stand" {
+        Interval { 0, 33 },
+    }
+}
+Bone "Bone_Head" {
+    ObjectId 0,
+    GeosetId Multiple,
+    GeosetAnimId None,
+}
+Bone "Bone_Chest_straight" {
+    ObjectId 1,
+    Parent 0,
+    GeosetId Multiple,
+    GeosetAnimId None,
+    Rotation 1 {
+        DontInterp,
+        0: { 0, 0, 0, 1 },
+    }
+}
+Bone "Bone_Chest_90screw" {
+    ObjectId 2,
+    Parent 0,
+    GeosetId Multiple,
+    GeosetAnimId None,
+    Rotation 1 {
+        DontInterp,
+        0: { 0.707107, 0, 0, 0.707107 },
+    }
+}
+Bone "Bone_Chest_90up" {
+    ObjectId 3,
+    Parent 0,
+    GeosetId Multiple,
+    GeosetAnimId None,
+    Rotation 1 {
+        DontInterp,
+        0: { 0, 0, 0.707107, 0.707107 },
+    }
+}
+Bone "Bone_Chest_90right" {
+    ObjectId 4,
+    Parent 0,
+    GeosetId Multiple,
+    GeosetAnimId None,
+    Rotation 1 {
+        DontInterp,
+        0: { 0, 0.707107, 0, 0.707107 },
+    }
+}
+Attachment "Overhead Ref" {
+    ObjectId 5,
+    Parent 2,
+    AttachmentID 0,
+}
+Attachment "Head Ref" {
+    ObjectId 6,
+    Parent 0,
+    AttachmentID 1,
+    Rotation 1 {
+        DontInterp,
+        0: { 0, 0, 0, 1 },
+    }
+}
+Attachment "Chest Ref" {
+    ObjectId 7,
+    Parent 3,
+    AttachmentID 2,
+}
+Attachment "Origin Ref" {
+    ObjectId 8,
+    Parent 4,
+    AttachmentID 3,
+}
+PivotPoints 9 {
+    { 0, 0, 0 },
+    { 0, 0, 0 },
+    { 0, 0, 0 },
+    { 0, 0, 0 },
+    { 0, 0, 0 },
+    { 0, 0, 0 },
+    { 0, 0, 0 },
+    { 0, 0, 0 },
+    { 0, 0, 0 },
+}

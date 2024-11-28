@@ -104,21 +104,4 @@ class TextDraw {
             l.draw(x, i === 0 ? y : y + lines[i - 1].maxY)
         }
     }
-
-    /**
-     * @param {Point} a
-     * @param {Point} b
-     * @return {this}
-     */
-    noline(a, b) {
-        this.spans.push(
-            new TextSpan('Прямая '),
-            new TextSpan(a.name, {color: a.color}),
-            new TextSpan(b.name, {color: b.color}),
-            new TextSpan(' не определена'),
-            new TextSpan('\n'),
-        )
-
-        return this
-    }
 }

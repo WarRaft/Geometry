@@ -68,6 +68,10 @@
 
             <include-in-head>js/example/cartesian-ray.js</include-in-head>
 
+            <include-in-head>js/example/cartesian-segment.js</include-in-head>
+            <include-in-head>js/example/cartesian-segment-lerp.js</include-in-head>
+            <include-in-head>js/example/cartesian-segment-lerp-projection.js</include-in-head>
+
             <include-in-head>js/example/cartesian-rect-oriented.js</include-in-head>
             <include-in-head>js/example/cartesian-rect-oriented-intersect.js</include-in-head>
             <include-in-head>js/example/cartesian-rect-oriented-intersect-projection.js</include-in-head>

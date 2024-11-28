@@ -24,13 +24,12 @@ class CartesianLineSlopeIntersect extends CanvasDraw {
     draw() {
         const c = this.cartesian.axis()
 
-        const [A, B, C, D] = c.points
         const [AB, CD] = /** @type {CartesianLineSloper[]} */ c.segments
 
         const t = this.text.clear()
 
-        AB.calc(t).lineOld = AB.hasL ? 3 : 0
-        CD.calc(t).lineOld = CD.hasL ? 3 : 0
+        AB.calc(t)
+        CD.calc(t)
 
         if (AB.hasK && CD.hasK) {
             t.spans.push(

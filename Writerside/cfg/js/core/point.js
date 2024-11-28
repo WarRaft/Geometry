@@ -49,6 +49,7 @@ class Point {
     /** @type {number} */ cx = 0
     /** @type {number} */ cy = 0
     /** @type {number} */ cr = 0
+    /** @type {Path2D} */ cpath
 
     get #round() {
         return this.round && !this.roundIgnore

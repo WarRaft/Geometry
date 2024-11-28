@@ -14,7 +14,7 @@ class CanvasNumberLineSegmentIntersect extends CanvasDraw {
             new Point(4, 0, {name: 'D', color: Color.pointD, dragY: false}),
             new Segment(null, null),
             new Segment(null, null),
-            new Segment(null, null),
+            new Segment(null, null, {drawLine: false}),
         )
 
         c.points.push(...X.points)
@@ -92,7 +92,7 @@ class NumberLineSegmentX {
     #true(points, sort) {
         points.sort(sort)
         this.AB.position(points[0], points[1])
-        this.ABCD.position(points[1], points[2]).lineOld = 0
+        this.ABCD.position(points[1], points[2]).drawLine = true
         this.CD.position(points[2], points[3])
         return this
     }
@@ -100,7 +100,7 @@ class NumberLineSegmentX {
     #false() {
         this.AB.position(this.A, this.B)
         this.CD.position(this.C, this.D)
-        this.ABCD.position(this.A, this.D).lineOld = -1
+        this.ABCD.position(this.A, this.D).drawLine = false
         return this
     }
 

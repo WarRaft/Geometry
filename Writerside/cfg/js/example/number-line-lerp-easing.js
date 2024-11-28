@@ -46,7 +46,7 @@ class CanvasNumberLineLerpEasing extends CanvasDraw {
             c.segments.push(
                 new Segment(A, C, {dash: [2, 2]}),
                 new Segment(B, C, {dash: [2, 2]}),
-                new Segment(A, B, {name: cubic?.name ?? '', line: -1})
+                new Segment(A, B, {name: cubic?.name ?? '', drawLine: false}),
             )
         }
     }

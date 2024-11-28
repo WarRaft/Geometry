@@ -10,6 +10,7 @@ class CartesianLine extends CanvasDraw {
         const AB = new Segment(
             new Point(2, 3, {name: 'A', color: Color.pointA}),
             new Point(-2, 1, {name: 'B', color: Color.pointB}),
+            {line: true}
         )
 
         c.points.push(...AB.points)
@@ -19,16 +20,13 @@ class CartesianLine extends CanvasDraw {
     draw() {
         const c = this.cartesian.axis()
 
-        const [A, B] = c.points
         const [AB] = c.segments
 
-        const noline = A.x === B.x && A.y === B.y
-        AB.line = noline ? -1 : 3
-
-        this.text.clear()
-        if (noline) this.text.noline(A, B).draw()
+        const t = this.text.clear()
+        if (!AB.hasLine) AB.noline(t)
 
         c.draw()
+        t.draw()
     }
 }
 

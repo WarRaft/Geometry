@@ -14,7 +14,8 @@ class CartesianLineSlope extends CanvasDraw {
 
         const AB1 = new Segment(
             new Point(0, 0, {name: 'A′', color: Color.pointA1, drag: false, dash: [2, 2]}),
-            new Point(0, 0, {name: 'B′', color: Color.pointB1, drag: false, dash: [2, 2]})
+            new Point(0, 0, {name: 'B′', color: Color.pointB1, drag: false, dash: [2, 2]}),
+            {line: true}
         )
 
         c.points.push(...AB.points, ...AB1.points)
@@ -32,13 +33,13 @@ class CartesianLineSlope extends CanvasDraw {
 
         this.text.clear()
 
-        AB.calc(this.text).lineOld = AB.hasL ? 3 : 0
-        AB1.line = AB.hasL ? 3 : 0
+        AB.calc(this.text)
 
         c.draw()
         this.text.draw()
     }
 }
+
 CanvasDraw.define(CartesianLineSlope)
 
 class CartesianLineSloper extends Segment {
@@ -53,6 +54,8 @@ class CartesianLineSloper extends Segment {
      * @param {TextDraw} t
      */
     calc(t) {
+        this.line = true
+
         const A = this.A, B = this.B
 
         const dx = this.dx = B.x - A.x
@@ -61,13 +64,9 @@ class CartesianLineSloper extends Segment {
         this.hasL = false
         this.hasK = false
 
-        if (A.x === B.x && A.y === B.y) {
-            t.noline(A, B)
-            return this
-        }
+        if (!this.hasLine) return this.noline(t)
 
         this.hasL = true
-        this.lineOld = 3
 
         t.spans.push(
             ...this.textName,
