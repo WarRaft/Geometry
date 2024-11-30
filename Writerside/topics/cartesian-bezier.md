@@ -9,4 +9,4 @@
 
 [](cartesian-bezier3.md)
 
-```.``` {id=canvas-cartesian-bezier-three}
+```.``` {id=canvas-cartesian-bezier3}
