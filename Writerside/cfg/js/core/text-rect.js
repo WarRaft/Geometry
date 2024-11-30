@@ -47,6 +47,7 @@ class TextRect {
      * @return {boolean}
      */
     intesect(b) {
+        if (b === null) return false
         const li = Math.max(this.minX, b.minX)
         const ri = Math.min(this.maxX, b.maxX)
         const ti = Math.max(this.minY, b.minY)

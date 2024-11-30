@@ -66,6 +66,7 @@ class Cartesian {
     /** @type {Segment[]} */ segments = []
     /** @type {Rect[]} */ rects = []
     /** @type {Polygon[]} */ polygons = []
+    /** @type {Bezier3[]} */ beziers3 = []
 
     /**
      * @param {boolean} x
@@ -296,13 +297,18 @@ class Cartesian {
                     color: p.color,
                 })
 
-                const rb = TextRect.fromText(
-                    ctx, `(${p.xs}${this.#axisY ? `, ${p.ys}` : ''})`, 12 * dpr, fontFamily, {
-                        color: p.color,
-                        x: ra.maxX,
-                        y: ra.maxY,
-                    }
-                )
+                /** @type {TextRect|null} */ let rb = null
+
+                if (p.subname !== null) {
+                    const subname = p.subname.length > 0 ? p.subname : `(${p.xs}${this.#axisY ? `, ${p.ys}` : ''})`
+                    rb = TextRect.fromText(
+                        ctx, subname, 12 * dpr, fontFamily, {
+                            color: p.color,
+                            x: ra.maxX,
+                            y: ra.maxY,
+                        }
+                    )
+                }
 
                 const intersect = () => {
                     for (const r of pointName) {
@@ -314,7 +320,7 @@ class Cartesian {
                         const ty = r.minY - cur.maxY - gap
                         if (ty > 0) continue
                         ra.translate(0, ty)
-                        rb.translate(0, ty)
+                        rb?.translate(0, ty)
                         intersect()
                         break
                     }
@@ -322,9 +328,14 @@ class Cartesian {
                 intersect()
                 ctx.closePath()
 
-                pointName.push(ra.fill(), rb.fill())
-                rb.maxY += 3 * dpr
-                pointNameClip.push(ra, rb)
+                pointName.push(ra.fill())
+                pointNameClip.push(ra)
+
+                if (rb !== null) {
+                    pointName.push(rb.fill())
+                    rb.maxY += 3 * dpr
+                    pointNameClip.push(rb)
+                }
             }
         }
 
@@ -432,6 +443,26 @@ class Cartesian {
                 ctx.fillText(s.name, bx + b.cr + 8 * dpr, by + th * .5)
             }
         }
+
+        for (const bez of this.beziers3) {
+            const a = bez.A
+            const b = bez.B
+            const c = bez.C
+            const d = bez.D
+
+            ctx.save()
+            _clipPoint(a)
+            _clipPoint(c)
+            _clipPoint(d)
+            ctx.beginPath()
+            ctx.moveTo(a.cx, a.cy)
+            ctx.quadraticCurveTo(b.cx, b.cy, c.cx, c.cy)
+            ctx.strokeStyle = d.color.strokeStyle
+            ctx.stroke()
+            ctx.closePath()
+            ctx.restore()
+        }
+
 
         // -- rect
         for (const r of this.rects) {

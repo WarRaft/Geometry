@@ -19,6 +19,7 @@
     </toc-element>
     <toc-element topic="cartesian-coordinate-system.md">
         <toc-element topic="cartesian-point-distance.md"/>
+        <toc-element topic="cartesian-point-rotate90.md"/>
         <toc-element topic="cartesian-line.md">
             <toc-element topic="cartesian-line-slope.md"/>
             <toc-element topic="cartesian-line-equation.md"/>
@@ -27,6 +28,13 @@
         <toc-element topic="cartesian-segment.md">
             <toc-element topic="cartesian-segment-lerp.md">
                 <toc-element topic="cartesian-segment-lerp-jass.md"/>
+            </toc-element>
+        </toc-element>
+        <toc-element topic="cartesian-bezier.md">
+            <toc-element topic="cartesian-bezier3.md">
+                <toc-element topic="cartesian-bezier3-game.md">
+                    <toc-element topic="cartesian-bezier3-game-jass.md"/>
+                </toc-element>
             </toc-element>
         </toc-element>
         <toc-element topic="cartesian-rect-oriented.md">

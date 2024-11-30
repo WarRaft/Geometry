@@ -1,3 +1,5 @@
+// https://gist.github.com/nikolas/b0cce2261f1382159b507dd492e1ceef
+
 class Color {
     static bg = new Color({
         fillStyle: '#0e0e2e'
@@ -58,6 +60,16 @@ class Color {
     static pointD1 = new Color({
         fillStyle: '#1c878f5b',
         strokeStyle: '#0d6d75',
+    })
+
+    static pointE = new Color({
+        fillStyle: '#112cb65b',
+        strokeStyle: '#112cb6',
+    })
+
+    static pointF = new Color({
+        fillStyle: '#c3a60d5b',
+        strokeStyle: '#c3a60d',
     })
 
     /**

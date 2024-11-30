@@ -13,8 +13,8 @@ class CartesianPointDistanceB extends CanvasDraw {
         )
 
         const AB1 = new Segment(
-            new Point(0, 0, {name: 'A′', color: Color.pointA1, dash: [2, 2]}),
-            new Point(0, 0, {name: 'B′', color: Color.pointB1, dash: [2, 2]})
+            new Point(0, 0, {name: 'A′', color: Color.pointA1, dash: [2, 2], drag: false}),
+            new Point(0, 0, {name: 'B′', color: Color.pointB1, dash: [2, 2], drag: false})
             , {dash: [2, 2]}
         )
 

@@ -3,6 +3,7 @@ class Point {
      * @param {number} x
      * @param {number} y
      * @param {string} name
+     * @param {string|null} subname
      * @param {Color} color
      * @param {number[]} dash
      * @param {boolean} round
@@ -15,6 +16,7 @@ class Point {
      */
     constructor(x, y, {
         name = '',
+        subname = '',
         color = Color.pointA,
         dash = [],
         round = false,
@@ -28,6 +30,7 @@ class Point {
         this.#x = x
         this.#y = y
         this.name = name
+        this.subname = subname
         this.color = color
         this.dash = dash
         this.round = round
@@ -98,6 +101,21 @@ class Point {
     }
 
     /**
+     * @param {Point} a
+     * @param {Point} b
+     * @param {Point} c
+     * @param {number} t
+     */
+    bezier3(a, b, c, t) {
+        const k0 = (1 - t) ** 2
+        const k2 = t * t
+        const k1 = t - k2
+
+        this.#x = k0 * a.x + 2 * k1 * b.x + k2 * c.x
+        this.#y = k0 * a.y + 2 * k1 * b.y + k2 * c.y
+    }
+
+    /**
      * @param {number} dx
      * @param {number} dy
      * @return {Point}
@@ -121,4 +139,6 @@ class Point {
     get dragCan() {
         return !this.hidden && (this.dragX || this.dragY)
     }
+
+
 }

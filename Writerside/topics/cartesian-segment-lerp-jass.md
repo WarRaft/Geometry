@@ -1,13 +1,14 @@
 # JASS
 
-В этом примере мы просто запустим снаряд из одной точки в другую без регулирования высоты полёта и установки угла
-поворота.
+- [](testmap.md)
+- [](dummy.md)
+- [](channel.md)
 
-<resource src="cartesian-segment-lerp.w3x"></resource>
+<resource src="cartesian-segment-lerp-jass.w3x"></resource>
 
-<video src="./../resources/cartesian-segment-lerp.mp4"/>
+<video src="./../resources/cartesian-segment-lerp-jass.mp4"/>
 
-```
+```sql
 function MathRealLerp_ujapi takes real a, real b, real t returns real
     return a * (1-t) + b * t
 endfunction
