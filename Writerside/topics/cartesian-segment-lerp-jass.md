@@ -4,9 +4,9 @@
 - [](dummy.md)
 - [](channel.md)
 
-<resource src="cartesian-segment-lerp-jass.w3x"></resource>
+<resource src="../resources/map/cartesian-segment-lerp/jass/map.w3x" />
 
-<video src="./../resources/cartesian-segment-lerp-jass.mp4"/>
+<video src="../resources/map/cartesian-segment-lerp/jass/video.mp4"/>
 
 ```sql
 function MathRealLerp_ujapi takes real a, real b, real t returns real

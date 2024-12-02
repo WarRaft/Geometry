@@ -28,6 +28,7 @@
         <toc-element topic="cartesian-segment.md">
             <toc-element topic="cartesian-segment-lerp.md">
                 <toc-element topic="cartesian-segment-lerp-jass.md"/>
+                <toc-element topic="cartesian-segment-lerp-angelscript.md"/>
             </toc-element>
         </toc-element>
         <toc-element topic="cartesian-bezier.md">
