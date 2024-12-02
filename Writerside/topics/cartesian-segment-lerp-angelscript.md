@@ -2,7 +2,7 @@
 
 - [](testmap.md)
 - 
-<resource src="../resources/map/cartesian-segment-lerp/angelscript/map.w3x" />
+<resource src="cartesian-segment-lerp-angelscript.w3x" />
 
 <video src="../resources/map/cartesian-segment-lerp/angelscript/video.mp4"/>
 

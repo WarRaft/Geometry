@@ -4,7 +4,7 @@
 - [](dummy.md)
 - [](channel.md)
 
-<resource src="../resources/map/cartesian-segment-lerp/jass/map.w3x" />
+<resource src="cartesian-segment-lerp-jass.w3x" />
 
 <video src="../resources/map/cartesian-segment-lerp/jass/video.mp4"/>
 

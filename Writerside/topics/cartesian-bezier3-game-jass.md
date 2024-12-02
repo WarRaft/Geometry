@@ -4,7 +4,7 @@
 - [](dummy.md)
 - [](channel.md)
 
-<resource src="../resources/map/cartesian-bezier3-game/jass/map.w3x" />
+<resource src="cartesian-bezier3-game-jass.w3x" />
 
 <video src="../resources/map/cartesian-bezier3-game/jass/video.mp4"/>
 
