@@ -4,7 +4,7 @@
 - 
 <resource src="cartesian-segment-lerp-angelscript.w3x" />
 
-<video src="../resources/map/cartesian-segment-lerp/angelscript/video.mp4"/>
+<video src="../resources/map/cartesian-segment-lerp/angelscript/cartesian-segment-lerp-angelscript.mp4"/>
 
 ```c++
 float missileTick = .01f;

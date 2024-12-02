@@ -6,7 +6,7 @@
 
 <resource src="cartesian-segment-lerp-jass.w3x" />
 
-<video src="../resources/map/cartesian-segment-lerp/jass/video.mp4"/>
+<video src="../resources/map/cartesian-segment-lerp/jass/cartesian-segment-lerp-jass.mp4"/>
 
 ```sql
 function MathRealLerp_ujapi takes real a, real b, real t returns real

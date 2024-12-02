@@ -6,7 +6,7 @@
 
 <resource src="cartesian-bezier3-game-jass.w3x" />
 
-<video src="../resources/map/cartesian-bezier3-game/jass/video.mp4"/>
+<video src="../resources/map/cartesian-bezier3-game/jass/cartesian-bezier3-game-jass.mp4"/>
 
 ```sql
 function SetBezier3XY takes integer id, integer index, unit missile, real ax, real ay, real cx, real cy, real t returns nothing
