@@ -104,7 +104,7 @@ $$
 R = P_0 - t \cdot P_0 -t \cdot P_0 + t^2 \cdot P_0 + t \cdot P_1 - t^2 \cdot P_1 + t \cdot P_1 - t^2 \cdot P_1 + t^2 \cdot P_2
 $$
 
-Выразмм $R$ как сумму слагаемых:
+Выразим $R$ как сумму слагаемых:
 
 $$
 R = A + B + C

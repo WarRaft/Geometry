@@ -75,7 +75,6 @@
             <include-in-head>js/example/cartesian-segment-lerp-projection.js</include-in-head>
 
             <include-in-head>js/example/cartesian-bezier3.js</include-in-head>
-            <include-in-head>js/example/cartesian-bezier3-game.js</include-in-head>
 
             <include-in-head>js/example/cartesian-rect-oriented.js</include-in-head>
             <include-in-head>js/example/cartesian-rect-oriented-intersect.js</include-in-head>
