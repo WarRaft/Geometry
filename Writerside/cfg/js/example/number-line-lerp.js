@@ -22,7 +22,9 @@ class CanvasNumberLineLerp extends CanvasDraw {
 
         const [A, B, C] = c.points
 
-        C.x = A.x + (B.x - A.x) * this.lerpK
+        const t = this.lerpK
+
+        C.x = A.x * (1 - t) + B.x * t
 
         c.draw()
     }
